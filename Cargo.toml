@@ -1,0 +1,16 @@
+[package]
+authors = ["Jorge Aparicio <jorge@japaric.io>"]
+categories = ["asynchronous", "embedded", "hardware-support", "no-std"]
+description = "Board Support Crate for the Blue Pill"
+keywords = ["arm", "cortex-m", "stm32"]
+license = "MIT OR Apache-2.0"
+name = "blue-pill"
+repository = "https://github.com/japaric/blue-pill"
+version = "0.1.0"
+
+[dependencies]
+stm32f103xx = "0.4.1"
+
+[dependencies.cast]
+default-features = false
+version = "0.2.2"
