@@ -11,6 +11,7 @@
 //! [i]: https://docs.rs/cortex-m-quickstart/0.1.2/cortex_m_quickstart/
 
 #![deny(missing_docs)]
+#![deny(warnings)]
 #![no_std]
 
 extern crate cast;

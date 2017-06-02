@@ -29,20 +29,20 @@ impl<'a> Timer<'a> {
         let tim1 = self.0;
 
         /// Power on TIM1
-        rcc.apb2enr.modify(|_, w| unsafe { w.tim1en().bits(1) });
+        rcc.apb2enr.modify(|_, w| w.tim1en().enabled());
 
         // Configure periodic update event
         let ratio = frequency::APB2 / frequency;
         let psc = u16((ratio - 1) / (1 << 16)).unwrap();
-        tim1.psc.write(|w| unsafe { w.psc().bits(psc) });
+        tim1.psc.write(|w| w.psc().bits(psc));
         let arr = u16(ratio / u32(psc + 1)).unwrap();
-        tim1.arr.write(|w| unsafe { w.arr().bits(arr) });
+        tim1.arr.write(|w| w.arr().bits(arr));
 
         // Continuous mode
-        tim1.cr1.write(|w| unsafe { w.opm().bits(0) });
+        tim1.cr1.write(|w| w.opm().continuous());
 
         // Enable update event interrupt
-        tim1.dier.modify(|_, w| unsafe { w.uie().bits(1) });
+        tim1.dier.modify(|_, w| w.uie().set());
     }
 
     /// Clears the update event flag
@@ -51,21 +51,21 @@ impl<'a> Timer<'a> {
     pub fn clear_update_flag(&self) -> Result<()> {
         let tim1 = self.0;
 
-        if tim1.sr.read().uif().bits() == 0 {
+        if tim1.sr.read().uif().is_clear() {
             Err(Error { _0: () })
         } else {
-            self.0.sr.modify(|_, w| unsafe { w.uif().bits(0) });
+            self.0.sr.modify(|_, w| w.uif().clear());
             Ok(())
         }
     }
 
     /// Pauses the timer
     pub fn pause(&self) {
-        self.0.cr1.modify(|_, w| unsafe { w.cen().bits(0) });
+        self.0.cr1.modify(|_, w| w.cen().disabled());
     }
 
     /// Resumes the timer count
     pub fn resume(&self) {
-        self.0.cr1.modify(|_, w| unsafe { w.cen().bits(1) });
+        self.0.cr1.modify(|_, w| w.cen().enabled());
     }
 }
