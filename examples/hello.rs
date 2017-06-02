@@ -3,11 +3,11 @@
 #![feature(used)]
 #![no_std]
 
-// version = "0.2.6"
+// version = "0.2.9"
 #[macro_use]
 extern crate cortex_m;
 
-// version = "0.2.0"
+// version = "0.2.3"
 extern crate cortex_m_rt;
 
 // version = "0.1.0"
@@ -20,16 +20,13 @@ use blue_pill::stm32f103xx;
 use rtfm::{P0, T0, TMax};
 
 // INITIALIZATION PHASE
-fn init(prio: P0, thr: &TMax) {
-    let gpioc = &GPIOC.access(prio, thr);
-    let rcc = &RCC.access(prio, thr);
-
-    led::init(gpioc, rcc);
+fn init(_prio: P0, _thr: &TMax) {
+    hprintln!("Hello");
 }
 
 // IDLE LOOP
 fn idle(_prio: P0, _thr: T0) -> ! {
-    Green.on();
+    hprintln!("World");
 
     // Sleep
     loop {
