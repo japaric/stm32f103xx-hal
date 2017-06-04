@@ -47,8 +47,8 @@ peripherals!(stm32f103xx, {
     },
 });
 
-// Counter of sleep cycles
-static SLEEP_CYCLES: Resource<Cell<u32>, C1> = Resource::new(Cell::new(0));
+// Total sleep time (in clock cycles)
+static SLEEP_TIME: Resource<Cell<u32>, C1> = Resource::new(Cell::new(0));
 
 // INITIALIZATION PHASE
 fn init(ref prio: P0, thr: &TMax) {
@@ -67,9 +67,11 @@ fn init(ref prio: P0, thr: &TMax) {
 // IDLE LOOP
 fn idle(ref prio: P0, _thr: T0) -> ! {
     loop {
+        // For the span of this critical section the processor will not service
+        // interrupts (tasks)
         rtfm::atomic(|thr| {
             let dwt = DWT.access(prio, thr);
-            let sleep_cycles = SLEEP_CYCLES.access(prio, thr);
+            let sleep_time = SLEEP_TIME.access(prio, thr);
 
             // Sleep
             let before = dwt.cyccnt.read();
@@ -78,11 +80,11 @@ fn idle(ref prio: P0, _thr: T0) -> ! {
 
             let elapsed = after.wrapping_sub(before);
 
-            // Accumulate sleep cycles
-            sleep_cycles.set(sleep_cycles.get() + elapsed);
+            // Accumulate sleep time
+            sleep_time.set(sleep_time.get() + elapsed);
         });
 
-        // Tasks are serviced here
+        // Tasks are serviced at this point
     }
 }
 
@@ -98,16 +100,16 @@ tasks!(stm32f103xx, {
 fn periodic(_task: Tim1UpTim10, ref prio: P1, ref thr: T1) {
     let tim1 = &TIM1.access(prio, thr);
     let itm = ITM.access(prio, thr);
-    let sleep_cycles = SLEEP_CYCLES.access(prio, thr);
+    let sleep_time = SLEEP_TIME.access(prio, thr);
 
     let timer = Timer(tim1);
 
     if timer.clear_update_flag().is_ok() {
         // Report clock cycles spent sleeping
-        iprintln!(&itm.stim[0], "{}", sleep_cycles.get());
+        iprintln!(&itm.stim[0], "{}", sleep_time.get());
 
-        // Reset sleep cycle counter to zero
-        sleep_cycles.set(0);
+        // Reset sleep time back to zero
+        sleep_time.set(0);
     } else {
         // Only reachable via `rtfm::request(periodic)`
         unreachable!()
