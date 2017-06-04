@@ -47,6 +47,7 @@ peripherals!(stm32f103xx, {
     },
 });
 
+// Counter of sleep cycles
 static SLEEP_CYCLES: Resource<Cell<u32>, C1> = Resource::new(Cell::new(0));
 
 // INITIALIZATION PHASE
@@ -65,18 +66,19 @@ fn init(ref prio: P0, thr: &TMax) {
 
 // IDLE LOOP
 fn idle(ref prio: P0, _thr: T0) -> ! {
-    // Sleep
     loop {
         rtfm::atomic(|thr| {
             let dwt = DWT.access(prio, thr);
             let sleep_cycles = SLEEP_CYCLES.access(prio, thr);
 
+            // Sleep
             let before = dwt.cyccnt.read();
             rtfm::wfi();
             let after = dwt.cyccnt.read();
 
             let elapsed = after.wrapping_sub(before);
 
+            // Accumulate sleep cycles
             sleep_cycles.set(sleep_cycles.get() + elapsed);
         });
 
