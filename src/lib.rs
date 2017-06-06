@@ -12,6 +12,7 @@
 
 #![deny(missing_docs)]
 #![deny(warnings)]
+#![feature(get_type_id)]
 #![no_std]
 
 extern crate cast;
@@ -23,5 +24,6 @@ mod frequency;
 pub mod gpio;
 pub mod led;
 pub mod pwm;
+pub mod qei;
 pub mod serial;
 pub mod timer;
