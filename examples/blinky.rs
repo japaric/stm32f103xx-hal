@@ -17,7 +17,7 @@ use blue_pill::led::Green;
 use blue_pill::timer::Timer;
 use blue_pill::{led, stm32f103xx};
 use rtfm::{Local, P0, P1, T0, T1, TMax};
-use stm32f103xx::interrupt::Tim1UpTim10;
+use stm32f103xx::interrupt::TIM1_UP_TIM10;
 
 // CONFIGURATION
 const FREQUENCY: u32 = 1;
@@ -25,15 +25,12 @@ const FREQUENCY: u32 = 1;
 // RESOURCES
 peripherals!(stm32f103xx, {
     GPIOC: Peripheral {
-        register_block: Gpioc,
         ceiling: C0,
     },
     RCC: Peripheral {
-        register_block: Rcc,
         ceiling: C0,
     },
     TIM1: Peripheral {
-        register_block: Tim1,
         ceiling: C1,
     },
 });
@@ -62,14 +59,14 @@ fn idle(_prio: P0, _thr: T0) -> ! {
 // TASKS
 tasks!(stm32f103xx, {
     blink: Task {
-        interrupt: Tim1UpTim10,
+        interrupt: TIM1_UP_TIM10,
         priority: P1,
         enabled: true,
     },
 });
 
-fn blink(mut task: Tim1UpTim10, ref prio: P1, ref thr: T1) {
-    static STATE: Local<bool, Tim1UpTim10> = Local::new(false);
+fn blink(mut task: TIM1_UP_TIM10, ref prio: P1, ref thr: T1) {
+    static STATE: Local<bool, TIM1_UP_TIM10> = Local::new(false);
 
     let tim1 = TIM1.access(prio, thr);
 
@@ -88,6 +85,7 @@ fn blink(mut task: Tim1UpTim10, ref prio: P1, ref thr: T1) {
     } else {
         // Only reachable through `rtfm::request(periodic)`
         #[cfg(debug_assertion)]
-        unreachable!()
+#[cfg(debug_assertion)]        #[cfg(debug_assertion)]
+        #[cfg(debug_assertion)] unreachable!()
     }
 }

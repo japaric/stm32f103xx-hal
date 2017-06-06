@@ -22,7 +22,7 @@ use core::cell::Cell;
 use blue_pill::stm32f103xx;
 use blue_pill::timer::Timer;
 use rtfm::{C1, P0, P1, Resource, T0, T1, TMax};
-use stm32f103xx::interrupt::Tim1UpTim10;
+use stm32f103xx::interrupt::TIM1_UP_TIM10;
 
 // CONFIGURATION
 const FREQUENCY: u32 = 1; // Hz
@@ -30,19 +30,15 @@ const FREQUENCY: u32 = 1; // Hz
 // RESOURCES
 peripherals!(stm32f103xx, {
     DWT: Peripheral {
-        register_block: Dwt,
         ceiling: C0,
     },
     ITM: Peripheral {
-        register_block: Itm,
         ceiling: C1,
     },
     RCC: Peripheral {
-        register_block: Rcc,
         ceiling: C0,
     },
     TIM1: Peripheral {
-        register_block: Tim1,
         ceiling: C1,
     },
 });
@@ -91,13 +87,13 @@ fn idle(ref prio: P0, _thr: T0) -> ! {
 // TASKS
 tasks!(stm32f103xx, {
     periodic: Task {
-        interrupt: Tim1UpTim10,
+        interrupt: TIM1_UP_TIM10,
         priority: P1,
         enabled: true,
     },
 });
 
-fn periodic(_task: Tim1UpTim10, ref prio: P1, ref thr: T1) {
+fn periodic(_task: TIM1_UP_TIM10, ref prio: P1, ref thr: T1) {
     let tim1 = &TIM1.access(prio, thr);
     let itm = ITM.access(prio, thr);
     let sleep_time = SLEEP_TIME.access(prio, thr);

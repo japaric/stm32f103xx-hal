@@ -1,7 +1,7 @@
 //! Periodic timer
 
 use cast::{u16, u32};
-use stm32f103xx::{Rcc, Tim1};
+use stm32f103xx::{RCC, TIM1};
 
 use frequency;
 
@@ -19,13 +19,13 @@ pub struct Error {
 ///
 /// - `Tim1UpTim10` - update event
 #[derive(Clone, Copy)]
-pub struct Timer<'a>(pub &'a Tim1);
+pub struct Timer<'a>(pub &'a TIM1);
 
 impl<'a> Timer<'a> {
     /// Initializes the timer with a periodic timeout of `frequency` Hz
     ///
     /// NOTE After initialization, the timer will be in the paused state.
-    pub fn init(&self, frequency: u32, rcc: &Rcc) {
+    pub fn init(&self, frequency: u32, rcc: &RCC) {
         let tim1 = self.0;
 
         /// Power on TIM1

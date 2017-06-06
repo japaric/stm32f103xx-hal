@@ -42,7 +42,6 @@ use rtfm::{P0, T0, TMax};
 // RESOURCES
 peripherals!(stm32f103xx, {
     ITM: Peripheral {
-        register_block: Itm,
         ceiling: C0,
     },
 });

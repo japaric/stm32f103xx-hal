@@ -2,7 +2,7 @@
 
 use core::ptr;
 
-use stm32f103xx::{Afio, Gpioa, Rcc, Usart1};
+use stm32f103xx::{AFIO, GPIOA, RCC, USART1};
 
 use frequency;
 
@@ -20,12 +20,12 @@ pub struct Error {
 ///
 /// - `Usart1` - RXNE
 #[derive(Clone, Copy)]
-pub struct Serial<'a>(pub &'a Usart1);
+pub struct Serial<'a>(pub &'a USART1);
 
 impl<'a> Serial<'a> {
     /// Initializes the serial interface with a baud rate of `baut_rate` bits
     /// per second
-    pub fn init(&self, baud_rate: u32, afio: &Afio, gpioa: &Gpioa, rcc: &Rcc) {
+    pub fn init(&self, baud_rate: u32, afio: &AFIO, gpioa: &GPIOA, rcc: &RCC) {
         let usart1 = self.0;
 
         // power up peripherals

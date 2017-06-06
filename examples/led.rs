@@ -20,11 +20,9 @@ use rtfm::{P0, T0, TMax};
 // RESOURCES
 peripherals!(stm32f103xx, {
     GPIOC: Peripheral {
-        register_block: Gpioc,
         ceiling: C0,
     },
     RCC: Peripheral {
-        register_block: Rcc,
         ceiling: C0,
     },
 });

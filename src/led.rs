@@ -1,12 +1,12 @@
 //! PC13 - User LED (Green)
 
-use stm32f103xx::{GPIOC, Gpioc, Rcc};
+use stm32f103xx::{GPIOC, RCC};
 
 /// Green LED (PC13)
 pub struct Green;
 
 /// Initializes the user LED
-pub fn init(gpioc: &Gpioc, rcc: &Rcc) {
+pub fn init(gpioc: &GPIOC, rcc: &RCC) {
     // power on GPIOC
     rcc.apb2enr.modify(|_, w| w.iopcen().enabled());
 
