@@ -134,6 +134,18 @@ impl<'a> Pwm<'a> {
         }
     }
 
+    /// Returns the duty cycle of the PWM `channel`
+    pub fn get_duty(&self, channel: Channel) -> u16 {
+        let tim2 = self.tim2;
+
+        match channel {
+            Channel::_1 => tim2.ccr1.read().ccr1().bits(),
+            Channel::_2 => tim2.ccr2.read().ccr2().bits(),
+            Channel::_3 => tim2.ccr3.read().ccr3().bits(),
+            Channel::_4 => tim2.ccr4.read().ccr4().bits(),
+        }
+    }
+
     /// Turns off the PWM `channel`
     pub fn off(&self, channel: Channel) {
         let tim2 = self.tim2;
