@@ -19,9 +19,7 @@ extern crate cortex_m_rtfm as rtfm;
 
 extern crate blue_pill;
 
-use blue_pill::qei::Qei;
-use blue_pill::stm32f103xx;
-use blue_pill::timer::Timer;
+use blue_pill::{Qei, Timer, stm32f103xx};
 use rtfm::{Local, P0, P1, T0, T1, TMax};
 use stm32f103xx::interrupt::TIM1_UP_TIM10;
 
@@ -55,11 +53,11 @@ fn init(ref prio: P0, thr: &TMax) {
     let afio = &AFIO.access(prio, thr);
     let gpiob = &GPIOB.access(prio, thr);
     let rcc = &RCC.access(prio, thr);
-    let tim1 = &TIM1.access(prio, thr);
+    let tim1 = TIM1.access(prio, thr);
     let tim4 = TIM4.access(prio, thr);
 
     let qei = Qei(&*tim4);
-    let timer = Timer(tim1);
+    let timer = Timer(&*tim1);
 
     qei.init(afio, gpiob, rcc);
 
@@ -89,11 +87,11 @@ fn periodic(ref mut task: TIM1_UP_TIM10, ref prio: P1, ref thr: T1) {
 
     let itm = &ITM.access(prio, thr);
     let previous = PREVIOUS.borrow_mut(task);
-    let tim1 = &TIM1.access(prio, thr);
+    let tim1 = TIM1.access(prio, thr);
     let tim4 = TIM4.access(prio, thr);
 
     let qei = Qei(&*tim4);
-    let timer = Timer(tim1);
+    let timer = Timer(&*tim1);
 
     if timer.clear_update_flag().is_ok() {
         let curr = qei.count();

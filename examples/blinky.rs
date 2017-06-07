@@ -13,9 +13,9 @@ extern crate cortex_m_rtfm as rtfm;
 
 extern crate blue_pill;
 
-use blue_pill::led::Green;
-use blue_pill::timer::Timer;
-use blue_pill::{led, stm32f103xx};
+use blue_pill::Timer;
+use blue_pill::led::{self, Green};
+use blue_pill::stm32f103xx;
 use rtfm::{Local, P0, P1, T0, T1, TMax};
 use stm32f103xx::interrupt::TIM1_UP_TIM10;
 
@@ -39,9 +39,9 @@ peripherals!(stm32f103xx, {
 fn init(ref prio: P0, thr: &TMax) {
     let gpioc = &GPIOC.access(prio, thr);
     let rcc = &RCC.access(prio, thr);
-    let tim1 = &TIM1.access(prio, thr);
+    let tim1 = TIM1.access(prio, thr);
 
-    let timer = Timer(tim1);
+    let timer = Timer(&*tim1);
 
     led::init(gpioc, rcc);
     timer.init(FREQUENCY, rcc);
@@ -70,7 +70,7 @@ fn blink(mut task: TIM1_UP_TIM10, ref prio: P1, ref thr: T1) {
 
     let tim1 = TIM1.access(prio, thr);
 
-    let timer = Timer(&tim1);
+    let timer = Timer(&*tim1);
 
     if timer.clear_update_flag().is_ok() {
         let state = STATE.borrow_mut(&mut task);
@@ -84,8 +84,6 @@ fn blink(mut task: TIM1_UP_TIM10, ref prio: P1, ref thr: T1) {
         }
     } else {
         // Only reachable through `rtfm::request(periodic)`
-        #[cfg(debug_assertion)]
-#[cfg(debug_assertion)]        #[cfg(debug_assertion)]
-        #[cfg(debug_assertion)] unreachable!()
+        unreachable!()
     }
 }

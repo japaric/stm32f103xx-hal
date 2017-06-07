@@ -13,8 +13,7 @@ extern crate cortex_m_rtfm as rtfm;
 
 extern crate blue_pill;
 
-use blue_pill::serial::Serial;
-use blue_pill::stm32f103xx;
+use blue_pill::{Serial, stm32f103xx};
 use rtfm::{P0, P1, T0, T1, TMax};
 use stm32f103xx::interrupt::USART1;
 

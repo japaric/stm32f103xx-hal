@@ -17,9 +17,8 @@ extern crate cortex_m_rtfm as rtfm;
 
 extern crate blue_pill;
 
-use blue_pill::capture::Capture;
-use blue_pill::timer::Channel;
 use blue_pill::stm32f103xx;
+use blue_pill::{Capture, Channel};
 use rtfm::{P0, T0, TMax};
 
 // CONFIGURATION

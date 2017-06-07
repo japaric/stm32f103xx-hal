@@ -17,8 +17,7 @@ extern crate cortex_m_rtfm as rtfm;
 
 extern crate blue_pill;
 
-use blue_pill::spi::Spi;
-use blue_pill::stm32f103xx;
+use blue_pill::{Spi, stm32f103xx};
 use rtfm::{P0, T0, TMax};
 
 // RESOURCES

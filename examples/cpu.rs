@@ -19,8 +19,8 @@ extern crate blue_pill;
 
 use core::cell::Cell;
 
+use blue_pill::Timer;
 use blue_pill::stm32f103xx;
-use blue_pill::timer::Timer;
 use rtfm::{C1, P0, P1, Resource, T0, T1, TMax};
 use stm32f103xx::interrupt::TIM1_UP_TIM10;
 
@@ -50,9 +50,9 @@ static SLEEP_TIME: Resource<Cell<u32>, C1> = Resource::new(Cell::new(0));
 fn init(ref prio: P0, thr: &TMax) {
     let dwt = &DWT.access(prio, thr);
     let rcc = &RCC.access(prio, thr);
-    let tim1 = &TIM1.access(prio, thr);
+    let tim1 = TIM1.access(prio, thr);
 
-    let timer = Timer(tim1);
+    let timer = Timer(&*tim1);
 
     dwt.enable_cycle_counter();
 
@@ -94,11 +94,11 @@ tasks!(stm32f103xx, {
 });
 
 fn periodic(_task: TIM1_UP_TIM10, ref prio: P1, ref thr: T1) {
-    let tim1 = &TIM1.access(prio, thr);
     let itm = ITM.access(prio, thr);
     let sleep_time = SLEEP_TIME.access(prio, thr);
+    let tim1 = TIM1.access(prio, thr);
 
-    let timer = Timer(tim1);
+    let timer = Timer(&*tim1);
 
     if timer.clear_update_flag().is_ok() {
         // Report clock cycles spent sleeping

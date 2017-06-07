@@ -36,4 +36,4 @@ pub use pwm::Pwm;
 pub use qei::Qei;
 pub use serial::Serial;
 pub use spi::Spi;
-pub use timer::Timer;
+pub use timer::{Channel, Timer};
