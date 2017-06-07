@@ -26,4 +26,5 @@ pub mod led;
 pub mod pwm;
 pub mod qei;
 pub mod serial;
+pub mod spi;
 pub mod timer;
