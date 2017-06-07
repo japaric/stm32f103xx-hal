@@ -68,7 +68,7 @@ where
 {
     /// Initializes the PWM module
     // FIXME simplify this once we have a &TIM1 -> &TIM2 method
-    pub fn init(&self, frequency: u32, afio: &AFIO, gpio: &T::Gpio, rcc: &RCC) {
+    pub fn init(&self, frequency: u32, afio: &AFIO, gpio: &T::GPIO, rcc: &RCC) {
         let tim = self.tim;
 
         match self.tim.register_block() {

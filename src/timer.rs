@@ -22,12 +22,12 @@ pub enum Channel {
     _4,
 }
 
-/// TIM instance that can be used with the `Pwm` abstraction
+/// TIM instance that can be used with the `Capture` / `Pwm` abstraction
 ///
 /// IMPLEMENTATION DETAIL. Do not implement this trait
 pub unsafe trait Tim {
     /// GPIO block associated to this TIM instance
-    type Gpio: Deref<Target = gpioa::RegisterBlock>;
+    type GPIO: Deref<Target = gpioa::RegisterBlock>;
 
     /// Returns the register block of this TIM instance
     fn register_block<'s>
@@ -37,7 +37,7 @@ pub unsafe trait Tim {
 }
 
 unsafe impl Tim for TIM1 {
-    type Gpio = GPIOA;
+    type GPIO = GPIOA;
 
     fn register_block(
         &self,
@@ -47,7 +47,7 @@ unsafe impl Tim for TIM1 {
 }
 
 unsafe impl Tim for TIM2 {
-    type Gpio = GPIOA;
+    type GPIO = GPIOA;
 
     fn register_block(
         &self,
@@ -58,7 +58,7 @@ unsafe impl Tim for TIM2 {
 
 unsafe impl Tim for TIM3 {
     // FIXME should be GPIOA *and* GPIOB
-    type Gpio = GPIOA;
+    type GPIO = GPIOA;
 
     fn register_block(
         &self,
@@ -68,7 +68,7 @@ unsafe impl Tim for TIM3 {
 }
 
 unsafe impl Tim for TIM4 {
-    type Gpio = GPIOB;
+    type GPIO = GPIOB;
 
     fn register_block(
         &self,

@@ -25,7 +25,7 @@ peripherals!(stm32f103xx, {
     AFIO: Peripheral {
         ceiling: C0,
     },
-    GPIOA: Peripheral {
+    GPIOB: Peripheral {
         ceiling: C0,
     },
     ITM: Peripheral {
@@ -34,7 +34,7 @@ peripherals!(stm32f103xx, {
     RCC: Peripheral {
         ceiling: C0,
     },
-    SPI1: Peripheral {
+    SPI2: Peripheral {
         ceiling: C0,
     },
 });
@@ -42,13 +42,13 @@ peripherals!(stm32f103xx, {
 // INITIALIZATION PHASE
 fn init(ref prio: P0, thr: &TMax) {
     let afio = &AFIO.access(prio, thr);
-    let gpioa = &GPIOA.access(prio, thr);
+    let gpiob = &GPIOB.access(prio, thr);
     let rcc = &RCC.access(prio, thr);
-    let spi1 = &SPI1.access(prio, thr);
+    let spi2 = SPI2.access(prio, thr);
 
-    let spi = Spi(spi1);
+    let spi = Spi(&*spi2);
 
-    spi.init(afio, gpioa, rcc);
+    spi.init(afio, gpiob, rcc);
 }
 
 // IDLE LOOP
@@ -66,9 +66,9 @@ fn idle(ref prio: P0, ref thr: T0) -> ! {
     pub const R: u8 = 1 << 7;
 
     let itm = &ITM.access(prio, thr);
-    let spi1 = &SPI1.access(prio, thr);
+    let spi2 = SPI2.access(prio, thr);
 
-    let spi = Spi(spi1);
+    let spi = Spi(&*spi2);
 
     rtfm::bkpt();
 

@@ -62,7 +62,7 @@ where
     /// - `1 / frequency` is the time each tick takes
     /// - captures on the rising edge by default
     /// - all the capture channels are disabled by default
-    pub fn init(&self, frequency: u32, afio: &AFIO, gpio: &T::Gpio, rcc: &RCC) {
+    pub fn init(&self, frequency: u32, afio: &AFIO, gpio: &T::GPIO, rcc: &RCC) {
         let tim = self.0;
 
         match self.0.register_block() {
