@@ -16,13 +16,16 @@
 //! - CH3 = PA2
 //! - CH4 = PA3
 //!
-// # TIM3
-//
-// - CH1 = PA6
-// - CH2 = PA7
+//! # TIM3
+//!
+//! - CH1 = PA6
+//! - CH2 = PA7
 // - CH3 = PB0
 // - CH4 = PB1
-//
+//!
+//! **WARNING** Do not use channels 3 and 4 with the `Capture.capture` API or
+//! you'll get junk values.
+//!
 //! # TIM4
 //!
 //! - CH1 = PB6 (5V tolerant)
@@ -192,9 +195,18 @@ where
                 } else if tim.get_type_id() == TypeId::of::<TIM3>() {
                     // CH1 = PA6 = floating input
                     // CH2 = PA7 = floating input
-                    // CH3 = PB0 = floating input
-                    // CH4 = PB1 = floating input
-                    unimplemented!()
+                    // CH3 = PB0 = floating input (TODO)
+                    // CH4 = PB1 = floating input (TODO)
+                    gpio.crl.modify(|_, w| {
+                        w.mode6()
+                            .input()
+                            .cnf6()
+                            .bits(0b01)
+                            .mode7()
+                            .input()
+                            .cnf7()
+                            .bits(0b01)
+                    });
                 } else if tim.get_type_id() == TypeId::of::<TIM4>() {
                     // CH1 = PB6 = floating input
                     // CH2 = PB7 = floating input
@@ -230,32 +242,48 @@ where
                            (0b1111 << 4) |
                            (0b01 << 0))
                 });
-                tim2.ccmr2_output.write(|w| unsafe {
-                    w.bits((0b1111 << 12) | (0b01 << 8) |
-                           (0b1111 << 4) |
-                           (0b01) << 0)
-                });
+                if tim.get_type_id() != TypeId::of::<TIM3>() {
+                    tim2.ccmr2_output.write(|w| unsafe {
+                        w.bits(
+                            (0b1111 << 12) | (0b01 << 8) | (0b1111 << 4) |
+                                (0b01) << 0,
+                        )
+                    });
+                }
 
                 // enable capture on rising edge
                 // capture pins disabled by default
-                tim2.ccer.modify(|_, w| {
-                    w.cc1p()
-                        .clear()
-                        .cc1e()
-                        .clear()
-                        .cc2p()
-                        .clear()
-                        .cc2e()
-                        .clear()
-                        .cc3p()
-                        .clear()
-                        .cc3e()
-                        .clear()
-                        .cc4p()
-                        .clear()
-                        .cc4e()
-                        .clear()
-                });
+                if tim.get_type_id() == TypeId::of::<TIM3>() {
+                    tim2.ccer.modify(|_, w| {
+                        w.cc1p()
+                            .clear()
+                            .cc1e()
+                            .clear()
+                            .cc2p()
+                            .clear()
+                            .cc2e()
+                            .clear()
+                    });
+                } else {
+                    tim2.ccer.modify(|_, w| {
+                        w.cc1p()
+                            .clear()
+                            .cc1e()
+                            .clear()
+                            .cc2p()
+                            .clear()
+                            .cc2e()
+                            .clear()
+                            .cc3p()
+                            .clear()
+                            .cc3e()
+                            .clear()
+                            .cc4p()
+                            .clear()
+                            .cc4e()
+                            .clear()
+                    });
+                }
 
                 let psc = u16((frequency::APB1 - 1) / frequency).unwrap();
                 tim2.psc.write(|w| w.psc().bits(psc));

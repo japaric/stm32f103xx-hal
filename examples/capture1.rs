@@ -70,7 +70,7 @@ fn idle(ref prio: P0, ref thr: T0) -> ! {
     }
 
     loop {
-        for c in &[Channel::_1, Channel::_2, Channel::_3, Channel::_4] {
+        for c in &CHANNELS {
             if let Ok(n) = capture.capture(*c) {
                 iprintln!(&itm.stim[0], "{:?}: {}", c, n);
             }
