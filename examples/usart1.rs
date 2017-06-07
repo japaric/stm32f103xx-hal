@@ -1,4 +1,6 @@
-//! Serial loopback
+//! Test the USART1 instance
+//!
+//! Connect the TX and RX pins to run this test
 
 #![feature(const_fn)]
 #![feature(used)]
@@ -15,8 +17,7 @@ extern crate blue_pill;
 
 use blue_pill::serial::Serial;
 use blue_pill::stm32f103xx;
-use rtfm::{P0, P1, T0, T1, TMax};
-use stm32f103xx::interrupt::USART1;
+use rtfm::{P0, T0, TMax};
 
 // CONFIGURATION
 pub const BAUD_RATE: u32 = 115_200;
@@ -47,10 +48,25 @@ fn init(ref prio: P0, thr: &TMax) {
     let serial = Serial(&*usart1);
 
     serial.init(BAUD_RATE, afio, gpioa, rcc);
+
+    const BYTE: u8 = b'A';
+
+    assert!(serial.write(BYTE).is_ok());
+
+    for _ in 0..1_000 {
+        if let Ok(byte) = serial.read() {
+            assert_eq!(byte, BYTE);
+            return;
+        }
+    }
+
+    unreachable!()
 }
 
 // IDLE LOOP
 fn idle(_prio: P0, _thr: T0) -> ! {
+    rtfm::bkpt();
+
     // Sleep
     loop {
         rtfm::wfi();
@@ -58,29 +74,4 @@ fn idle(_prio: P0, _thr: T0) -> ! {
 }
 
 // TASKS
-tasks!(stm32f103xx, {
-    loopback: Task {
-        interrupt: USART1,
-        priority: P1,
-        enabled: true,
-    },
-});
-
-fn loopback(_task: USART1, ref prio: P1, ref thr: T1) {
-    let usart1 = USART1.access(prio, thr);
-
-    let serial = Serial(&*usart1);
-
-    if let Ok(byte) = serial.read() {
-        if serial.write(byte).is_err() {
-            // NOTE(unreachable!) unlikely to overrun the TX buffer because we
-            // are sending _one_ byte per byte received
-            #[cfg(debug_assertions)]
-            unreachable!()
-        }
-    } else {
-        // NOTE(unreachable!) only reachable through `rtfm::request(loopback)`
-        #[cfg(debug_assertions)]
-        unreachable!()
-    }
-}
+tasks!(stm32f103xx, {});
