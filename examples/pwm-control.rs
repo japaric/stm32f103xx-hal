@@ -55,10 +55,10 @@ fn init(ref prio: P0, thr: &TMax) {
     let afio = &AFIO.access(prio, thr);
     let gpioa = &GPIOA.access(prio, thr);
     let rcc = &RCC.access(prio, thr);
-    let tim2 = &TIM2.access(prio, thr);
+    let tim2 = TIM2.access(prio, thr);
     let usart1 = USART1.access(prio, thr);
 
-    let pwm = Pwm(tim2);
+    let pwm = Pwm(&*tim2);
     let serial = Serial(&*usart1);
 
     serial.init(BAUD_RATE, afio, gpioa, rcc);
@@ -87,10 +87,10 @@ tasks!(stm32f103xx, {
 });
 
 fn rx(_task: USART1, ref prio: P1, ref thr: T1) {
-    let tim2 = &TIM2.access(prio, thr);
+    let tim2 = TIM2.access(prio, thr);
     let usart1 = USART1.access(prio, thr);
 
-    let pwm = Pwm(tim2);
+    let pwm = Pwm(&*tim2);
     let serial = Serial(&*usart1);
 
     if let Ok(byte) = serial.read() {

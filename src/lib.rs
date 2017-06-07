@@ -16,6 +16,7 @@
 #![no_std]
 
 extern crate cast;
+extern crate either;
 
 pub extern crate stm32f103xx;
 

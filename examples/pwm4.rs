@@ -1,4 +1,4 @@
-//! Output a PWM with a duty cycle of 50% on pin PA0
+//! Output a PWM with a duty cycle of 6% on all the channels
 
 #![deny(warnings)]
 #![feature(const_fn)]
@@ -26,13 +26,13 @@ peripherals!(stm32f103xx, {
     AFIO: Peripheral {
         ceiling: C0,
     },
-    GPIOA: Peripheral {
+    GPIOB: Peripheral {
         ceiling: C0,
     },
     RCC: Peripheral {
         ceiling: C0,
     },
-    TIM2: Peripheral {
+    TIM4: Peripheral {
         ceiling: C0,
     },
 });
@@ -40,16 +40,26 @@ peripherals!(stm32f103xx, {
 // INITIALIZATION PHASE
 fn init(ref prio: P0, thr: &TMax) {
     let afio = &AFIO.access(prio, thr);
-    let gpioa = &GPIOA.access(prio, thr);
+    let gpiob = &GPIOB.access(prio, thr);
     let rcc = &RCC.access(prio, thr);
-    let tim2 = &TIM2.access(prio, thr);
+    let tim4 = TIM4.access(prio, thr);
 
-    let pwm = Pwm(tim2);
+    let pwm = Pwm(&*tim4);
 
-    pwm.init(FREQUENCY, afio, gpioa, rcc);
-    pwm.set_duty(Channel::_1, pwm.get_period() / 2);
+    pwm.init(FREQUENCY, afio, gpiob, rcc);
+    let duty = pwm.get_period() / 16;
+
+    pwm.set_duty(Channel::_1, duty);
+    pwm.set_duty(Channel::_2, duty);
+    pwm.set_duty(Channel::_3, duty);
+    pwm.set_duty(Channel::_4, duty);
+
+    rtfm::bkpt();
 
     pwm.on(Channel::_1);
+    pwm.on(Channel::_2);
+    pwm.on(Channel::_3);
+    pwm.on(Channel::_4);
 }
 
 // IDLE LOOP
