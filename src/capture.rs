@@ -147,7 +147,9 @@ where
                     if tim.get_type_id() == TypeId::of::<TIM2>() {
                         w.iopaen().enabled()
                     } else if tim.get_type_id() == TypeId::of::<TIM3>() {
-                        w.iopaen().enabled().iopben().enabled()
+                        w.iopaen().enabled()
+                    // TODO
+                    // .iopben().enabled()
                     } else if tim.get_type_id() == TypeId::of::<TIM4>() {
                         w.iopben().enabled()
                     } else {

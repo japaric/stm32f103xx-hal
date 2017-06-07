@@ -1,5 +1,4 @@
-//! Output a PWM with a duty cycle of ~6% on all the channels of TIM1
-// FIXME doesn't seem to work :-(
+//! Output a PWM with a duty cycle of ~6% on all the channels of TIM3
 
 #![deny(warnings)]
 #![feature(const_fn)]
@@ -32,7 +31,7 @@ peripherals!(stm32f103xx, {
     RCC: Peripheral {
         ceiling: C0,
     },
-    TIM1: Peripheral {
+    TIM3: Peripheral {
         ceiling: C0,
     },
 });
@@ -42,15 +41,14 @@ fn init(ref prio: P0, thr: &TMax) {
     let afio = &AFIO.access(prio, thr);
     let gpioa = &GPIOA.access(prio, thr);
     let rcc = &RCC.access(prio, thr);
-    let tim1 = TIM1.access(prio, thr);
+    let tim3 = TIM3.access(prio, thr);
 
-    let pwm = Pwm(&*tim1);
+    let pwm = Pwm(&*tim3);
 
     pwm.init(FREQUENCY, afio, gpioa, rcc);
     let duty = pwm.get_period() / 16;
 
-    const CHANNELS: [Channel; 4] =
-        [Channel::_1, Channel::_2, Channel::_3, Channel::_4];
+    const CHANNELS: [Channel; 2] = [Channel::_1, Channel::_2];
 
     for c in &CHANNELS {
         pwm.set_duty(*c, duty);

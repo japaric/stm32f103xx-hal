@@ -1,4 +1,4 @@
-//! Output a PWM with a duty cycle of 6% on all the channels
+//! Output a PWM with a duty cycle of ~6% on all the channels of TIM2
 
 #![deny(warnings)]
 #![feature(const_fn)]
@@ -48,17 +48,17 @@ fn init(ref prio: P0, thr: &TMax) {
     pwm.init(FREQUENCY, afio, gpioa, rcc);
     let duty = pwm.get_period() / 16;
 
-    pwm.set_duty(Channel::_1, duty);
-    pwm.set_duty(Channel::_2, duty);
-    pwm.set_duty(Channel::_3, duty);
-    pwm.set_duty(Channel::_4, duty);
+    const CHANNELS: [Channel; 4] =
+        [Channel::_1, Channel::_2, Channel::_3, Channel::_4];
 
-    rtfm::bkpt();
+    for c in &CHANNELS {
+        pwm.set_duty(*c, duty);
+    }
 
-    pwm.on(Channel::_1);
-    pwm.on(Channel::_2);
-    pwm.on(Channel::_3);
-    pwm.on(Channel::_4);
+    for c in &CHANNELS {
+        pwm.on(*c);
+        rtfm::bkpt();
+    }
 }
 
 // IDLE LOOP

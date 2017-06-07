@@ -16,13 +16,13 @@
 //! - CH3 = PA2
 //! - CH4 = PA3
 //!
-// # TIM3
-//
-// - CH1 = PA6
-// - CH2 = PA7
+//! # TIM3
+//!
+//! - CH1 = PA6
+//! - CH2 = PA7
 // - CH3 = PB0
 // - CH4 = PB1
-//
+//!
 //! # TIM4
 //!
 //! - CH1 = PB6
@@ -158,7 +158,9 @@ where
                     if tim.get_type_id() == TypeId::of::<TIM2>() {
                         w.iopaen().enabled()
                     } else if tim.get_type_id() == TypeId::of::<TIM3>() {
-                        w.iopaen().enabled().iopben().enabled()
+                        w.iopaen().enabled()
+                    // TODO
+                    // .iopben().enabled()
                     } else if tim.get_type_id() == TypeId::of::<TIM4>() {
                         w.iopben().enabled()
                     } else {
@@ -205,9 +207,18 @@ where
                 } else if tim.get_type_id() == TypeId::of::<TIM3>() {
                     // CH1 = PA6 = alternate push-pull
                     // CH2 = PA7 = alternate push-pull
-                    // CH3 = PB0 = alternate push-pull
-                    // CH4 = PB1 = alternate push-pull
-                    unimplemented!()
+                    // CH3 = PB0 = alternate push-pull (TODO)
+                    // CH4 = PB1 = alternate push-pull (TODO)
+                    gpio.crl.modify(|_, w| {
+                        w.mode6()
+                            .output()
+                            .cnf6()
+                            .alt_push()
+                            .mode7()
+                            .output()
+                            .cnf7()
+                            .alt_push()
+                    });
                 } else if tim.get_type_id() == TypeId::of::<TIM4>() {
                     // CH1 = PB6 = alternate push-pull
                     // CH2 = PB7 = alternate push-pull
@@ -237,36 +248,53 @@ where
                 }
 
                 // PWM mode 1
-                tim2.ccmr1_output.modify(|_, w| unsafe {
-                    w.oc1pe()
-                        .set()
-                        .oc1m()
-                        .bits(0b110)
-                        .oc2pe()
-                        .set()
-                        .oc2m()
-                        .bits(0b110)
-                });
-                tim2.ccmr2_output.modify(|_, w| unsafe {
-                    w.oc3pe()
-                        .set()
-                        .oc3m()
-                        .bits(0b110)
-                        .oc4pe()
-                        .set()
-                        .oc4m()
-                        .bits(0b110)
-                });
-                tim2.ccer.modify(|_, w| {
-                    w.cc1p()
-                        .clear()
-                        .cc2p()
-                        .clear()
-                        .cc3p()
-                        .clear()
-                        .cc4p()
-                        .clear()
-                });
+                if tim.get_type_id() == TypeId::of::<TIM3>() {
+                    tim2.ccmr1_output.modify(|_, w| unsafe {
+                        w.oc1pe()
+                            .set()
+                            .oc1m()
+                            .bits(0b110)
+                            .oc2pe()
+                            .set()
+                            .oc2m()
+                            .bits(0b110)
+                    });
+
+                    tim2.ccer.modify(|_, w| w.cc1p().clear().cc2p().clear());
+                } else {
+                    tim2.ccmr1_output.modify(|_, w| unsafe {
+                        w.oc1pe()
+                            .set()
+                            .oc1m()
+                            .bits(0b110)
+                            .oc2pe()
+                            .set()
+                            .oc2m()
+                            .bits(0b110)
+                    });
+
+                    tim2.ccmr2_output.modify(|_, w| unsafe {
+                        w.oc3pe()
+                            .set()
+                            .oc3m()
+                            .bits(0b110)
+                            .oc4pe()
+                            .set()
+                            .oc4m()
+                            .bits(0b110)
+                    });
+
+                    tim2.ccer.modify(|_, w| {
+                        w.cc1p()
+                            .clear()
+                            .cc2p()
+                            .clear()
+                            .cc3p()
+                            .clear()
+                            .cc4p()
+                            .clear()
+                    });
+                }
 
                 let ratio = frequency::APB1 / frequency;
                 let psc = u16((ratio - 1) / (1 << 16)).unwrap();
