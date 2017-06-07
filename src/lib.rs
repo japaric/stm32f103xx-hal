@@ -22,6 +22,7 @@ pub extern crate stm32f103xx;
 
 mod frequency;
 
+pub mod capture;
 pub mod gpio;
 pub mod led;
 pub mod pwm;

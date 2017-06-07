@@ -32,49 +32,13 @@
 
 use core::any::{Any, TypeId};
 use core::cell::Cell;
-use core::ops::Deref;
 
 use cast::{u16, u32};
 use either::Either;
-use stm32f103xx::{AFIO, GPIOA, GPIOB, RCC, TIM1, TIM2, TIM3, TIM4, gpioa,
-                  tim1, tim2};
+use stm32f103xx::{AFIO, RCC, TIM2, TIM3, TIM4};
 
 use frequency;
-
-/// PWM channel
-pub enum Channel {
-    /// TxC1
-    _1,
-    /// TxC2
-    _2,
-    /// TxC3
-    _3,
-    /// TxC4
-    _4,
-}
-
-/// TIM instance that can be used with the `Pwm` abstraction
-pub trait Tim {
-    /// GPIO block associated to this TIM instance
-    type Gpio: Deref<Target = gpioa::RegisterBlock>;
-}
-
-impl Tim for TIM1 {
-    type Gpio = GPIOA;
-}
-
-impl Tim for TIM2 {
-    type Gpio = GPIOA;
-}
-
-// TODO
-// impl Tim for TIM3 {
-//     type Gpio = GPIOA; // *and* GPIOB
-// }
-
-impl Tim for TIM4 {
-    type Gpio = GPIOB;
-}
+use timer::{Channel, Tim};
 
 /// PWM driver
 pub struct Pwm<'a, T>
@@ -102,29 +66,19 @@ impl<'a, T> Pwm<'a, T>
 where
     T: Any + Tim,
 {
-    fn tim(&self) -> Either<&'a tim1::RegisterBlock, &'a tim2::RegisterBlock> {
-        if self.tim.get_type_id() == TypeId::of::<TIM1>() {
-            Either::Left(unsafe {
-                &*(self.tim as *const _ as *const tim1::RegisterBlock)
-            })
-        } else {
-            Either::Right(unsafe {
-                &*(self.tim as *const _ as *const tim2::RegisterBlock)
-            })
-        }
-    }
-
     /// Initializes the PWM module
     // FIXME simplify this once we have a &TIM1 -> &TIM2 method
     pub fn init(&self, frequency: u32, afio: &AFIO, gpio: &T::Gpio, rcc: &RCC) {
         let tim = self.tim;
 
-        match self.tim() {
+        match self.tim.register_block() {
             Either::Left(tim1) => {
+                // enable AFIO, TIM1 and GPIOA
                 rcc.apb2enr.modify(|_, w| {
                     w.tim1en().enabled().afioen().enabled().iopaen().enabled()
                 });
 
+                // no remap of TIM1 pins
                 afio.mapr.modify(
                     |_, w| unsafe { w.tim1_remap().bits(0b00) },
                 );
@@ -341,7 +295,7 @@ where
         match self.arr.get() {
             Some(arr) => arr,
             None => {
-                let arr = match self.tim() {
+                let arr = match self.tim.register_block() {
                     Either::Left(tim1) => tim1.arr.read().arr().bits(),
                     Either::Right(tim2) => tim2.arr.read().arr().bits(),
                 };
@@ -353,7 +307,7 @@ where
 
     /// Returns the duty cycle of the PWM `channel`
     pub fn get_duty(&self, channel: Channel) -> u16 {
-        match self.tim() {
+        match self.tim.register_block() {
             Either::Left(tim1) => {
                 match channel {
                     Channel::_1 => tim1.ccr1.read().ccr1().bits(),
@@ -375,7 +329,7 @@ where
 
     /// Turns off the PWM `channel`
     pub fn off(&self, channel: Channel) {
-        match self.tim() {
+        match self.tim.register_block() {
             Either::Left(tim1) => {
                 match channel {
                     Channel::_1 => tim1.ccer.modify(|_, w| w.cc1e().clear()),
@@ -397,7 +351,7 @@ where
 
     /// Turns on the PWM `channel`
     pub fn on(&self, channel: Channel) {
-        match self.tim() {
+        match self.tim.register_block() {
             Either::Left(tim1) => {
                 match channel {
                     Channel::_1 => tim1.ccer.modify(|_, w| w.cc1e().set()),
@@ -419,7 +373,7 @@ where
 
     /// Sets the duty cycle for the PWM `channel`
     pub fn set_duty(&self, channel: Channel, duty: u16) {
-        match self.tim() {
+        match self.tim.register_block() {
             Either::Left(tim1) => {
                 match channel {
                     Channel::_1 => tim1.ccr1.write(|w| w.ccr1().bits(duty)),

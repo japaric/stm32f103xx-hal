@@ -1,9 +1,74 @@
 //! Periodic timer
 
+use core::ops::Deref;
+
+use either::Either;
 use cast::{u16, u32};
-use stm32f103xx::{RCC, TIM1};
+use stm32f103xx::{GPIOA, GPIOB, RCC, TIM1, TIM2, TIM4, gpioa, tim1, tim2};
 
 use frequency;
+
+/// Channel associated to a timer
+#[derive(Clone, Copy, Debug)]
+pub enum Channel {
+    /// TxC1
+    _1,
+    /// TxC2
+    _2,
+    /// TxC3
+    _3,
+    /// TxC4
+    _4,
+}
+
+/// TIM instance that can be used with the `Pwm` abstraction
+///
+/// IMPLEMENTATION DETAIL. Do not implement this trait
+pub unsafe trait Tim {
+    /// GPIO block associated to this TIM instance
+    type Gpio: Deref<Target = gpioa::RegisterBlock>;
+
+    /// Returns the register block of this TIM instance
+    fn register_block<'s>
+        (
+        &'s self,
+    ) -> Either<&'s tim1::RegisterBlock, &'s tim2::RegisterBlock>;
+}
+
+unsafe impl Tim for TIM1 {
+    type Gpio = GPIOA;
+
+    fn register_block(
+        &self,
+    ) -> Either<&tim1::RegisterBlock, &tim2::RegisterBlock> {
+        Either::Left(&**self)
+    }
+}
+
+unsafe impl Tim for TIM2 {
+    type Gpio = GPIOA;
+
+    fn register_block(
+        &self,
+    ) -> Either<&tim1::RegisterBlock, &tim2::RegisterBlock> {
+        Either::Right(&**self)
+    }
+}
+
+// TODO
+// impl Tim for TIM3 {
+//     type Gpio = GPIOA; // *and* GPIOB
+// }
+
+unsafe impl Tim for TIM4 {
+    type Gpio = GPIOB;
+
+    fn register_block(
+        &self,
+    ) -> Either<&tim1::RegisterBlock, &tim2::RegisterBlock> {
+        Either::Right(&**self)
+    }
+}
 
 /// Specialized `Result` type
 pub type Result<T> = ::core::result::Result<T, Error>;
