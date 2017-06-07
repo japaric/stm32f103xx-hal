@@ -30,3 +30,10 @@ pub mod qei;
 pub mod serial;
 pub mod spi;
 pub mod timer;
+
+pub use capture::Capture;
+pub use pwm::Pwm;
+pub use qei::Qei;
+pub use serial::Serial;
+pub use spi::Spi;
+pub use timer::Timer;
