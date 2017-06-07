@@ -15,7 +15,8 @@ extern crate cortex_m_rtfm as rtfm;
 
 extern crate blue_pill;
 
-use blue_pill::pwm::{Channel, Pwm};
+use blue_pill::pwm::Pwm;
+use blue_pill::timer::Channel;
 use blue_pill::stm32f103xx;
 use rtfm::{P0, T0, TMax};
 

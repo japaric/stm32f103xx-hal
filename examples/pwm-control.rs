@@ -21,9 +21,10 @@ extern crate blue_pill;
 
 use core::u16;
 
-use blue_pill::pwm::{Channel, Pwm};
+use blue_pill::pwm::Pwm;
 use blue_pill::serial::Serial;
 use blue_pill::stm32f103xx;
+use blue_pill::timer::Channel;
 use rtfm::{P0, P1, T0, T1, TMax};
 use stm32f103xx::interrupt::USART1;
 
