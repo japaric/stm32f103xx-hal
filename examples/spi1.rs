@@ -5,6 +5,8 @@
 #![feature(used)]
 #![no_std]
 
+extern crate blue_pill;
+
 #[macro_use]
 extern crate cortex_m;
 
@@ -14,8 +16,6 @@ extern crate cortex_m_rt;
 // version = "0.1.0"
 #[macro_use]
 extern crate cortex_m_rtfm as rtfm;
-
-extern crate blue_pill;
 
 use blue_pill::{Spi, stm32f103xx};
 use rtfm::{P0, T0, TMax};

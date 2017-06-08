@@ -38,14 +38,22 @@ use core::any::{Any, TypeId};
 
 use cast::u16;
 use either::Either;
+use nb;
 use stm32f103xx::{AFIO, RCC, TIM2, TIM3, TIM4};
 
 use frequency;
 use timer::{Channel, Tim};
 
-/// Input capture error
-pub struct Error {
-    _0: (),
+/// Input / capture result
+pub type Result<T> = ::core::result::Result<T, nb::Error<Error>>;
+
+/// Input / capture error
+#[derive(Debug)]
+pub enum Error {
+    /// Previous capture value was overwritten
+    Overcapture,
+    #[doc(hidden)]
+    _Extensible,
 }
 
 /// Input capture interface
@@ -301,68 +309,88 @@ where
     }
 
     /// Captures input on `channel`
-    pub fn capture(&self, channel: Channel) -> Result<u16, Error> {
+    pub fn capture(&self, channel: Channel) -> Result<u16> {
         match self.0.register_block() {
             Either::Left(tim1) => {
+                let sr = tim1.sr.read();
+
                 match channel {
                     Channel::_1 => {
-                        if tim1.sr.read().cc1if().is_set() {
+                        if sr.cc1of().is_set() {
+                            Err(nb::Error::Other(Error::Overcapture))
+                        } else if sr.cc1if().is_set() {
                             Ok(tim1.ccr1.read().ccr1().bits())
                         } else {
-                            Err(Error { _0: () })
+                            Err(nb::Error::WouldBlock)
                         }
                     }
                     Channel::_2 => {
-                        if tim1.sr.read().cc2if().is_set() {
+                        if sr.cc2of().is_set() {
+                            Err(nb::Error::Other(Error::Overcapture))
+                        } else if sr.cc2if().is_set() {
                             Ok(tim1.ccr2.read().ccr2().bits())
                         } else {
-                            Err(Error { _0: () })
+                            Err(nb::Error::WouldBlock)
                         }
                     }
                     Channel::_3 => {
-                        if tim1.sr.read().cc3if().is_set() {
+                        if sr.cc3of().is_set() {
+                            Err(nb::Error::Other(Error::Overcapture))
+                        } else if sr.cc3if().is_set() {
                             Ok(tim1.ccr3.read().ccr3().bits())
                         } else {
-                            Err(Error { _0: () })
+                            Err(nb::Error::WouldBlock)
                         }
                     }
                     Channel::_4 => {
-                        if tim1.sr.read().cc4if().is_set() {
+                        if sr.cc4of().is_set() {
+                            Err(nb::Error::Other(Error::Overcapture))
+                        } else if sr.cc4if().is_set() {
                             Ok(tim1.ccr4.read().ccr4().bits())
                         } else {
-                            Err(Error { _0: () })
+                            Err(nb::Error::WouldBlock)
                         }
                     }
                 }
             }
             Either::Right(tim2) => {
+                let sr = tim2.sr.read();
+
                 match channel {
                     Channel::_1 => {
-                        if tim2.sr.read().cc1if().is_set() {
+                        if sr.cc1of().is_set() {
+                            Err(nb::Error::Other(Error::Overcapture))
+                        } else if sr.cc1if().is_set() {
                             Ok(tim2.ccr1.read().ccr1().bits())
                         } else {
-                            Err(Error { _0: () })
+                            Err(nb::Error::WouldBlock)
                         }
                     }
                     Channel::_2 => {
-                        if tim2.sr.read().cc2if().is_set() {
+                        if sr.cc2of().is_set() {
+                            Err(nb::Error::Other(Error::Overcapture))
+                        } else if sr.cc2if().is_set() {
                             Ok(tim2.ccr2.read().ccr2().bits())
                         } else {
-                            Err(Error { _0: () })
+                            Err(nb::Error::WouldBlock)
                         }
                     }
                     Channel::_3 => {
-                        if tim2.sr.read().cc3if().is_set() {
+                        if sr.cc3of().is_set() {
+                            Err(nb::Error::Other(Error::Overcapture))
+                        } else if sr.cc3if().is_set() {
                             Ok(tim2.ccr3.read().ccr3().bits())
                         } else {
-                            Err(Error { _0: () })
+                            Err(nb::Error::WouldBlock)
                         }
                     }
                     Channel::_4 => {
-                        if tim2.sr.read().cc4if().is_set() {
+                        if sr.cc4of().is_set() {
+                            Err(nb::Error::Other(Error::Overcapture))
+                        } else if sr.cc4if().is_set() {
                             Ok(tim2.ccr4.read().ccr4().bits())
                         } else {
-                            Err(Error { _0: () })
+                            Err(nb::Error::WouldBlock)
                         }
                     }
                 }

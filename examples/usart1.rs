@@ -6,6 +6,8 @@
 #![feature(used)]
 #![no_std]
 
+extern crate blue_pill;
+
 // version = "0.2.3"
 extern crate cortex_m_rt;
 
@@ -13,10 +15,11 @@ extern crate cortex_m_rt;
 #[macro_use]
 extern crate cortex_m_rtfm as rtfm;
 
-extern crate blue_pill;
+extern crate nb;
 
 use blue_pill::{Serial, stm32f103xx};
 use rtfm::{P0, T0, TMax};
+use nb::Error;
 
 // CONFIGURATION
 pub const BAUD_RATE: u32 = 115_200;
@@ -53,13 +56,17 @@ fn init(ref prio: P0, thr: &TMax) {
     assert!(serial.write(BYTE).is_ok());
 
     for _ in 0..1_000 {
-        if let Ok(byte) = serial.read() {
-            assert_eq!(byte, BYTE);
-            return;
+        match serial.read() {
+            Ok(byte) => {
+                assert_eq!(byte, BYTE);
+                return;
+            }
+            Err(Error::Other(e)) => panic!("{:?}", e),
+            Err(Error::WouldBlock) => continue,
         }
     }
 
-    unreachable!()
+    panic!("Timeout")
 }
 
 // IDLE LOOP

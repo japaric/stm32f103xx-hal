@@ -24,35 +24,44 @@ use core::any::{Any, TypeId};
 use core::ops::Deref;
 use core::ptr;
 
+use nb;
 use stm32f103xx::{AFIO, GPIOA, GPIOB, RCC, USART1, USART2, USART3, gpioa,
                   usart1};
 
 use frequency;
 
 /// Specialized `Result` type
-pub type Result<T> = ::core::result::Result<T, Error>;
+pub type Result<T> = ::core::result::Result<T, nb::Error<Error>>;
 
 /// USART instance usable with the `Serial` abstraction
 pub trait Usart: Deref<Target = usart1::RegisterBlock> {
     /// GPIO block associated to this USART instance
-    type Gpio: Deref<Target = gpioa::RegisterBlock>;
+    type GPIO: Deref<Target = gpioa::RegisterBlock>;
 }
 
 impl Usart for USART1 {
-    type Gpio = GPIOA;
+    type GPIO = GPIOA;
 }
 
 impl Usart for USART2 {
-    type Gpio = GPIOA;
+    type GPIO = GPIOA;
 }
 
 impl Usart for USART3 {
-    type Gpio = GPIOB;
+    type GPIO = GPIOB;
 }
 
 /// An error
-pub struct Error {
-    _0: (),
+#[derive(Debug)]
+pub enum Error {
+    /// De-synchronization, excessive noise or a break character detected
+    Framing,
+    /// Noise detected in the received frame
+    Noise,
+    /// RX buffer overrun
+    Overrun,
+    #[doc(hidden)]
+    _Extensible,
 }
 
 /// Serial interface
@@ -60,10 +69,24 @@ pub struct Error {
 /// # Interrupts
 ///
 /// - RXNE
-#[derive(Clone, Copy)]
 pub struct Serial<'a, U>(pub &'a U)
 where
     U: Any + Usart;
+
+impl<'a, U> Clone for Serial<'a, U>
+where
+    U: Any + Usart,
+{
+    fn clone(&self) -> Self {
+        *self
+    }
+}
+
+impl<'a, U> Copy for Serial<'a, U>
+where
+    U: Any + Usart,
+{
+}
 
 impl<'a, U> Serial<'a, U>
 where
@@ -71,7 +94,7 @@ where
 {
     /// Initializes the serial interface with a baud rate of `baut_rate` bits
     /// per second
-    pub fn init(&self, baud_rate: u32, afio: &AFIO, gpio: &U::Gpio, rcc: &RCC) {
+    pub fn init(&self, baud_rate: u32, afio: &AFIO, gpio: &U::GPIO, rcc: &RCC) {
         let usart = self.0;
 
         // power up peripherals
@@ -172,15 +195,22 @@ where
     /// Returns `Err` if the RX buffer is empty
     pub fn read(&self) -> Result<u8> {
         let usart1 = self.0;
+        let sr = usart1.sr.read();
 
-        if usart1.sr.read().rxne().is_set() {
+        if sr.ore().is_set() {
+            Err(nb::Error::Other(Error::Overrun))
+        } else if sr.ne().is_set() {
+            Err(nb::Error::Other(Error::Noise))
+        } else if sr.fe().is_set() {
+            Err(nb::Error::Other(Error::Framing))
+        } else if sr.rxne().is_set() {
             // NOTE(read_volatile) the register is 9 bits big but we'll only
             // work with the first 8 bits
             Ok(unsafe {
                 ptr::read_volatile(&usart1.dr as *const _ as *const u8)
             })
         } else {
-            Err(Error { _0: () })
+            Err(nb::Error::WouldBlock)
         }
     }
 
@@ -189,15 +219,22 @@ where
     /// Returns `Err` if the TX buffer is already full
     pub fn write(&self, byte: u8) -> Result<()> {
         let usart1 = self.0;
+        let sr = usart1.sr.read();
 
-        if usart1.sr.read().txe().is_set() {
+        if sr.ore().is_set() {
+            Err(nb::Error::Other(Error::Overrun))
+        } else if sr.ne().is_set() {
+            Err(nb::Error::Other(Error::Noise))
+        } else if sr.fe().is_set() {
+            Err(nb::Error::Other(Error::Framing))
+        } else if sr.txe().is_set() {
             // NOTE(write_volatile) see NOTE in the `read` method
             unsafe {
                 ptr::write_volatile(&usart1.dr as *const _ as *mut u8, byte)
             }
             Ok(())
         } else {
-            Err(Error { _0: () })
+            Err(nb::Error::WouldBlock)
         }
     }
 }

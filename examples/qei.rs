@@ -7,6 +7,8 @@
 #![feature(used)]
 #![no_std]
 
+extern crate blue_pill;
+
 #[macro_use]
 extern crate cortex_m;
 
@@ -16,8 +18,6 @@ extern crate cortex_m_rt;
 // version = "0.1.0"
 #[macro_use]
 extern crate cortex_m_rtfm as rtfm;
-
-extern crate blue_pill;
 
 use blue_pill::{Qei, Timer, stm32f103xx};
 use rtfm::{Local, P0, P1, T0, T1, TMax};
@@ -93,19 +93,17 @@ fn periodic(ref mut task: TIM1_UP_TIM10, ref prio: P1, ref thr: T1) {
     let qei = Qei(&*tim4);
     let timer = Timer(&*tim1);
 
-    if timer.clear_update_flag().is_ok() {
-        let curr = qei.count();
-        let dir = qei.direction();
+    // NOTE(wait) timeout should have already occurred
+    timer.wait().unwrap();
 
-        if let Some(prev) = previous.take() {
-            let speed = curr as i16 - prev as i16;
+    let curr = qei.count();
+    let dir = qei.direction();
 
-            iprintln!(&itm.stim[0], "{} - {} - {:?}", curr, speed, dir);
-        }
+    if let Some(prev) = previous.take() {
+        let speed = curr as i16 - prev as i16;
 
-        *previous = Some(curr);
-    } else {
-        // NOTE can only be reached via `rtfm::request(periodic)`
-        unreachable!()
+        iprintln!(&itm.stim[0], "{} - {} - {:?}", curr, speed, dir);
     }
+
+    *previous = Some(curr);
 }

@@ -4,6 +4,8 @@
 #![feature(used)]
 #![no_std]
 
+extern crate blue_pill;
+
 // version = "0.2.9"
 #[macro_use]
 extern crate cortex_m;
@@ -14,8 +16,6 @@ extern crate cortex_m_rt;
 // version = "0.1.0"
 #[macro_use]
 extern crate cortex_m_rtfm as rtfm;
-
-extern crate blue_pill;
 
 use core::cell::Cell;
 
@@ -100,14 +100,12 @@ fn periodic(_task: TIM1_UP_TIM10, ref prio: P1, ref thr: T1) {
 
     let timer = Timer(&*tim1);
 
-    if timer.clear_update_flag().is_ok() {
-        // Report clock cycles spent sleeping
-        iprintln!(&itm.stim[0], "{}", sleep_time.get());
+    // NOTE(wait) timeout should have already occurred
+    timer.wait().unwrap();
 
-        // Reset sleep time back to zero
-        sleep_time.set(0);
-    } else {
-        // Only reachable via `rtfm::request(periodic)`
-        unreachable!()
-    }
+    // Report clock cycles spent sleeping
+    iprintln!(&itm.stim[0], "{}", sleep_time.get());
+
+    // Reset sleep time back to zero
+    sleep_time.set(0);
 }

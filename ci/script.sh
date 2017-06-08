@@ -25,6 +25,12 @@ EOF
         local ex=$(basename $path)
         ex=${ex%.*}
 
+        case $ex in
+            *-await)
+                continue
+                ;;
+        esac
+
         xargo check --example $ex --target $TARGET
     done
 

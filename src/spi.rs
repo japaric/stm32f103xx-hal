@@ -20,6 +20,7 @@ use core::any::{Any, TypeId};
 use core::ops::Deref;
 use core::ptr;
 
+use nb;
 use stm32f103xx::{AFIO, GPIOA, GPIOB, RCC, SPI1, SPI2, gpioa, spi1};
 
 /// SPI instance that can be used with the `Spi` abstraction
@@ -36,13 +37,21 @@ unsafe impl Bus for SPI2 {
     type GPIO = GPIOB;
 }
 
-/// SPI error
-pub struct Error {
-    _0: (),
-}
-
 /// SPI result
-pub type Result<T> = ::core::result::Result<T, Error>;
+pub type Result<T> = ::core::result::Result<T, nb::Error<Error>>;
+
+/// SPI error
+#[derive(Debug)]
+pub enum Error {
+    /// Overrun occurred
+    Overrun,
+    /// Mode fault occurred
+    ModeFault,
+    /// CRC error
+    Crc,
+    #[doc(hidden)]
+    _Extensible,
+}
 
 /// Serial Peripheral Interface
 pub struct Spi<'a, S>(pub &'a S)
@@ -167,26 +176,42 @@ where
     /// NOTE You *must* send a byte before you can receive one
     pub fn receive(&self) -> Result<u8> {
         let spi1 = self.0;
+        let sr = spi1.sr.read();
 
-        if spi1.sr.read().rxne().is_set() {
-            unsafe { Ok(ptr::read_volatile(&spi1.dr as *const _ as *const u8)) }
+        if sr.ovr().is_set() {
+            Err(nb::Error::Other(Error::Overrun))
+        } else if sr.modf().is_set() {
+            Err(nb::Error::Other(Error::ModeFault))
+        } else if sr.crcerr().is_set() {
+            Err(nb::Error::Other(Error::Crc))
+        } else if sr.rxne().is_set() {
+            Ok(unsafe {
+                ptr::read_volatile(&spi1.dr as *const _ as *const u8)
+            })
         } else {
-            Err(Error { _0: () })
+            Err(nb::Error::WouldBlock)
         }
     }
 
     /// Sends a byte
     pub fn send(&self, byte: u8) -> Result<()> {
         let spi1 = self.0;
+        let sr = spi1.sr.read();
 
-        if spi1.sr.read().txe().is_set() {
+        if sr.ovr().is_set() {
+            Err(nb::Error::Other(Error::Overrun))
+        } else if sr.modf().is_set() {
+            Err(nb::Error::Other(Error::ModeFault))
+        } else if sr.crcerr().is_set() {
+            Err(nb::Error::Other(Error::Crc))
+        } else if sr.txe().is_set() {
             // NOTE(write_volatile) see note above
             unsafe {
                 ptr::write_volatile(&spi1.dr as *const _ as *mut u8, byte)
             }
             Ok(())
         } else {
-            Err(Error { _0: () })
+            Err(nb::Error::WouldBlock)
         }
     }
 }

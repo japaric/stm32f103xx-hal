@@ -3,8 +3,9 @@
 use core::any::{Any, TypeId};
 use core::ops::Deref;
 
-use either::Either;
 use cast::{u16, u32};
+use either::Either;
+use nb::Error;
 use stm32f103xx::{GPIOA, GPIOB, RCC, TIM1, TIM2, TIM3, TIM4, gpioa, tim1, tim2};
 
 use frequency;
@@ -77,23 +78,29 @@ unsafe impl Tim for TIM4 {
     }
 }
 
-/// Specialized `Result` type
-pub type Result<T> = ::core::result::Result<T, Error>;
-
-/// An error
-pub struct Error {
-    _0: (),
-}
-
 /// Periodic timer
 ///
 /// # Interrupts
 ///
 /// - `Tim1UpTim10` - update event
-#[derive(Clone, Copy)]
 pub struct Timer<'a, T>(pub &'a T)
 where
     T: Any + Tim;
+
+impl<'a, T> Clone for Timer<'a, T>
+where
+    T: Any + Tim,
+{
+    fn clone(&self) -> Self {
+        *self
+    }
+}
+
+impl<'a, T> Copy for Timer<'a, T>
+where
+    T: Any + Tim,
+{
+}
 
 impl<'a, T> Timer<'a, T>
 where
@@ -148,14 +155,12 @@ where
         }
     }
 
-    /// Clears the update event flag
-    ///
-    /// Returns `Err` if no update event has occurred
-    pub fn clear_update_flag(&self) -> Result<()> {
+    /// Waits until the timer times out
+    pub fn wait(&self) -> Result<(), Error<!>> {
         match self.0.register_block() {
             Either::Left(tim1) => {
                 if tim1.sr.read().uif().is_clear() {
-                    Err(Error { _0: () })
+                    Err(Error::WouldBlock)
                 } else {
                     tim1.sr.modify(|_, w| w.uif().clear());
                     Ok(())
@@ -163,7 +168,7 @@ where
             }
             Either::Right(tim2) => {
                 if tim2.sr.read().uif().is_clear() {
-                    Err(Error { _0: () })
+                    Err(Error::WouldBlock)
                 } else {
                     tim2.sr.modify(|_, w| w.uif().clear());
                     Ok(())

@@ -10,14 +10,14 @@
 #![feature(used)]
 #![no_std]
 
+extern crate blue_pill;
+
 // version = "0.2.3"
 extern crate cortex_m_rt;
 
 // version = "0.1.0"
 #[macro_use]
 extern crate cortex_m_rtfm as rtfm;
-
-extern crate blue_pill;
 
 use core::u16;
 
@@ -91,47 +91,37 @@ fn rx(_task: USART1, ref prio: P1, ref thr: T1) {
     let pwm = Pwm(&*tim2);
     let serial = Serial(&*usart1);
 
-    if let Ok(byte) = serial.read() {
-        // Echo back to signal we are alive
-        if serial.write(byte).is_err() {
-            // NOTE Impossible to override the TX buffer
-            unreachable!()
-        }
+    let byte = serial.read().unwrap();
+    // Echo back to signal we are alive
+    serial.write(byte).unwrap();
 
-        match byte {
-            b'+' | b'-' | b'*' | b'/' => {
-                let duty = pwm.get_duty(Channel::_1);
+    match byte {
+        b'+' | b'-' | b'*' | b'/' => {
+            let duty = pwm.get_duty(Channel::_1);
 
-                match byte {
-                    b'+' => {
-                        let period = pwm.get_period();
-                        pwm.set_duty(
-                            Channel::_1,
-                            if duty < period { duty + 1 } else { period },
-                        );
-                    }
-                    b'-' => {
-                        pwm.set_duty(
-                            Channel::_1,
-                            duty.checked_sub(1).unwrap_or(0),
-                        );
-                    }
-                    b'*' => {
-                        let new_duty = duty.checked_mul(2).unwrap_or(u16::MAX);
-                        let period = pwm.get_period();
-
-                        if new_duty < period {
-                            pwm.set_duty(Channel::_1, new_duty)
-                        }
-                    }
-                    b'/' => pwm.set_duty(Channel::_1, duty / 2),
-                    _ => unreachable!(),
+            match byte {
+                b'+' => {
+                    let period = pwm.get_period();
+                    pwm.set_duty(
+                        Channel::_1,
+                        if duty < period { duty + 1 } else { period },
+                    );
                 }
+                b'-' => {
+                    pwm.set_duty(Channel::_1, duty.checked_sub(1).unwrap_or(0));
+                }
+                b'*' => {
+                    let new_duty = duty.checked_mul(2).unwrap_or(u16::MAX);
+                    let period = pwm.get_period();
+
+                    if new_duty < period {
+                        pwm.set_duty(Channel::_1, new_duty)
+                    }
+                }
+                b'/' => pwm.set_duty(Channel::_1, duty / 2),
+                _ => { /* unreachable */ }
             }
-            _ => {}
         }
-    } else {
-        // NOTE Can only be reached via `rtfm::request(rx)`
-        unreachable!()
+        _ => {}
     }
 }

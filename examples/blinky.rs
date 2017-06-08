@@ -4,14 +4,14 @@
 #![feature(used)]
 #![no_std]
 
+extern crate blue_pill;
+
 // version = "0.2.3"
 extern crate cortex_m_rt;
 
 // version = "0.1.0"
 #[macro_use]
 extern crate cortex_m_rtfm as rtfm;
-
-extern crate blue_pill;
 
 use blue_pill::Timer;
 use blue_pill::led::{self, Green};
@@ -72,18 +72,16 @@ fn blink(mut task: TIM1_UP_TIM10, ref prio: P1, ref thr: T1) {
 
     let timer = Timer(&*tim1);
 
-    if timer.clear_update_flag().is_ok() {
-        let state = STATE.borrow_mut(&mut task);
+    // NOTE(wait) timeout should have already occurred
+    timer.wait().unwrap();
 
-        *state = !*state;
+    let state = STATE.borrow_mut(&mut task);
 
-        if *state {
-            Green.on();
-        } else {
-            Green.off();
-        }
+    *state = !*state;
+
+    if *state {
+        Green.on();
     } else {
-        // Only reachable through `rtfm::request(periodic)`
-        unreachable!()
+        Green.off();
     }
 }

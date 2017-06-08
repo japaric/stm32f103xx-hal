@@ -1,5 +1,6 @@
-//! Periodic timeouts with TIM1
+//! Blocking version of blinky
 
+#![allow(unreachable_code)] // for the `block!` macro
 #![deny(warnings)]
 #![feature(const_fn)]
 #![feature(used)]
@@ -14,7 +15,10 @@ extern crate cortex_m_rt;
 #[macro_use]
 extern crate cortex_m_rtfm as rtfm;
 
-use blue_pill::led::{self, Green};
+#[macro_use]
+extern crate nb;
+
+use blue_pill::led::{Green, self};
 use blue_pill::{Timer, stm32f103xx};
 use rtfm::{P0, T0, TMax};
 
@@ -29,7 +33,7 @@ peripherals!(stm32f103xx, {
     RCC: Peripheral {
         ceiling: C0,
     },
-    TIM1: Peripheral {
+    TIM3: Peripheral {
         ceiling: C0,
     },
 });
@@ -38,24 +42,24 @@ peripherals!(stm32f103xx, {
 fn init(ref prio: P0, thr: &TMax) {
     let gpioc = &GPIOC.access(prio, thr);
     let rcc = &RCC.access(prio, thr);
-    let tim1 = TIM1.access(prio, thr);
+    let tim3 = TIM3.access(prio, thr);
 
-    let timer = Timer(&*tim1);
+    let timer = Timer(&*tim3);
 
     led::init(gpioc, rcc);
     timer.init(FREQUENCY, rcc);
-    timer.resume();
 }
 
 // IDLE LOOP
 fn idle(ref prio: P0, ref thr: T0) -> ! {
-    let tim1 = TIM1.access(prio, thr);
+    let tim3 = TIM3.access(prio, thr);
 
-    let timer = Timer(&*tim1);
+    let timer = Timer(&*tim3);
 
+    timer.resume();
     let mut state = false;
     loop {
-        while timer.wait().is_err() {}
+        block!(timer.wait()).unwrap(); // NOTE(unwrap) E = !
 
         state = !state;
 

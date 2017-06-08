@@ -5,14 +5,14 @@
 #![feature(used)]
 #![no_std]
 
+extern crate blue_pill;
+
 // version = "0.2.3"
 extern crate cortex_m_rt;
 
 // version = "0.1.0"
 #[macro_use]
 extern crate cortex_m_rtfm as rtfm;
-
-extern crate blue_pill;
 
 use blue_pill::led::{self, Green};
 use blue_pill::{Timer, stm32f103xx};
@@ -55,7 +55,7 @@ fn idle(ref prio: P0, ref thr: T0) -> ! {
 
     let mut state = false;
     loop {
-        while timer.clear_update_flag().is_err() {}
+        while timer.wait().is_err() {}
 
         state = !state;
 

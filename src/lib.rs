@@ -13,10 +13,12 @@
 #![deny(missing_docs)]
 #![deny(warnings)]
 #![feature(get_type_id)]
+#![feature(never_type)]
 #![no_std]
 
 extern crate cast;
 extern crate either;
+extern crate nb;
 
 pub extern crate stm32f103xx;
 

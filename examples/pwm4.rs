@@ -5,14 +5,14 @@
 #![feature(used)]
 #![no_std]
 
+extern crate blue_pill;
+
 // version = "0.2.3"
 extern crate cortex_m_rt;
 
 // version = "0.1.0"
 #[macro_use]
 extern crate cortex_m_rtfm as rtfm;
-
-extern crate blue_pill;
 
 use blue_pill::{Channel, Pwm, stm32f103xx};
 use rtfm::{P0, T0, TMax};

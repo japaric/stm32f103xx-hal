@@ -1,5 +1,6 @@
-//! Periodic timeouts with TIM1
+//! Blinky using futures
 
+#![allow(unreachable_code)] // for the `try_nb!` macro
 #![deny(warnings)]
 #![feature(const_fn)]
 #![feature(used)]
@@ -14,8 +15,15 @@ extern crate cortex_m_rt;
 #[macro_use]
 extern crate cortex_m_rtfm as rtfm;
 
+extern crate futures;
+
+#[macro_use]
+extern crate nb;
+
 use blue_pill::led::{self, Green};
 use blue_pill::{Timer, stm32f103xx};
+use futures::{Async, Future};
+use futures::future::{self, Loop};
 use rtfm::{P0, T0, TMax};
 
 // CONFIGURATION
@@ -29,7 +37,7 @@ peripherals!(stm32f103xx, {
     RCC: Peripheral {
         ceiling: C0,
     },
-    TIM1: Peripheral {
+    TIM3: Peripheral {
         ceiling: C0,
     },
 });
@@ -38,32 +46,41 @@ peripherals!(stm32f103xx, {
 fn init(ref prio: P0, thr: &TMax) {
     let gpioc = &GPIOC.access(prio, thr);
     let rcc = &RCC.access(prio, thr);
-    let tim1 = TIM1.access(prio, thr);
+    let tim3 = TIM3.access(prio, thr);
 
-    let timer = Timer(&*tim1);
+    let timer = Timer(&*tim3);
 
     led::init(gpioc, rcc);
     timer.init(FREQUENCY, rcc);
-    timer.resume();
 }
 
 // IDLE LOOP
+#[inline(never)]
 fn idle(ref prio: P0, ref thr: T0) -> ! {
-    let tim1 = TIM1.access(prio, thr);
+    let tim3 = TIM3.access(prio, thr);
 
-    let timer = Timer(&*tim1);
+    let timer = Timer(&*tim3);
 
-    let mut state = false;
-    loop {
-        while timer.wait().is_err() {}
+    // Tasks
+    let mut blinky = (|| {
+        let mut state = false;
+        loop {
+            await!(timer.wait()).unwrap(); // NOTE E = !
 
-        state = !state;
+            state != state;
 
-        if state {
-            Green.on();
-        } else {
-            Green.off();
+            if state {
+                Green.on();
+            } else {
+                Green.off();
+            }
         }
+    })();
+
+    // Event loop
+    timer.resume();
+    loop {
+        blinky.resume();
     }
 }
 
