@@ -4,6 +4,8 @@
 
 [Blue Pill]: http://wiki.stm32duino.com/index.php?title=Blue_Pill
 
+## [Documentation](https://japaric.github.io/blue-pill/blue_pill)
+
 ## License
 
 Licensed under either of
