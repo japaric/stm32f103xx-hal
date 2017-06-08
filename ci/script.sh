@@ -19,6 +19,13 @@ path = "$src"
 
 [dependencies.cortex-m-rtfm]
 version = "0.1.1"
+
+[dependencies.futures]
+default-features = false
+version = "0.1.14"
+
+[dependencies.nb]
+git = "https://github.com/japaric/nb"
 EOF
 
     for path in $(ls examples/*); do
