@@ -12,6 +12,8 @@
 
 extern crate blue_pill;
 
+extern crate cortex_m_hal as hal;
+
 // version = "0.2.3"
 extern crate cortex_m_rt;
 
@@ -21,13 +23,15 @@ extern crate cortex_m_rtfm as rtfm;
 
 use core::u16;
 
+use blue_pill::time::Hertz;
 use blue_pill::{Channel, Pwm, Serial, stm32f103xx};
+use hal::prelude::*;
 use rtfm::{P0, P1, T0, T1, TMax};
 use stm32f103xx::interrupt::USART1;
 
 // CONFIGURATION
-const BAUD_RATE: u32 = 115_200; // bps
-const FREQUENCY: u32 = 1_000; // Hz
+const BAUD_RATE: Hertz = Hertz(115_200);
+const FREQUENCY: Hertz = Hertz(1_000);
 
 // RESOURCES
 peripherals!(stm32f103xx, {
@@ -59,12 +63,12 @@ fn init(ref prio: P0, thr: &TMax) {
     let pwm = Pwm(&*tim2);
     let serial = Serial(&*usart1);
 
-    serial.init(BAUD_RATE, afio, gpioa, rcc);
+    serial.init(BAUD_RATE.invert(), afio, gpioa, rcc);
 
-    pwm.init(FREQUENCY, afio, gpioa, rcc);
+    pwm.init(FREQUENCY.invert(), afio, gpioa, rcc);
     pwm.set_duty(Channel::_1, 0);
 
-    pwm.on(Channel::_1);
+    pwm.enable(Channel::_1);
 }
 
 // IDLE LOOP
@@ -101,10 +105,10 @@ fn rx(_task: USART1, ref prio: P1, ref thr: T1) {
 
             match byte {
                 b'+' => {
-                    let period = pwm.get_period();
+                    let max = pwm.get_max_duty();
                     pwm.set_duty(
                         Channel::_1,
-                        if duty < period { duty + 1 } else { period },
+                        if duty < max { duty + 1 } else { max },
                     );
                 }
                 b'-' => {
@@ -112,9 +116,9 @@ fn rx(_task: USART1, ref prio: P1, ref thr: T1) {
                 }
                 b'*' => {
                     let new_duty = duty.checked_mul(2).unwrap_or(u16::MAX);
-                    let period = pwm.get_period();
+                    let max_duty = pwm.get_max_duty();
 
-                    if new_duty < period {
+                    if new_duty < max_duty {
                         pwm.set_duty(Channel::_1, new_duty)
                     }
                 }

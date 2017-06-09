@@ -15,6 +15,10 @@ stm32f103xx = "0.6.1"
 default-features = false
 version = "0.2.2"
 
+[dependencies.cortex-m-hal]
+git = "https://github.com/japaric/cortex-m-hal"
+rev = "b12039609c6ac2d21392d44cd7080072c509"
+
 [dependencies.either]
 default-features = false
 version = "1.1.0"

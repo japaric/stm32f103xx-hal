@@ -8,6 +8,8 @@
 
 extern crate blue_pill;
 
+extern crate cortex_m_hal as hal;
+
 // version = "0.2.3"
 extern crate cortex_m_rt;
 
@@ -21,14 +23,16 @@ extern crate futures;
 extern crate nb;
 
 use blue_pill::led::{self, Green};
+use blue_pill::time::Hertz;
 use blue_pill::{Serial, Timer, stm32f103xx};
-use futures::{Async, Future};
 use futures::future::{self, Loop};
+use futures::{Async, Future};
+use hal::prelude::*;
 use rtfm::{P0, T0, TMax};
 
 // CONFIGURATION
-const BAUD_RATE: u32 = 115_200;
-const FREQUENCY: u32 = 1;
+const BAUD_RATE: Hertz = Hertz(115_200);
+const FREQUENCY: Hertz = Hertz(1);
 
 // RESOURCES
 peripherals!(stm32f103xx, {
@@ -65,8 +69,10 @@ fn init(ref prio: P0, thr: &TMax) {
     let serial = Serial(&*usart1);
 
     led::init(gpioc, rcc);
-    serial.init(BAUD_RATE, afio, gpioa, rcc);
-    timer.init(FREQUENCY, rcc);
+
+    serial.init(BAUD_RATE.invert(), afio, gpioa, rcc);
+
+    timer.init(FREQUENCY.invert(), rcc);
 }
 
 // IDLE LOOP

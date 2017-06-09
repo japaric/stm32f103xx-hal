@@ -8,6 +8,8 @@
 
 extern crate blue_pill;
 
+extern crate cortex_m_hal as hal;
+
 // version = "0.2.3"
 extern crate cortex_m_rt;
 
@@ -17,12 +19,13 @@ extern crate cortex_m_rtfm as rtfm;
 
 extern crate nb;
 
+use blue_pill::time::Hertz;
 use blue_pill::{Serial, stm32f103xx};
+use hal::prelude::*;
 use rtfm::{P0, T0, TMax};
-use nb::Error;
 
 // CONFIGURATION
-pub const BAUD_RATE: u32 = 115_200;
+pub const BAUD_RATE: Hertz = Hertz(115_200);
 
 // RESOURCES
 peripherals!(stm32f103xx, {
@@ -49,7 +52,7 @@ fn init(ref prio: P0, thr: &TMax) {
 
     let serial = Serial(&*usart1);
 
-    serial.init(BAUD_RATE, afio, gpioa, rcc);
+    serial.init(BAUD_RATE.invert(), afio, gpioa, rcc);
 
     const BYTE: u8 = b'A';
 
@@ -61,8 +64,8 @@ fn init(ref prio: P0, thr: &TMax) {
                 assert_eq!(byte, BYTE);
                 return;
             }
-            Err(Error::Other(e)) => panic!("{:?}", e),
-            Err(Error::WouldBlock) => continue,
+            Err(nb::Error::Other(e)) => panic!("{:?}", e),
+            Err(nb::Error::WouldBlock) => continue,
         }
     }
 
@@ -71,6 +74,7 @@ fn init(ref prio: P0, thr: &TMax) {
 
 // IDLE LOOP
 fn idle(_prio: P0, _thr: T0) -> ! {
+    // OK
     rtfm::bkpt();
 
     // Sleep

@@ -1,4 +1,4 @@
-//! Quadrature Encoder Interface
+//! Quadrature Encoder Interface using TIM1
 //!
 //! Periodically reports the readings of the QEI
 
@@ -8,6 +8,8 @@
 #![no_std]
 
 extern crate blue_pill;
+
+extern crate cortex_m_hal as hal;
 
 #[macro_use]
 extern crate cortex_m;
@@ -19,19 +21,21 @@ extern crate cortex_m_rt;
 #[macro_use]
 extern crate cortex_m_rtfm as rtfm;
 
+use blue_pill::time::Hertz;
 use blue_pill::{Qei, Timer, stm32f103xx};
+use hal::prelude::*;
 use rtfm::{Local, P0, P1, T0, T1, TMax};
-use stm32f103xx::interrupt::TIM1_UP_TIM10;
+use stm32f103xx::interrupt::TIM4;
 
 // CONFIGURATION
-const FREQUENCY: u32 = 1; // Hz
+const FREQUENCY: Hertz = Hertz(1);
 
 // RESOURCES
 peripherals!(stm32f103xx, {
     AFIO: Peripheral {
         ceiling: C0,
     },
-    GPIOB: Peripheral {
+    GPIOA: Peripheral {
         ceiling: C0,
     },
     ITM: Peripheral {
@@ -51,17 +55,17 @@ peripherals!(stm32f103xx, {
 // INITIALIZATION PHASE
 fn init(ref prio: P0, thr: &TMax) {
     let afio = &AFIO.access(prio, thr);
-    let gpiob = &GPIOB.access(prio, thr);
+    let gpioa = &GPIOA.access(prio, thr);
     let rcc = &RCC.access(prio, thr);
     let tim1 = TIM1.access(prio, thr);
     let tim4 = TIM4.access(prio, thr);
 
-    let qei = Qei(&*tim4);
-    let timer = Timer(&*tim1);
+    let qei = Qei(&*tim1);
+    let timer = Timer(&*tim4);
 
-    qei.init(afio, gpiob, rcc);
+    qei.init(afio, gpioa, rcc);
 
-    timer.init(FREQUENCY, rcc);
+    timer.init(FREQUENCY.invert(), rcc);
     timer.resume();
 }
 
@@ -76,31 +80,31 @@ fn idle(_prio: P0, _thr: T0) -> ! {
 // TASKS
 tasks!(stm32f103xx, {
     periodic: Task {
-        interrupt: TIM1_UP_TIM10,
+        interrupt: TIM4,
         priority: P1,
         enabled: true,
     },
 });
 
-fn periodic(ref mut task: TIM1_UP_TIM10, ref prio: P1, ref thr: T1) {
-    static PREVIOUS: Local<Option<u16>, TIM1_UP_TIM10> = Local::new(None);
+fn periodic(ref mut task: TIM4, ref prio: P1, ref thr: T1) {
+    static PREVIOUS: Local<Option<u16>, TIM4> = Local::new(None);
 
     let itm = &ITM.access(prio, thr);
     let previous = PREVIOUS.borrow_mut(task);
     let tim1 = TIM1.access(prio, thr);
     let tim4 = TIM4.access(prio, thr);
 
-    let qei = Qei(&*tim4);
-    let timer = Timer(&*tim1);
+    let qei = Qei(&*tim1);
+    let timer = Timer(&*tim4);
 
-    // NOTE(wait) timeout should have already occurred
-    timer.wait().unwrap();
+    // NOTE(unwrap) timeout should have already occurred
+    timer.wait().unwrap_or_else(|_| unreachable!());
 
     let curr = qei.count();
     let dir = qei.direction();
 
     if let Some(prev) = previous.take() {
-        let speed = curr as i16 - prev as i16;
+        let speed = (curr as i16).wrapping_sub(prev as i16);
 
         iprintln!(&itm.stim[0], "{} - {} - {:?}", curr, speed, dir);
     }

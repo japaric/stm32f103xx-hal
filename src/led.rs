@@ -1,4 +1,6 @@
-//! PC13 - User LED (Green)
+//! User LEDs
+//!
+//! - Green = PC13
 
 use stm32f103xx::{GPIOC, RCC};
 

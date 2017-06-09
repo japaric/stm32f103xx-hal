@@ -6,6 +6,8 @@
 
 extern crate blue_pill;
 
+extern crate cortex_m_hal as hal;
+
 // version = "0.2.3"
 extern crate cortex_m_rt;
 
@@ -13,14 +15,18 @@ extern crate cortex_m_rt;
 #[macro_use]
 extern crate cortex_m_rtfm as rtfm;
 
+extern crate nb;
+
 use blue_pill::led::{self, Green};
+use blue_pill::time::Hertz;
 use blue_pill::{Serial, Timer, stm32f103xx};
+use hal::prelude::*;
 use rtfm::{Local, P0, P1, T0, T1, TMax};
 use stm32f103xx::interrupt::{TIM1_UP_TIM10, USART1};
 
 // CONFIGURATION
-pub const BAUD_RATE: u32 = 115_200;
-pub const FREQUENCY: u32 = 1;
+pub const BAUD_RATE: Hertz = Hertz(115_200);
+pub const FREQUENCY: Hertz = Hertz(1);
 
 // RESOURCES
 peripherals!(stm32f103xx, {
@@ -39,7 +45,7 @@ peripherals!(stm32f103xx, {
     USART1: Peripheral {
         ceiling: C1,
     },
-    TIM3: Peripheral {
+    TIM1: Peripheral {
         ceiling: C1,
     },
 });
@@ -51,14 +57,17 @@ fn init(ref prio: P0, thr: &TMax) {
     let gpioc = &GPIOC.access(prio, thr);
     let rcc = &RCC.access(prio, thr);
     let usart1 = USART1.access(prio, thr);
-    let tim3 = TIM3.access(prio, thr);
+    let tim1 = TIM1.access(prio, thr);
 
     let serial = Serial(&*usart1);
-    let timer = Timer(&*tim3);
+    let timer = Timer(&*tim1);
 
     led::init(gpioc, rcc);
-    serial.init(BAUD_RATE, afio, gpioa, rcc);
-    timer.init(FREQUENCY, rcc);
+
+    serial.init(BAUD_RATE.invert(), afio, gpioa, rcc);
+
+    timer.init(FREQUENCY.invert(), rcc);
+    timer.resume();
 }
 
 // IDLE LOOP
@@ -87,15 +96,14 @@ fn blinky(ref mut task: TIM1_UP_TIM10, ref prio: P1, ref thr: T1) {
     static STATE: Local<bool, TIM1_UP_TIM10> = Local::new(false);
 
     let state = STATE.borrow_mut(task);
-    let tim3 = TIM3.access(prio, thr);
+    let tim1 = TIM1.access(prio, thr);
 
-    let timer = Timer(&*tim3);
+    let timer = Timer(&*tim1);
 
-    // NOTE(wait) timeout should have already occurred
-    timer.wait().unwrap();
+    // NOTE(unwrap) timeout should have already occurred
+    timer.wait().unwrap_or_else(|_| unreachable!());
 
-    // Done
-    *state != *state;
+    *state = !*state;
 
     if *state {
         Green.on();
@@ -109,6 +117,9 @@ fn loopback(_task: USART1, ref prio: P1, ref thr: T1) {
 
     let serial = Serial(&*usart1);
 
-    let byte = serial.read().unwrap();
-    serial.write(byte).unwrap();
+    match serial.read().and_then(|byte| serial.write(byte)) {
+        Err(nb::Error::Other(e)) => panic!("{:?}", e),
+        Err(nb::Error::WouldBlock) => unreachable!(),
+        Ok(()) => {}
+    }
 }

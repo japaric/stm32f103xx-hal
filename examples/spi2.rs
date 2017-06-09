@@ -1,4 +1,4 @@
-//! Interfacing the MPU9250
+//! Interfacing the MPU9250 using SPI2
 
 #![deny(warnings)]
 #![feature(const_fn)]
@@ -10,6 +10,8 @@ extern crate blue_pill;
 #[macro_use]
 extern crate cortex_m;
 
+extern crate cortex_m_hal as hal;
+
 // version = "0.2.3"
 extern crate cortex_m_rt;
 
@@ -18,6 +20,7 @@ extern crate cortex_m_rt;
 extern crate cortex_m_rtfm as rtfm;
 
 use blue_pill::{Spi, stm32f103xx};
+use hal::prelude::*;
 use rtfm::{P0, T0, TMax};
 
 // RESOURCES
@@ -78,7 +81,7 @@ fn idle(ref prio: P0, ref thr: T0) -> ! {
     while spi.send(WHO_AM_I | R).is_err() {}
 
     let _junk = loop {
-        if let Ok(byte) = spi.receive() {
+        if let Ok(byte) = spi.read() {
             break byte;
         }
     };
@@ -86,7 +89,7 @@ fn idle(ref prio: P0, ref thr: T0) -> ! {
     while spi.send(JUNK).is_err() {}
 
     let ans = loop {
-        if let Ok(byte) = spi.receive() {
+        if let Ok(byte) = spi.read() {
             break byte;
         }
     };

@@ -10,6 +10,8 @@ extern crate blue_pill;
 #[macro_use]
 extern crate cortex_m;
 
+extern crate cortex_m_hal as hal;
+
 // version = "0.2.3"
 extern crate cortex_m_rt;
 
@@ -17,12 +19,16 @@ extern crate cortex_m_rt;
 #[macro_use]
 extern crate cortex_m_rtfm as rtfm;
 
+extern crate nb;
+
 use blue_pill::stm32f103xx;
+use blue_pill::time::Milliseconds;
 use blue_pill::{Capture, Channel};
+use hal::prelude::*;
 use rtfm::{P0, T0, TMax};
 
 // CONFIGURATION
-const FREQUENCY: u32 = 1_000;
+const RESOLUTION: Milliseconds = Milliseconds(1);
 
 // RESOURCES
 peripherals!(stm32f103xx, {
@@ -52,7 +58,7 @@ fn init(ref prio: P0, thr: &TMax) {
 
     let capture = Capture(&*tim3);
 
-    capture.init(FREQUENCY, afio, gpioa, rcc);
+    capture.init(RESOLUTION, afio, gpioa, rcc);
 }
 
 // IDLE LOOP
@@ -70,8 +76,12 @@ fn idle(ref prio: P0, ref thr: T0) -> ! {
 
     loop {
         for c in &CHANNELS {
-            if let Ok(n) = capture.capture(*c) {
-                iprintln!(&itm.stim[0], "{:?}: {}", c, n);
+            match capture.capture(*c) {
+                Ok(snapshot) => {
+                    iprintln!(&itm.stim[0], "{:?}: {:?} ms", c, snapshot);
+                }
+                Err(nb::Error::WouldBlock) => {}
+                Err(nb::Error::Other(e)) => panic!("{:?}", e),
             }
         }
     }

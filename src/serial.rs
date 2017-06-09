@@ -24,31 +24,35 @@ use core::any::{Any, TypeId};
 use core::ops::Deref;
 use core::ptr;
 
+use hal;
 use nb;
 use stm32f103xx::{AFIO, GPIOA, GPIOB, RCC, USART1, USART2, USART3, gpioa,
                   usart1};
 
-use frequency;
-
 /// Specialized `Result` type
 pub type Result<T> = ::core::result::Result<T, nb::Error<Error>>;
 
-/// USART instance usable with the `Serial` abstraction
-pub trait Usart: Deref<Target = usart1::RegisterBlock> {
-    /// GPIO block associated to this USART instance
+/// IMPLEMENTATION DETAIL
+pub unsafe trait Usart: Deref<Target = usart1::RegisterBlock> {
+    /// IMPLEMENTATION DETAIL
     type GPIO: Deref<Target = gpioa::RegisterBlock>;
+    /// IMPLEMENTATION DETAIL
+    type Ticks: Into<u32>;
 }
 
-impl Usart for USART1 {
+unsafe impl Usart for USART1 {
     type GPIO = GPIOA;
+    type Ticks = ::apb2::Ticks;
 }
 
-impl Usart for USART2 {
+unsafe impl Usart for USART2 {
     type GPIO = GPIOA;
+    type Ticks = ::apb1::Ticks;
 }
 
-impl Usart for USART3 {
+unsafe impl Usart for USART3 {
     type GPIO = GPIOB;
+    type Ticks = ::apb1::Ticks;
 }
 
 /// An error
@@ -94,7 +98,20 @@ where
 {
     /// Initializes the serial interface with a baud rate of `baut_rate` bits
     /// per second
-    pub fn init(&self, baud_rate: u32, afio: &AFIO, gpio: &U::GPIO, rcc: &RCC) {
+    pub fn init<B>(&self, baud_rate: B, afio: &AFIO, gpio: &U::GPIO, rcc: &RCC)
+    where
+        B: Into<U::Ticks>,
+    {
+        self._init(baud_rate.into(), afio, gpio, rcc)
+    }
+
+    fn _init(
+        &self,
+        baud_rate: U::Ticks,
+        afio: &AFIO,
+        gpio: &U::GPIO,
+        rcc: &RCC,
+    ) {
         let usart = self.0;
 
         // power up peripherals
@@ -161,14 +178,11 @@ where
         usart.cr2.write(|w| unsafe { w.stop().bits(0b00) });
 
         // baud rate
-        let frequency = if usart.get_type_id() == TypeId::of::<USART1>() {
-            frequency::APB2
-        } else {
-            frequency::APB1
-        };
-        usart.brr.write(
-            |w| unsafe { w.bits(frequency / baud_rate) },
-        );
+        let brr = baud_rate.into();
+
+        assert!(brr >= 16, "impossible baud rate");
+
+        usart.brr.write(|w| unsafe { w.bits(brr) });
 
         // disable hardware flow control
         usart.cr3.write(|w| w.rtse().clear().ctse().clear());
@@ -189,11 +203,15 @@ where
                 .set()
         });
     }
+}
 
-    /// Reads a byte from the RX buffer
-    ///
-    /// Returns `Err` if the RX buffer is empty
-    pub fn read(&self) -> Result<u8> {
+impl<'a, U> hal::Serial for Serial<'a, U>
+where
+    U: Any + Usart,
+{
+    type Error = Error;
+
+    fn read(&self) -> Result<u8> {
         let usart1 = self.0;
         let sr = usart1.sr.read();
 
@@ -214,10 +232,7 @@ where
         }
     }
 
-    /// Writes byte into the TX buffer
-    ///
-    /// Returns `Err` if the TX buffer is already full
-    pub fn write(&self, byte: u8) -> Result<()> {
+    fn write(&self, byte: u8) -> Result<()> {
         let usart1 = self.0;
         let sr = usart1.sr.read();
 

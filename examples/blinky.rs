@@ -6,6 +6,8 @@
 
 extern crate blue_pill;
 
+extern crate cortex_m_hal as hal;
+
 // version = "0.2.3"
 extern crate cortex_m_rt;
 
@@ -16,11 +18,13 @@ extern crate cortex_m_rtfm as rtfm;
 use blue_pill::Timer;
 use blue_pill::led::{self, Green};
 use blue_pill::stm32f103xx;
+use blue_pill::time::Hertz;
+use hal::prelude::*;
 use rtfm::{Local, P0, P1, T0, T1, TMax};
 use stm32f103xx::interrupt::TIM1_UP_TIM10;
 
 // CONFIGURATION
-const FREQUENCY: u32 = 1;
+const FREQUENCY: Hertz = Hertz(1);
 
 // RESOURCES
 peripherals!(stm32f103xx, {
@@ -44,7 +48,7 @@ fn init(ref prio: P0, thr: &TMax) {
     let timer = Timer(&*tim1);
 
     led::init(gpioc, rcc);
-    timer.init(FREQUENCY, rcc);
+    timer.init(FREQUENCY.invert(), rcc);
     timer.resume();
 }
 

@@ -10,6 +10,8 @@ extern crate blue_pill;
 #[macro_use]
 extern crate cortex_m;
 
+extern crate cortex_m_hal as hal;
+
 // version = "0.2.4"
 extern crate cortex_m_rt;
 
@@ -21,11 +23,13 @@ use core::cell::Cell;
 
 use blue_pill::Timer;
 use blue_pill::stm32f103xx;
+use blue_pill::time::Hertz;
+use hal::prelude::*;
 use rtfm::{C1, P0, P1, Resource, T0, T1, TMax};
 use stm32f103xx::interrupt::TIM1_UP_TIM10;
 
 // CONFIGURATION
-const FREQUENCY: u32 = 1; // Hz
+const FREQUENCY: Hertz = Hertz(1);
 
 // RESOURCES
 peripherals!(stm32f103xx, {
@@ -56,7 +60,7 @@ fn init(ref prio: P0, thr: &TMax) {
 
     dwt.enable_cycle_counter();
 
-    timer.init(FREQUENCY, rcc);
+    timer.init(FREQUENCY.invert(), rcc);
     timer.resume();
 }
 
@@ -100,8 +104,8 @@ fn periodic(_task: TIM1_UP_TIM10, ref prio: P1, ref thr: T1) {
 
     let timer = Timer(&*tim1);
 
-    // NOTE(wait) timeout should have already occurred
-    timer.wait().unwrap();
+    // NOTE(unwrap) timeout should have already occurred
+    timer.wait().unwrap_or_else(|_| unreachable!());
 
     // Report clock cycles spent sleeping
     iprintln!(&itm.stim[0], "{}", sleep_time.get());

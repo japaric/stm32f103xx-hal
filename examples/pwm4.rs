@@ -7,6 +7,8 @@
 
 extern crate blue_pill;
 
+extern crate cortex_m_hal as hal;
+
 // version = "0.2.3"
 extern crate cortex_m_rt;
 
@@ -15,10 +17,12 @@ extern crate cortex_m_rt;
 extern crate cortex_m_rtfm as rtfm;
 
 use blue_pill::{Channel, Pwm, stm32f103xx};
+use blue_pill::time::Hertz;
+use hal::prelude::*;
 use rtfm::{P0, T0, TMax};
 
 // CONFIGURATION
-const FREQUENCY: u32 = 1_000; // Hz
+const FREQUENCY: Hertz = Hertz(1_000);
 
 // RESOURCES
 peripherals!(stm32f103xx, {
@@ -45,8 +49,8 @@ fn init(ref prio: P0, thr: &TMax) {
 
     let pwm = Pwm(&*tim4);
 
-    pwm.init(FREQUENCY, afio, gpiob, rcc);
-    let duty = pwm.get_period() / 16;
+    pwm.init(FREQUENCY.invert(), afio, gpiob, rcc);
+    let duty = pwm.get_max_duty() / 16;
 
     const CHANNELS: [Channel; 4] =
         [Channel::_1, Channel::_2, Channel::_3, Channel::_4];
@@ -56,7 +60,7 @@ fn init(ref prio: P0, thr: &TMax) {
     }
 
     for c in &CHANNELS {
-        pwm.on(*c);
+        pwm.enable(*c);
         rtfm::bkpt();
     }
 }

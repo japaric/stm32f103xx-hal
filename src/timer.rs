@@ -1,14 +1,12 @@
-//! Periodic timer
+//! Timer
 
 use core::any::{Any, TypeId};
 use core::ops::Deref;
 
 use cast::{u16, u32};
-use either::Either;
-use nb::Error;
-use stm32f103xx::{GPIOA, GPIOB, RCC, TIM1, TIM2, TIM3, TIM4, gpioa, tim1, tim2};
-
-use frequency;
+use hal;
+use nb::{self, Error};
+use stm32f103xx::{GPIOA, GPIOB, RCC, TIM1, TIM2, TIM3, TIM4, gpioa, tim2};
 
 /// Channel associated to a timer
 #[derive(Clone, Copy, Debug)]
@@ -23,181 +21,199 @@ pub enum Channel {
     _4,
 }
 
-/// TIM instance that can be used with the `Capture` / `Pwm` abstraction
-///
-/// IMPLEMENTATION DETAIL. Do not implement this trait
-pub unsafe trait Tim {
-    /// GPIO block associated to this TIM instance
+/// IMPLEMENTATION DETAIL
+pub unsafe trait TIM: Deref<Target = tim2::RegisterBlock> {
+    /// IMPLEMENTATION DETAIL
     type GPIO: Deref<Target = gpioa::RegisterBlock>;
-
-    /// Returns the register block of this TIM instance
-    fn register_block<'s>
-        (
-        &'s self,
-    ) -> Either<&'s tim1::RegisterBlock, &'s tim2::RegisterBlock>;
 }
 
-unsafe impl Tim for TIM1 {
+unsafe impl TIM for TIM2 {
     type GPIO = GPIOA;
-
-    fn register_block(
-        &self,
-    ) -> Either<&tim1::RegisterBlock, &tim2::RegisterBlock> {
-        Either::Left(&**self)
-    }
 }
 
-unsafe impl Tim for TIM2 {
+unsafe impl TIM for TIM3 {
     type GPIO = GPIOA;
-
-    fn register_block(
-        &self,
-    ) -> Either<&tim1::RegisterBlock, &tim2::RegisterBlock> {
-        Either::Right(&**self)
-    }
 }
 
-unsafe impl Tim for TIM3 {
-    // FIXME should be GPIOA *and* GPIOB
-    type GPIO = GPIOA;
-
-    fn register_block(
-        &self,
-    ) -> Either<&tim1::RegisterBlock, &tim2::RegisterBlock> {
-        Either::Right(&**self)
-    }
-}
-
-unsafe impl Tim for TIM4 {
+unsafe impl TIM for TIM4 {
     type GPIO = GPIOB;
-
-    fn register_block(
-        &self,
-    ) -> Either<&tim1::RegisterBlock, &tim2::RegisterBlock> {
-        Either::Right(&**self)
-    }
 }
 
-/// Periodic timer
-///
-/// # Interrupts
-///
-/// - `Tim1UpTim10` - update event
+/// `hal::Timer` implementation
 pub struct Timer<'a, T>(pub &'a T)
 where
-    T: Any + Tim;
+    T: 'a;
 
-impl<'a, T> Clone for Timer<'a, T>
-where
-    T: Any + Tim,
-{
+impl<'a, T> Clone for Timer<'a, T> {
     fn clone(&self) -> Self {
         *self
     }
 }
 
-impl<'a, T> Copy for Timer<'a, T>
-where
-    T: Any + Tim,
-{
+impl<'a, T> Copy for Timer<'a, T> {}
+
+impl<'a> Timer<'a, TIM1> {
+    /// Initializes the timer with a periodic timeout of `frequency` Hz
+    ///
+    /// NOTE After initialization, the timer will be in the paused state.
+    pub fn init<P>(&self, period: P, rcc: &RCC)
+    where
+        P: Into<::apb2::Ticks>,
+    {
+        self._init(period.into(), rcc)
+    }
+
+    fn _init(&self, period: ::apb2::Ticks, rcc: &RCC) {
+        let tim1 = self.0;
+
+        // Enable TIM1
+        rcc.apb2enr.modify(|_, w| w.tim1en().enabled());
+
+        // Configure periodic update event
+        self._set_timeout(period);
+
+        // Continuous mode
+        tim1.cr1.write(|w| w.opm().continuous());
+
+        // Enable update event interrupt
+        tim1.dier.modify(|_, w| w.uie().set());
+    }
+
+    fn _set_timeout(&self, timeout: ::apb2::Ticks) {
+        let period = timeout.0;
+
+        let psc = u16((period - 1) / (1 << 16)).unwrap();
+        self.0.psc.write(|w| w.psc().bits(psc));
+
+        let arr = u16(period / u32(psc + 1)).unwrap();
+        self.0.arr.write(|w| w.arr().bits(arr));
+    }
+}
+
+impl<'a> hal::Timer for Timer<'a, TIM1> {
+    type Time = ::apb2::Ticks;
+
+    fn get_timeout(&self) -> ::apb2::Ticks {
+        ::apb2::Ticks(
+            u32(self.0.psc.read().psc().bits() + 1) *
+                u32(self.0.arr.read().arr().bits()),
+        )
+    }
+
+    fn pause(&self) {
+        self.0.cr1.modify(|_, w| w.cen().disabled());
+    }
+
+    fn restart(&self) {
+        self.0.cnt.write(|w| w.cnt().bits(0));
+    }
+
+    fn resume(&self) {
+        self.0.cr1.modify(|_, w| w.cen().enabled());
+    }
+
+    fn set_timeout<T>(&self, timeout: T)
+    where
+        T: Into<::apb2::Ticks>,
+    {
+        self._set_timeout(timeout.into())
+    }
+
+    fn wait(&self) -> nb::Result<(), !> {
+        if self.0.sr.read().uif().is_clear() {
+            Err(Error::WouldBlock)
+        } else {
+            self.0.sr.modify(|_, w| w.uif().clear());
+            Ok(())
+        }
+    }
 }
 
 impl<'a, T> Timer<'a, T>
 where
-    T: Any + Tim,
+    T: Any + TIM,
 {
     /// Initializes the timer with a periodic timeout of `frequency` Hz
     ///
     /// NOTE After initialization, the timer will be in the paused state.
-    pub fn init(&self, frequency: u32, rcc: &RCC) {
-        let tim = self.0;
-
-        match self.0.register_block() {
-            Either::Left(tim1) => {
-                rcc.apb2enr.modify(|_, w| w.tim1en().enabled());
-
-                // Configure periodic update event
-                let ratio = frequency::APB2 / frequency;
-                let psc = u16((ratio - 1) / (1 << 16)).unwrap();
-                tim1.psc.write(|w| w.psc().bits(psc));
-                let arr = u16(ratio / u32(psc + 1)).unwrap();
-                tim1.arr.write(|w| w.arr().bits(arr));
-
-                // Continuous mode
-                tim1.cr1.write(|w| w.opm().continuous());
-
-                // Enable update event interrupt
-                tim1.dier.modify(|_, w| w.uie().set());
-            }
-            Either::Right(tim2) => {
-                // Power on TIMx
-                if tim.get_type_id() == TypeId::of::<TIM2>() {
-                    rcc.apb1enr.modify(|_, w| w.tim2en().enabled());
-                } else if tim.get_type_id() == TypeId::of::<TIM3>() {
-                    rcc.apb1enr.modify(|_, w| w.tim3en().enabled());
-                } else if tim.get_type_id() == TypeId::of::<TIM4>() {
-                    rcc.apb1enr.modify(|_, w| w.tim4en().enabled());
-                }
-
-                // Configure periodic update event
-                let ratio = frequency::APB1 / frequency;
-                let psc = u16((ratio - 1) / (1 << 16)).unwrap();
-                tim2.psc.write(|w| w.psc().bits(psc));
-                let arr = u16(ratio / u32(psc + 1)).unwrap();
-                tim2.arr.write(|w| w.arr().bits(arr));
-
-                // Continuous mode
-                tim2.cr1.write(|w| w.opm().continuous());
-
-                // Enable update event interrupt
-                tim2.dier.modify(|_, w| w.uie().set());
-            }
-        }
+    pub fn init<P>(&self, period: P, rcc: &RCC)
+    where
+        P: Into<::apb1::Ticks>,
+    {
+        self.init_(period.into(), rcc)
     }
 
-    /// Waits until the timer times out
-    pub fn wait(&self) -> Result<(), Error<!>> {
-        match self.0.register_block() {
-            Either::Left(tim1) => {
-                if tim1.sr.read().uif().is_clear() {
-                    Err(Error::WouldBlock)
-                } else {
-                    tim1.sr.modify(|_, w| w.uif().clear());
-                    Ok(())
-                }
-            }
-            Either::Right(tim2) => {
-                if tim2.sr.read().uif().is_clear() {
-                    Err(Error::WouldBlock)
-                } else {
-                    tim2.sr.modify(|_, w| w.uif().clear());
-                    Ok(())
-                }
-            }
+    fn init_(&self, timeout: ::apb1::Ticks, rcc: &RCC) {
+        let tim2 = self.0;
+
+        // Enable TIMx
+        if tim2.get_type_id() == TypeId::of::<TIM2>() {
+            rcc.apb1enr.modify(|_, w| w.tim2en().enabled());
+        } else if tim2.get_type_id() == TypeId::of::<TIM3>() {
+            rcc.apb1enr.modify(|_, w| w.tim3en().enabled());
+        } else if tim2.get_type_id() == TypeId::of::<TIM4>() {
+            rcc.apb1enr.modify(|_, w| w.tim4en().enabled());
         }
+
+        // Configure periodic update event
+        self._set_timeout(timeout);
+
+        // Continuous mode
+        tim2.cr1.write(|w| w.opm().continuous());
+
+        // Enable the update event interrupt
+        tim2.dier.modify(|_, w| w.uie().set());
     }
 
-    /// Pauses the timer
-    pub fn pause(&self) {
-        match self.0.register_block() {
-            Either::Left(tim1) => {
-                tim1.cr1.modify(|_, w| w.cen().disabled());
-            }
-            Either::Right(tim2) => {
-                tim2.cr1.modify(|_, w| w.cen().disabled());
-            }
-        }
+    fn _set_timeout(&self, timeout: ::apb1::Ticks) {
+        let period = timeout.0;
+
+        let psc = u16((period - 1) / (1 << 16)).unwrap();
+        self.0.psc.write(|w| w.psc().bits(psc));
+
+        let arr = u16(period / u32(psc + 1)).unwrap();
+        self.0.arr.write(|w| w.arr().bits(arr));
+    }
+}
+
+impl<'a, T> hal::Timer for Timer<'a, T>
+where
+    T: Any + TIM,
+{
+    type Time = ::apb1::Ticks;
+
+    fn get_timeout(&self) -> ::apb1::Ticks {
+        ::apb1::Ticks(
+            u32(self.0.psc.read().psc().bits() + 1) *
+                u32(self.0.arr.read().arr().bits()),
+        )
     }
 
-    /// Resumes the timer count
-    pub fn resume(&self) {
-        match self.0.register_block() {
-            Either::Left(tim1) => {
-                tim1.cr1.modify(|_, w| w.cen().enabled());
-            }
-            Either::Right(tim2) => {
-                tim2.cr1.modify(|_, w| w.cen().enabled());
-            }
+    fn pause(&self) {
+        self.0.cr1.modify(|_, w| w.cen().disabled());
+    }
+
+    fn restart(&self) {
+        self.0.cnt.write(|w| w.cnt().bits(0));
+    }
+
+    fn resume(&self) {
+        self.0.cr1.modify(|_, w| w.cen().enabled());
+    }
+
+    fn set_timeout<TO>(&self, timeout: TO)
+    where
+        TO: Into<::apb1::Ticks>,
+    {
+        self._set_timeout(timeout.into())
+    }
+
+    fn wait(&self) -> nb::Result<(), !> {
+        if self.0.sr.read().uif().is_clear() {
+            Err(Error::WouldBlock)
+        } else {
+            self.0.sr.modify(|_, w| w.uif().clear());
+            Ok(())
         }
     }
 }

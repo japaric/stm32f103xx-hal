@@ -6,6 +6,8 @@
 
 extern crate blue_pill;
 
+extern crate cortex_m_hal as hal;
+
 // version = "0.2.3"
 extern crate cortex_m_rt;
 
@@ -14,11 +16,13 @@ extern crate cortex_m_rt;
 extern crate cortex_m_rtfm as rtfm;
 
 use blue_pill::{Serial, stm32f103xx};
+use blue_pill::time::Hertz;
+use hal::prelude::*;
 use rtfm::{P0, P1, T0, T1, TMax};
 use stm32f103xx::interrupt::USART1;
 
 // CONFIGURATION
-pub const BAUD_RATE: u32 = 115_200;
+pub const BAUD_RATE: Hertz = Hertz(115_200);
 
 // RESOURCES
 peripherals!(stm32f103xx, {
@@ -45,7 +49,7 @@ fn init(ref prio: P0, thr: &TMax) {
 
     let serial = Serial(&*usart1);
 
-    serial.init(BAUD_RATE, afio, gpioa, rcc);
+    serial.init(BAUD_RATE.invert(), afio, gpioa, rcc);
 }
 
 // IDLE LOOP

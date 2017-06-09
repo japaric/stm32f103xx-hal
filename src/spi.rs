@@ -4,14 +4,14 @@
 //!
 //! # SPI1
 //!
-//! - nCS = PA4
+//! - NSS = PA4
 //! - SCK = PA5
 //! - MISO = PA6
 //! - MOSI = PA7
 //!
 //! # SPI2
 //!
-//! - nCS = PB12
+//! - NSS = PB12
 //! - SCK = PB13
 //! - MISO = PB14
 //! - MOSI = PB15
@@ -20,20 +20,21 @@ use core::any::{Any, TypeId};
 use core::ops::Deref;
 use core::ptr;
 
+use hal;
 use nb;
 use stm32f103xx::{AFIO, GPIOA, GPIOB, RCC, SPI1, SPI2, gpioa, spi1};
 
 /// SPI instance that can be used with the `Spi` abstraction
-pub unsafe trait Bus: Deref<Target = spi1::RegisterBlock> {
+pub unsafe trait SPI: Deref<Target = spi1::RegisterBlock> {
     /// GPIO block associated to this SPI instance
     type GPIO: Deref<Target = gpioa::RegisterBlock>;
 }
 
-unsafe impl Bus for SPI1 {
+unsafe impl SPI for SPI1 {
     type GPIO = GPIOA;
 }
 
-unsafe impl Bus for SPI2 {
+unsafe impl SPI for SPI2 {
     type GPIO = GPIOB;
 }
 
@@ -56,11 +57,11 @@ pub enum Error {
 /// Serial Peripheral Interface
 pub struct Spi<'a, S>(pub &'a S)
 where
-    S: Any + Bus;
+    S: Any + SPI;
 
 impl<'a, S> Spi<'a, S>
 where
-    S: Any + Bus,
+    S: Any + SPI,
 {
     /// Initializes the SPI
     pub fn init(&self, afio: &AFIO, gpio: &S::GPIO, rcc: &RCC) {
@@ -80,22 +81,22 @@ where
             // MISO = PA6 = Floating input
             // MOSI = PA7 = Alternate function push pull
             gpio.crl.modify(|_, w| {
-                w.cnf4()
-                    .bits(0b10)
-                    .mode4()
-                    .bits(0b10)
-                    .cnf5()
-                    .bits(0b10)
+                w.mode4()
+                    .output()
+                    .cnf4()
+                    .alt_push()
                     .mode5()
-                    .bits(0b10)
+                    .output()
+                    .cnf5()
+                    .alt_push()
+                    .mode6()
+                    .input()
                     .cnf6()
                     .bits(0b01)
-                    .mode6()
-                    .bits(0b00)
-                    .cnf7()
-                    .bits(0b10)
                     .mode7()
-                    .bits(0b10)
+                    .output()
+                    .cnf7()
+                    .alt_push()
             });
         } else if spi.get_type_id() == TypeId::of::<SPI2>() {
             // enable AFIO, SPI1, GPIOA
@@ -109,22 +110,22 @@ where
             // MISO = PB14 = Floating input
             // MOSI = PB15 = Alternate function push pull
             gpio.crh.modify(|_, w| {
-                w.cnf12()
-                    .bits(0b10)
-                    .mode12()
-                    .bits(0b10)
-                    .cnf13()
-                    .bits(0b10)
+                w.mode12()
+                    .output()
+                    .cnf12()
+                    .alt_push()
                     .mode13()
-                    .bits(0b10)
+                    .output()
+                    .cnf13()
+                    .alt_push()
+                    .mode14()
+                    .input()
                     .cnf14()
                     .bits(0b01)
-                    .mode14()
-                    .bits(0b00)
-                    .cnf15()
-                    .bits(0b10)
                     .mode15()
-                    .bits(0b10)
+                    .output()
+                    .cnf15()
+                    .alt_push()
             });
         }
 
@@ -162,19 +163,27 @@ where
     }
 
     /// Disables the SPI bus
+    ///
+    /// **NOTE** This drives the NSS pin high
     pub fn disable(&self) {
         self.0.cr1.modify(|_, w| w.spe().clear())
     }
 
     /// Enables the SPI bus
+    ///
+    /// **NOTE** This drives the NSS pin low
     pub fn enable(&self) {
         self.0.cr1.modify(|_, w| w.spe().set())
     }
+}
 
-    /// Receives a byte
-    ///
-    /// NOTE You *must* send a byte before you can receive one
-    pub fn receive(&self) -> Result<u8> {
+impl<'a, S> hal::Spi<u8> for Spi<'a, S>
+where
+    S: Any + SPI,
+{
+    type Error = Error;
+
+    fn read(&self) -> Result<u8> {
         let spi1 = self.0;
         let sr = spi1.sr.read();
 
@@ -193,8 +202,7 @@ where
         }
     }
 
-    /// Sends a byte
-    pub fn send(&self, byte: u8) -> Result<()> {
+    fn send(&self, byte: u8) -> Result<()> {
         let spi1 = self.0;
         let sr = spi1.sr.read();
 
