@@ -8,7 +8,7 @@
 
 extern crate blue_pill;
 
-extern crate cortex_m_hal as hal;
+extern crate embedded_hal as hal;
 
 // version = "0.2.3"
 extern crate cortex_m_rt;

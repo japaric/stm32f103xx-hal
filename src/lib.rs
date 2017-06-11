@@ -17,7 +17,7 @@
 #![no_std]
 
 extern crate cast;
-extern crate cortex_m_hal as hal;
+extern crate embedded_hal as hal;
 extern crate either;
 extern crate nb;
 

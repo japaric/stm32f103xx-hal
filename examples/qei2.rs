@@ -9,7 +9,7 @@
 
 extern crate blue_pill;
 
-extern crate cortex_m_hal as hal;
+extern crate embedded_hal as hal;
 
 #[macro_use]
 extern crate cortex_m;

@@ -17,9 +17,9 @@ main() {
 [dependencies.blue-pill]
 path = "$src"
 
-[dependencies.cortex-m-hal]
-git = "https://github.com/japaric/cortex-m-hal"
-rev = "b12039609c6ac2d21392d44cd7080072c509"
+[dependencies.embedded-hal]
+git = "https://github.com/japaric/embedded-hal"
+rev = "5295697669f5b48a900aa325b8ebb4d4e8d4b236"
 
 [dependencies.cortex-m-rtfm]
 version = "0.1.1"
