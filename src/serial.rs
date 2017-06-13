@@ -24,10 +24,14 @@ use core::any::{Any, TypeId};
 use core::ops::Deref;
 use core::ptr;
 
+use cast::u16;
 use hal;
 use nb;
-use stm32f103xx::{AFIO, GPIOA, GPIOB, RCC, USART1, USART2, USART3, gpioa,
-                  usart1};
+use static_ref::Ref;
+use stm32f103xx::{AFIO, DMA1, GPIOA, GPIOB, RCC, USART1, USART2, USART3,
+                  gpioa, usart1};
+
+use dma::{self, Buffer, Dma1Channel4};
 
 /// Specialized `Result` type
 pub type Result<T> = ::core::result::Result<T, nb::Error<Error>>;
@@ -98,23 +102,36 @@ where
 {
     /// Initializes the serial interface with a baud rate of `baut_rate` bits
     /// per second
-    pub fn init<B>(&self, baud_rate: B, afio: &AFIO, gpio: &U::GPIO, rcc: &RCC)
-    where
+    ///
+    /// The serial interface will be configured to use 8 bits of data, 1 stop
+    /// bit, no hardware control and to omit parity checking
+    pub fn init<B>(
+        &self,
+        baud_rate: B,
+        afio: &AFIO,
+        dma1: Option<&DMA1>,
+        gpio: &U::GPIO,
+        rcc: &RCC,
+    ) where
         B: Into<U::Ticks>,
     {
-        self._init(baud_rate.into(), afio, gpio, rcc)
+        self._init(baud_rate.into(), afio, dma1, gpio, rcc)
     }
 
     fn _init(
         &self,
         baud_rate: U::Ticks,
         afio: &AFIO,
+        dma1: Option<&DMA1>,
         gpio: &U::GPIO,
         rcc: &RCC,
     ) {
         let usart = self.0;
 
         // power up peripherals
+        if dma1.is_some() {
+            rcc.ahbenr.modify(|_, w| w.dma1en().enabled());
+        }
         if usart.get_type_id() == TypeId::of::<USART1>() {
             rcc.apb2enr.modify(|_, w| {
                 w.afioen().enabled().iopaen().enabled().usart1en().enabled()
@@ -174,6 +191,46 @@ where
             });
         }
 
+        // mem2mem: Memory to memory mode disabled
+        // pl: Medium priority
+        // msize: Memory size = 8 bits
+        // psize: Peripheral size = 8 bits
+        // minc: Memory increment mode enabled
+        // pinc: Peripheral increment mode disabled
+        // circ: Circular mode disabled
+        // dir: Transfer from memory to peripheral
+        // tceie: Transfer complete interrupt enabled
+        // en: Disabled
+        if let Some(dma1) = dma1 {
+            if usart.get_type_id() == TypeId::of::<USART1>() {
+                dma1.ccr4.write(|w| unsafe {
+                    w.mem2mem()
+                        .clear()
+                        .pl()
+                        .bits(0b01)
+                        .msize()
+                        .bits(0b00)
+                        .psize()
+                        .bits(0b00)
+                        .minc()
+                        .set()
+                        .circ()
+                        .clear()
+                        .pinc()
+                        .clear()
+                        .dir()
+                        .set()
+                        .tcie()
+                        .set()
+                        .en()
+                        .clear()
+                });
+            } else {
+                // TODO enable DMA for USART{2,3}
+                unimplemented!()
+            }
+        }
+
         // 8N1
         usart.cr2.write(|w| unsafe { w.stop().bits(0b00) });
 
@@ -185,7 +242,10 @@ where
         usart.brr.write(|w| unsafe { w.bits(brr) });
 
         // disable hardware flow control
-        usart.cr3.write(|w| w.rtse().clear().ctse().clear());
+        // enable DMA TX transfers
+        usart.cr3.write(
+            |w| w.rtse().clear().ctse().clear().dmat().set(),
+        );
 
         // enable TX, RX; enable RXNE; disable parity checking
         usart.cr1.write(|w| {
@@ -251,5 +311,38 @@ where
         } else {
             Err(nb::Error::WouldBlock)
         }
+    }
+}
+
+impl<'a> Serial<'a, USART1> {
+    /// Starts a DMA transfer to send `buffer` through this serial port
+    pub fn write_all<B>(
+        &self,
+        dma1: &DMA1,
+        buffer: Ref<Buffer<B, Dma1Channel4>>,
+    ) -> ::core::result::Result<(), dma::Error>
+    where
+        B: AsRef<[u8]>,
+    {
+        let usart1 = self.0;
+
+        if dma1.ccr4.read().en().is_set() {
+            return Err(dma::Error::InUse);
+        }
+
+        let buffer = buffer.lock().as_ref();
+
+        dma1.cndtr4.write(|w| unsafe {
+                w.ndt().bits(u16(buffer.len()).unwrap())
+            });
+        dma1.cpar4.write(|w| unsafe {
+                w.bits(&usart1.dr as *const _ as u32)
+            });
+        dma1.cmar4.write(
+            |w| unsafe { w.bits(buffer.as_ptr() as u32) },
+        );
+        dma1.ccr4.modify(|_, w| w.en().set());
+
+        Ok(())
     }
 }

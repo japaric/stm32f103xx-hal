@@ -19,10 +19,11 @@ extern crate cortex_m_rtfm as rtfm;
 
 extern crate nb;
 
+use blue_pill::dma::{Buffer, Dma1Channel4};
 use blue_pill::time::Hertz;
 use blue_pill::{Serial, stm32f103xx};
-use hal::prelude::*;
-use rtfm::{P0, T0, TMax};
+use rtfm::{C1, P0, P1, Resource, T0, T1, TMax};
+use stm32f103xx::interrupt::DMA1_CHANNEL4;
 
 // CONFIGURATION
 pub const BAUD_RATE: Hertz = Hertz(115_200);
@@ -31,6 +32,9 @@ pub const BAUD_RATE: Hertz = Hertz(115_200);
 peripherals!(stm32f103xx, {
     AFIO: Peripheral {
         ceiling: C0,
+    },
+    DMA1: Peripheral {
+        ceiling: C1,
     },
     GPIOA: Peripheral {
         ceiling: C0,
@@ -43,40 +47,28 @@ peripherals!(stm32f103xx, {
     },
 });
 
+static BUFFER: Resource<Buffer<[u8; 14], Dma1Channel4>, C1> =
+    Resource::new(Buffer::new([0; 14]));
+
 // INITIALIZATION PHASE
 fn init(ref prio: P0, thr: &TMax) {
     let afio = &AFIO.access(prio, thr);
+    let dma1 = &DMA1.access(prio, thr);
     let gpioa = &GPIOA.access(prio, thr);
     let rcc = &RCC.access(prio, thr);
     let usart1 = USART1.access(prio, thr);
+    let buffer = BUFFER.access(prio, thr);
 
     let serial = Serial(&*usart1);
 
-    serial.init(BAUD_RATE.invert(), afio, None, gpioa, rcc);
+    serial.init(BAUD_RATE.invert(), afio, Some(dma1), gpioa, rcc);
+    buffer.borrow_mut().clone_from_slice(b"Hello, world!\n");
 
-    const BYTE: u8 = b'A';
-
-    assert!(serial.write(BYTE).is_ok());
-
-    for _ in 0..1_000 {
-        match serial.read() {
-            Ok(byte) => {
-                assert_eq!(byte, BYTE);
-                return;
-            }
-            Err(nb::Error::Other(e)) => panic!("{:?}", e),
-            Err(nb::Error::WouldBlock) => continue,
-        }
-    }
-
-    panic!("Timeout")
+    serial.write_all(dma1, buffer).unwrap();
 }
 
 // IDLE LOOP
 fn idle(_prio: P0, _thr: T0) -> ! {
-    // OK
-    rtfm::bkpt();
-
     // Sleep
     loop {
         rtfm::wfi();
@@ -84,4 +76,19 @@ fn idle(_prio: P0, _thr: T0) -> ! {
 }
 
 // TASKS
-tasks!(stm32f103xx, {});
+tasks!(stm32f103xx, {
+    done: Task {
+        interrupt: DMA1_CHANNEL4,
+        priority: P1,
+        enabled: true,
+    },
+});
+
+fn done(_task: DMA1_CHANNEL4, ref prio: P1, ref thr: T1) {
+    let buffer = BUFFER.access(prio, thr);
+    let dma1 = &DMA1.access(prio, thr);
+
+    buffer.free(dma1).unwrap();
+
+    rtfm::bkpt();
+}

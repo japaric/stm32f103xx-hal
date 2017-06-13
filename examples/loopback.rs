@@ -1,4 +1,4 @@
-//! Serial loopback
+//! Serial loopback via USART1
 
 #![feature(const_fn)]
 #![feature(used)]
@@ -49,7 +49,7 @@ fn init(ref prio: P0, thr: &TMax) {
 
     let serial = Serial(&*usart1);
 
-    serial.init(BAUD_RATE.invert(), afio, gpioa, rcc);
+    serial.init(BAUD_RATE.invert(), afio, None, gpioa, rcc);
 }
 
 // IDLE LOOP

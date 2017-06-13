@@ -64,7 +64,7 @@ fn init(ref prio: P0, thr: &TMax) {
 
     led::init(gpioc, rcc);
 
-    serial.init(BAUD_RATE.invert(), afio, gpioa, rcc);
+    serial.init(BAUD_RATE.invert(), afio, None, gpioa, rcc);
 
     timer.init(FREQUENCY.invert(), rcc);
     timer.resume();

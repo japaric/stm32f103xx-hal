@@ -14,16 +14,19 @@
 #![deny(warnings)]
 #![feature(get_type_id)]
 #![feature(never_type)]
+#![feature(const_fn)]
 #![no_std]
 
 extern crate cast;
-extern crate embedded_hal as hal;
 extern crate either;
+extern crate embedded_hal as hal;
 extern crate nb;
+extern crate static_ref;
 
 pub extern crate stm32f103xx;
 
 pub mod capture;
+pub mod dma;
 pub mod gpio;
 pub mod led;
 pub mod pwm;

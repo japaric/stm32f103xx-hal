@@ -53,7 +53,7 @@ fn init(ref prio: P0, thr: &TMax) {
 
     let serial = Serial(&*usart2);
 
-    serial.init(BAUD_RATE.invert(), afio, gpioa, rcc);
+    serial.init(BAUD_RATE.invert(), afio, None, gpioa, rcc);
 
     const BYTE: u8 = b'A';
 

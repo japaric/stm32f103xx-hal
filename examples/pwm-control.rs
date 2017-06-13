@@ -63,7 +63,7 @@ fn init(ref prio: P0, thr: &TMax) {
     let pwm = Pwm(&*tim2);
     let serial = Serial(&*usart1);
 
-    serial.init(BAUD_RATE.invert(), afio, gpioa, rcc);
+    serial.init(BAUD_RATE.invert(), afio, None, gpioa, rcc);
 
     pwm.init(FREQUENCY.invert(), afio, gpioa, rcc);
     pwm.set_duty(Channel::_1, 0);
