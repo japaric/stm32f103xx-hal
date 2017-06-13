@@ -21,6 +21,11 @@ pub struct Dma1Channel4 {
     _0: (),
 }
 
+/// Channel 5 of DMA1
+pub struct Dma1Channel5 {
+    _0: (),
+}
+
 /// Buffer to be used with a certain DMA `CHANNEL`
 pub struct Buffer<T, CHANNEL> {
     _marker: PhantomData<CHANNEL>,
@@ -32,7 +37,6 @@ pub struct Buffer<T, CHANNEL> {
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 enum Status {
     Locked,
-    #[cfg(unused)]
     MutLocked,
     Unlocked,
 }
@@ -153,7 +157,6 @@ impl<T, CHANNEL> Buffer<T, CHANNEL> {
         unsafe { &*self.data.get() }
     }
 
-    #[cfg(unused)]
     pub(crate) fn lock_mut(&self) -> &mut T {
         assert_eq!(self.status.get(), Status::Unlocked);
         assert_eq!(self.flag.get(), UNUSED);
@@ -164,31 +167,55 @@ impl<T, CHANNEL> Buffer<T, CHANNEL> {
         unsafe { &mut *self.data.get() }
     }
 
-    pub(crate) unsafe fn unlock(&self) {
+    unsafe fn unlock(&self, status: Status) {
+        match status {
+            Status::Locked => self.flag.set(self.flag.get() - 1),
+            Status::MutLocked => self.flag.set(UNUSED),
+            _ => { /* unreachable!() */ }
+        }
+
         self.status.set(Status::Unlocked);
-
-        self.flag.set(self.flag.get() - 1);
-    }
-
-    #[cfg(unused)]
-    pub(crate) unsafe fn unlock_mut(&self) {
-        self.status.set(Status::Unlocked);
-
-        self.flag.set(0);
     }
 }
 
+// FIXME these `free` methods probably want some of sort of barrier
 impl<T> Buffer<T, Dma1Channel4> {
     /// Waits until this buffer is freed by the DMA
     pub fn free(&self, dma1: &DMA1) -> nb::Result<(), Error> {
-        assert_eq!(self.status.get(), Status::Locked);
+        let status = self.status.get();
+
+        if status == Status::Unlocked {
+            return Ok(());
+        }
 
         if dma1.isr.read().teif4().is_set() {
             Err(nb::Error::Other(Error::Transfer))
         } else if dma1.isr.read().tcif4().is_set() {
-            unsafe { self.unlock() }
+            unsafe { self.unlock(status) }
             dma1.ifcr.write(|w| w.ctcif4().set());
             dma1.ccr4.modify(|_, w| w.en().clear());
+            Ok(())
+        } else {
+            Err(nb::Error::WouldBlock)
+        }
+    }
+}
+
+impl<T> Buffer<T, Dma1Channel5> {
+    /// Waits until this buffer is freed by the DMA
+    pub fn free(&self, dma1: &DMA1) -> nb::Result<(), Error> {
+        let status = self.status.get();
+
+        if status == Status::Unlocked {
+            return Ok(());
+        }
+
+        if dma1.isr.read().teif5().is_set() {
+            Err(nb::Error::Other(Error::Transfer))
+        } else if dma1.isr.read().tcif5().is_set() {
+            unsafe { self.unlock(status) }
+            dma1.ifcr.write(|w| w.ctcif5().set());
+            dma1.ccr5.modify(|_, w| w.en().clear());
             Ok(())
         } else {
             Err(nb::Error::WouldBlock)

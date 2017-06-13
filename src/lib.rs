@@ -12,9 +12,9 @@
 
 #![deny(missing_docs)]
 #![deny(warnings)]
+#![feature(const_fn)]
 #![feature(get_type_id)]
 #![feature(never_type)]
-#![feature(const_fn)]
 #![no_std]
 
 extern crate cast;

@@ -31,7 +31,7 @@ use static_ref::Ref;
 use stm32f103xx::{AFIO, DMA1, GPIOA, GPIOB, RCC, USART1, USART2, USART3,
                   gpioa, usart1};
 
-use dma::{self, Buffer, Dma1Channel4};
+use dma::{self, Buffer, Dma1Channel4, Dma1Channel5};
 
 /// Specialized `Result` type
 pub type Result<T> = ::core::result::Result<T, nb::Error<Error>>;
@@ -201,18 +201,19 @@ where
             });
         }
 
-        // mem2mem: Memory to memory mode disabled
-        // pl: Medium priority
-        // msize: Memory size = 8 bits
-        // psize: Peripheral size = 8 bits
-        // minc: Memory increment mode enabled
-        // pinc: Peripheral increment mode disabled
-        // circ: Circular mode disabled
-        // dir: Transfer from memory to peripheral
-        // tceie: Transfer complete interrupt enabled
-        // en: Disabled
         if let Some(dma1) = dma1 {
             if usart.get_type_id() == TypeId::of::<USART1>() {
+                // TX DMA transfer
+                // mem2mem: Memory to memory mode disabled
+                // pl: Medium priority
+                // msize: Memory size = 8 bits
+                // psize: Peripheral size = 8 bits
+                // minc: Memory increment mode enabled
+                // pinc: Peripheral increment mode disabled
+                // circ: Circular mode disabled
+                // dir: Transfer from memory to peripheral
+                // tceie: Transfer complete interrupt enabled
+                // en: Disabled
                 dma1.ccr4.write(|w| unsafe {
                     w.mem2mem()
                         .clear()
@@ -235,6 +236,40 @@ where
                         .en()
                         .clear()
                 });
+
+                // RX DMA transfer
+                // mem2mem: Memory to memory mode disabled
+                // pl: Medium priority
+                // msize: Memory size = 8 bits
+                // psize: Peripheral size = 8 bits
+                // minc: Memory increment mode enabled
+                // pinc: Peripheral increment mode disabled
+                // circ: Circular mode disabled
+                // dir: Transfer from peripheral to memory
+                // tceie: Transfer complete interrupt enabled
+                // en: Disabled
+                dma1.ccr5.write(|w| unsafe {
+                    w.mem2mem()
+                        .clear()
+                        .pl()
+                        .bits(0b01)
+                        .msize()
+                        .bits(0b00)
+                        .psize()
+                        .bits(0b00)
+                        .minc()
+                        .set()
+                        .circ()
+                        .clear()
+                        .pinc()
+                        .clear()
+                        .dir()
+                        .clear()
+                        .tcie()
+                        .set()
+                        .en()
+                        .clear()
+                });
             } else {
                 // TODO enable DMA for USART{2,3}
                 unimplemented!()
@@ -252,10 +287,10 @@ where
         usart.brr.write(|w| unsafe { w.bits(brr) });
 
         // disable hardware flow control
-        // enable DMA TX transfers
-        usart.cr3.write(
-            |w| w.rtse().clear().ctse().clear().dmat().set(),
-        );
+        // enable DMA TX and RX transfers
+        usart.cr3.write(|w| {
+            w.rtse().clear().ctse().clear().dmat().set().dmar().set()
+        });
 
         // enable TX, RX; disable parity checking
         usart.cr1.write(|w| {
@@ -347,6 +382,39 @@ where
 }
 
 impl<'a> Serial<'a, USART1> {
+    /// Starts a DMA transfer to receive serial data into a `buffer`
+    // TODO support circular mode + half transfer interrupt as a double
+    // buffering mode
+    pub fn read_exact<B>(
+        &self,
+        dma1: &DMA1,
+        buffer: Ref<Buffer<B, Dma1Channel5>>,
+    ) -> ::core::result::Result<(), dma::Error>
+    where
+        B: AsMut<[u8]>,
+    {
+        let usart1 = self.0;
+
+        if dma1.ccr5.read().en().is_set() {
+            return Err(dma::Error::InUse);
+        }
+
+        let buffer = buffer.lock_mut().as_mut();
+
+        dma1.cndtr5.write(|w| unsafe {
+            w.ndt().bits(u16(buffer.len()).unwrap())
+        });
+        dma1.cpar5.write(|w| unsafe {
+            w.bits(&usart1.dr as *const _ as u32)
+        });
+        dma1.cmar5.write(
+            |w| unsafe { w.bits(buffer.as_ptr() as u32) },
+        );
+        dma1.ccr5.modify(|_, w| w.en().set());
+
+        Ok(())
+    }
+
     /// Starts a DMA transfer to send `buffer` through this serial port
     pub fn write_all<B>(
         &self,
