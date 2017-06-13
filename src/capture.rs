@@ -52,6 +52,18 @@ pub enum Error {
     _Extensible,
 }
 
+/// Interrupt event
+pub enum Event {
+    /// Capture on channel 1
+    Capture1,
+    /// Capture on channel 2
+    Capture2,
+    /// Capture on channel 3
+    Capture3,
+    /// Capture on channel 4
+    Capture4,
+}
+
 /// Input capture interface
 pub struct Capture<'a, T>(pub &'a T)
 where
@@ -147,6 +159,30 @@ impl<'a> Capture<'a, TIM1> {
         tim1.cr1.write(
             |w| w.dir().up().opm().continuous().cen().enabled(),
         );
+    }
+
+    /// Starts listening for an interrupt `event`
+    pub fn listen(&self, event: Event) {
+        let tim1 = self.0;
+
+        match event {
+            Event::Capture1 => tim1.dier.modify(|_, w| w.cc1ie().set()),
+            Event::Capture2 => tim1.dier.modify(|_, w| w.cc2ie().set()),
+            Event::Capture3 => tim1.dier.modify(|_, w| w.cc3ie().set()),
+            Event::Capture4 => tim1.dier.modify(|_, w| w.cc4ie().set()),
+        }
+    }
+
+    /// Stops listening for an interrupt `event`
+    pub fn unlisten(&self, event: Event) {
+        let tim1 = self.0;
+
+        match event {
+            Event::Capture1 => tim1.dier.modify(|_, w| w.cc1ie().clear()),
+            Event::Capture2 => tim1.dier.modify(|_, w| w.cc2ie().clear()),
+            Event::Capture3 => tim1.dier.modify(|_, w| w.cc3ie().clear()),
+            Event::Capture4 => tim1.dier.modify(|_, w| w.cc4ie().clear()),
+        }
     }
 
     fn _set_resolution(&self, resolution: ::apb2::Ticks) {
@@ -418,6 +454,30 @@ where
         tim2.cr1.write(
             |w| w.dir().up().opm().continuous().cen().enabled(),
         );
+    }
+
+    /// Starts listening for an interrupt `event`
+    pub fn listen(&self, event: Event) {
+        let tim = self.0;
+
+        match event {
+            Event::Capture1 => tim.dier.modify(|_, w| w.cc1ie().set()),
+            Event::Capture2 => tim.dier.modify(|_, w| w.cc2ie().set()),
+            Event::Capture3 => tim.dier.modify(|_, w| w.cc3ie().set()),
+            Event::Capture4 => tim.dier.modify(|_, w| w.cc4ie().set()),
+        }
+    }
+
+    /// Stops listening for an interrupt `event`
+    pub fn unlisten(&self, event: Event) {
+        let tim = self.0;
+
+        match event {
+            Event::Capture1 => tim.dier.modify(|_, w| w.cc1ie().clear()),
+            Event::Capture2 => tim.dier.modify(|_, w| w.cc2ie().clear()),
+            Event::Capture3 => tim.dier.modify(|_, w| w.cc3ie().clear()),
+            Event::Capture4 => tim.dier.modify(|_, w| w.cc4ie().clear()),
+        }
     }
 
     fn _set_resolution(&self, resolution: ::apb1::Ticks) {
