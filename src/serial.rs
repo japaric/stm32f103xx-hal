@@ -72,6 +72,16 @@ pub enum Error {
     _Extensible,
 }
 
+/// Interrupt event
+pub enum Event {
+    /// RX buffer Not Empty (new data available)
+    Rxne,
+    /// Transmission Complete
+    Tc,
+    /// TX buffer Empty (more data can be send)
+    Txe,
+}
+
 /// Serial interface
 ///
 /// # Interrupts
@@ -247,7 +257,7 @@ where
             |w| w.rtse().clear().ctse().clear().dmat().set(),
         );
 
-        // enable TX, RX; enable RXNE; disable parity checking
+        // enable TX, RX; disable parity checking
         usart.cr1.write(|w| {
             w.ue()
                 .set()
@@ -260,8 +270,30 @@ where
                 .pce()
                 .clear()
                 .rxneie()
-                .set()
+                .clear()
         });
+    }
+
+    /// Starts listening for an interrupt `event`
+    pub fn listen(&self, event: Event) {
+        let usart = self.0;
+
+        match event {
+            Event::Rxne => usart.cr1.modify(|_, w| w.rxneie().set()),
+            Event::Tc => usart.cr1.modify(|_, w| w.tcie().set()),
+            Event::Txe => usart.cr1.modify(|_, w| w.txeie().set()),
+        }
+    }
+
+    /// Stops listening for an interrupt `event`
+    pub fn unlisten(&self, event: Event) {
+        let usart = self.0;
+
+        match event {
+            Event::Rxne => usart.cr1.modify(|_, w| w.rxneie().clear()),
+            Event::Tc => usart.cr1.modify(|_, w| w.tcie().clear()),
+            Event::Txe => usart.cr1.modify(|_, w| w.txeie().clear()),
+        }
     }
 }
 
@@ -333,11 +365,11 @@ impl<'a> Serial<'a, USART1> {
         let buffer = buffer.lock().as_ref();
 
         dma1.cndtr4.write(|w| unsafe {
-                w.ndt().bits(u16(buffer.len()).unwrap())
-            });
+            w.ndt().bits(u16(buffer.len()).unwrap())
+        });
         dma1.cpar4.write(|w| unsafe {
-                w.bits(&usart1.dr as *const _ as u32)
-            });
+            w.bits(&usart1.dr as *const _ as u32)
+        });
         dma1.cmar4.write(
             |w| unsafe { w.bits(buffer.as_ptr() as u32) },
         );

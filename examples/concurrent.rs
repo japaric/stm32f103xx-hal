@@ -18,6 +18,7 @@ extern crate cortex_m_rtfm as rtfm;
 extern crate nb;
 
 use blue_pill::led::{self, Green};
+use blue_pill::serial::Event;
 use blue_pill::time::Hertz;
 use blue_pill::{Serial, Timer, stm32f103xx};
 use hal::prelude::*;
@@ -65,6 +66,7 @@ fn init(ref prio: P0, thr: &TMax) {
     led::init(gpioc, rcc);
 
     serial.init(BAUD_RATE.invert(), afio, None, gpioa, rcc);
+    serial.listen(Event::Rxne);
 
     timer.init(FREQUENCY.invert(), rcc);
     timer.resume();
