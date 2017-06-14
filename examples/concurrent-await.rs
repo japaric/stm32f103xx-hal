@@ -100,12 +100,10 @@ fn idle(ref prio: P0, ref thr: T0) -> ! {
         }
     })();
 
-    let mut loopback = (|| {
-        loop {
-            let byte = await!(serial.read()).unwrap();
-            await!(serial.write()).unwrap();
-        }
-    })();
+    let mut loopback = (|| loop {
+                            let byte = await!(serial.read()).unwrap();
+                            await!(serial.write()).unwrap();
+                        })();
 
     // Resume the timer count
     timer.resume();

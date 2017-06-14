@@ -20,7 +20,7 @@ extern crate cortex_m_rtfm as rtfm;
 #[macro_use]
 extern crate nb;
 
-use blue_pill::led::{Green, self};
+use blue_pill::led::{self, Green};
 use blue_pill::time::Hertz;
 use blue_pill::{Timer, stm32f103xx};
 use hal::prelude::*;

@@ -178,10 +178,10 @@ impl<T, CHANNEL> Buffer<T, CHANNEL> {
     }
 }
 
-// FIXME these `free` methods probably want some of sort of barrier
+// FIXME these `release` methods probably want some of sort of barrier
 impl<T> Buffer<T, Dma1Channel4> {
-    /// Waits until this buffer is freed by the DMA
-    pub fn free(&self, dma1: &DMA1) -> nb::Result<(), Error> {
+    /// Waits until the DMA releases this buffer
+    pub fn release(&self, dma1: &DMA1) -> nb::Result<(), Error> {
         let status = self.status.get();
 
         if status == Status::Unlocked {
@@ -202,8 +202,8 @@ impl<T> Buffer<T, Dma1Channel4> {
 }
 
 impl<T> Buffer<T, Dma1Channel5> {
-    /// Waits until this buffer is freed by the DMA
-    pub fn free(&self, dma1: &DMA1) -> nb::Result<(), Error> {
+    /// Waits until the DMA releases this buffer
+    pub fn release(&self, dma1: &DMA1) -> nb::Result<(), Error> {
         let status = self.status.get();
 
         if status == Status::Unlocked {

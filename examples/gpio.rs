@@ -13,7 +13,7 @@ extern crate cortex_m_rt;
 #[macro_use]
 extern crate cortex_m_rtfm as rtfm;
 
-use blue_pill::gpio::{PB12, self};
+use blue_pill::gpio::{self, PB12};
 use blue_pill::stm32f103xx;
 use rtfm::{P0, T0, TMax};
 

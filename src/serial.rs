@@ -383,6 +383,9 @@ where
 
 impl<'a> Serial<'a, USART1> {
     /// Starts a DMA transfer to receive serial data into a `buffer`
+    ///
+    /// This will mutably lock the `buffer` preventing borrowing its contents
+    /// The `buffer` can be `release`d after the DMA transfer finishes
     // TODO support circular mode + half transfer interrupt as a double
     // buffering mode
     pub fn read_exact<B>(
@@ -416,6 +419,9 @@ impl<'a> Serial<'a, USART1> {
     }
 
     /// Starts a DMA transfer to send `buffer` through this serial port
+    ///
+    /// This will immutably lock the `buffer` preventing mutably borrowing its
+    /// contents. The `buffer` can be `release`d after the DMA transfer finishes
     pub fn write_all<B>(
         &self,
         dma1: &DMA1,

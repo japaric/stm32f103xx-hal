@@ -1,6 +1,4 @@
-//! Test the USART1 instance
-//!
-//! Connect the TX and RX pins to run this test
+//! Test sending serial data using the DMA
 
 #![feature(const_fn)]
 #![feature(used)]
@@ -88,7 +86,7 @@ fn done(_task: DMA1_CHANNEL4, ref prio: P1, ref thr: T1) {
     let buffer = BUFFER.access(prio, thr);
     let dma1 = &DMA1.access(prio, thr);
 
-    buffer.free(dma1).unwrap();
+    buffer.release(dma1).unwrap();
 
     rtfm::bkpt();
 }
