@@ -21,6 +21,7 @@
 //! - Interrupt = USART3
 
 use core::any::{Any, TypeId};
+use core::marker::Unsize;
 use core::ops::Deref;
 use core::ptr;
 
@@ -394,7 +395,7 @@ impl<'a> Serial<'a, USART1> {
         buffer: Ref<Buffer<B, Dma1Channel5>>,
     ) -> ::core::result::Result<(), dma::Error>
     where
-        B: AsMut<[u8]>,
+        B: Unsize<[u8]>,
     {
         let usart1 = self.0;
 
@@ -402,7 +403,7 @@ impl<'a> Serial<'a, USART1> {
             return Err(dma::Error::InUse);
         }
 
-        let buffer = buffer.lock_mut().as_mut();
+        let buffer: &mut [u8] = buffer.lock_mut();
 
         dma1.cndtr5.write(|w| unsafe {
             w.ndt().bits(u16(buffer.len()).unwrap())
@@ -428,7 +429,7 @@ impl<'a> Serial<'a, USART1> {
         buffer: Ref<Buffer<B, Dma1Channel4>>,
     ) -> ::core::result::Result<(), dma::Error>
     where
-        B: AsRef<[u8]>,
+        B: Unsize<[u8]>,
     {
         let usart1 = self.0;
 
@@ -436,7 +437,7 @@ impl<'a> Serial<'a, USART1> {
             return Err(dma::Error::InUse);
         }
 
-        let buffer = buffer.lock().as_ref();
+        let buffer: &[u8] = buffer.lock();
 
         dma1.cndtr4.write(|w| unsafe {
             w.ndt().bits(u16(buffer.len()).unwrap())
