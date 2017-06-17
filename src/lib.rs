@@ -15,6 +15,7 @@
 #![feature(const_fn)]
 #![feature(get_type_id)]
 #![feature(never_type)]
+#![feature(unsize)]
 #![no_std]
 
 extern crate cast;

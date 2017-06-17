@@ -31,11 +31,14 @@
 //! - CH4 = PB9
 
 use core::any::{Any, TypeId};
+use core::marker::Unsize;
 
 use cast::{u16, u32};
 use hal;
-use stm32f103xx::{AFIO, GPIOA, RCC, TIM1, TIM2, TIM3, TIM4};
+use static_ref::Ref;
+use stm32f103xx::{AFIO, DMA1, GPIOA, RCC, TIM1, TIM2, TIM3, TIM4};
 
+use dma::{self, Buffer, Dma1Channel2};
 use timer::{Channel, TIM};
 
 /// PWM driver
@@ -199,22 +202,33 @@ where
     T: Any + TIM,
 {
     /// Initializes the PWM module
-    pub fn init<P>(&self, period: P, afio: &AFIO, gpio: &T::GPIO, rcc: &RCC)
-    where
+    pub fn init<P>(
+        &self,
+        period: P,
+        afio: &AFIO,
+        dma1: Option<&DMA1>,
+        gpio: &T::GPIO,
+        rcc: &RCC,
+    ) where
         P: Into<::apb1::Ticks>,
     {
-        self._init(period.into(), afio, gpio, rcc)
+        self._init(period.into(), afio, dma1, gpio, rcc)
     }
 
     fn _init(
         &self,
         period: ::apb1::Ticks,
         afio: &AFIO,
+        dma1: Option<&DMA1>,
         gpio: &T::GPIO,
         rcc: &RCC,
     ) {
         let tim2 = self.0;
 
+        // enable AFIO, (DMA1), TIMx and GPIOx
+        if dma1.is_some() {
+            rcc.ahbenr.modify(|_, w| w.dma1en().enabled());
+        }
         if tim2.get_type_id() == TypeId::of::<TIM2>() {
             rcc.apb1enr.modify(|_, w| w.tim2en().enabled());
         } else if tim2.get_type_id() == TypeId::of::<TIM3>() {
@@ -365,6 +379,48 @@ where
 
         self._set_period(period);
 
+        if let Some(dma1) = dma1 {
+            tim2.dier.modify(|_, w| w.ude().set());
+
+            if tim2.get_type_id() == TypeId::of::<TIM2>() {
+                // TIM2_UP
+                // mem2mem: Memory to memory mode disabled
+                // pl: Medium priority
+                // msize: Memory size = 8 bits
+                // psize: Peripheral size = 16 bits
+                // minc: Memory increment mode enabled
+                // pinc: Peripheral increment mode disabled
+                // circ: Circular mode disabled
+                // dir: Transfer from memory to peripheral
+                // tceie: Transfer complete interrupt disabled
+                // en: Disabled
+                dma1.ccr2.write(|w| unsafe {
+                    w.mem2mem()
+                        .clear()
+                        .pl()
+                        .bits(0b01)
+                        .msize()
+                        .bits(0b00)
+                        .psize()
+                        .bits(0b01)
+                        .minc()
+                        .set()
+                        .pinc()
+                        .clear()
+                        .circ()
+                        .clear()
+                        .dir()
+                        .set()
+                        .tcie()
+                        .set()
+                        .en()
+                        .clear()
+                });
+            } else {
+                unimplemented!()
+            }
+        }
+
         tim2.cr1.write(|w| unsafe {
             w.cms()
                 .bits(0b00)
@@ -385,6 +441,48 @@ where
 
         let arr = u16(period / u32(psc + 1)).unwrap();
         self.0.arr.write(|w| w.arr().bits(arr));
+    }
+
+    /// Uses `buffer` to continuously change the duty cycle on every period
+    pub fn set_duties<B>(
+        &self,
+        dma1: &DMA1,
+        channel: Channel,
+        buffer: Ref<Buffer<B, Dma1Channel2>>,
+    ) -> ::core::result::Result<(), dma::Error>
+    where
+        B: Unsize<[u8]>,
+    {
+        let tim2 = self.0;
+
+        if tim2.get_type_id() == TypeId::of::<TIM2>() {
+            if dma1.ccr2.read().en().is_set() {
+                return Err(dma::Error::InUse);
+            }
+
+            let buffer: &[u8] = buffer.lock();
+
+            dma1.cndtr2.write(|w| unsafe {
+                w.ndt().bits(u16(buffer.len()).unwrap())
+            });
+            dma1.cpar2.write(|w| unsafe {
+                match channel {
+                    Channel::_1 => w.bits(&tim2.ccr1 as *const _ as u32),
+                    Channel::_2 => w.bits(&tim2.ccr2 as *const _ as u32),
+                    Channel::_3 => w.bits(&tim2.ccr3 as *const _ as u32),
+                    Channel::_4 => w.bits(&tim2.ccr4 as *const _ as u32),
+                }
+            });
+            dma1.cmar2.write(
+                |w| unsafe { w.bits(buffer.as_ptr() as u32) },
+            );
+            dma1.ccr2.modify(|_, w| w.en().set());
+
+            Ok(())
+
+        } else {
+            unimplemented!()
+        }
     }
 }
 

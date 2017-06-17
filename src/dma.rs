@@ -16,6 +16,11 @@ pub enum Error {
     Transfer,
 }
 
+/// Channel 2 of DMA1
+pub struct Dma1Channel2 {
+    _0: (),
+}
+
 /// Channel 4 of DMA1
 pub struct Dma1Channel4 {
     _0: (),
@@ -179,6 +184,28 @@ impl<T, CHANNEL> Buffer<T, CHANNEL> {
 }
 
 // FIXME these `release` methods probably want some of sort of barrier
+impl<T> Buffer<T, Dma1Channel2> {
+    /// Waits until the DMA releases this buffer
+    pub fn release(&self, dma1: &DMA1) -> nb::Result<(), Error> {
+        let status = self.status.get();
+
+        if status == Status::Unlocked {
+            return Ok(());
+        }
+
+        if dma1.isr.read().teif2().is_set() {
+            Err(nb::Error::Other(Error::Transfer))
+        } else if dma1.isr.read().tcif2().is_set() {
+            unsafe { self.unlock(status) }
+            dma1.ifcr.write(|w| w.ctcif2().set());
+            dma1.ccr2.modify(|_, w| w.en().clear());
+            Ok(())
+        } else {
+            Err(nb::Error::WouldBlock)
+        }
+    }
+}
+
 impl<T> Buffer<T, Dma1Channel4> {
     /// Waits until the DMA releases this buffer
     pub fn release(&self, dma1: &DMA1) -> nb::Result<(), Error> {

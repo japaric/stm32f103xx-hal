@@ -49,7 +49,7 @@ fn init(ref prio: P0, thr: &TMax) {
 
     let pwm = Pwm(&*tim4);
 
-    pwm.init(FREQUENCY.invert(), afio, gpiob, rcc);
+    pwm.init(FREQUENCY.invert(), afio, None, gpiob, rcc);
     let duty = pwm.get_max_duty() / 16;
 
     const CHANNELS: [Channel; 4] =

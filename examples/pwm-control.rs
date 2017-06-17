@@ -65,7 +65,7 @@ fn init(ref prio: P0, thr: &TMax) {
 
     serial.init(BAUD_RATE.invert(), afio, None, gpioa, rcc);
 
-    pwm.init(FREQUENCY.invert(), afio, gpioa, rcc);
+    pwm.init(FREQUENCY.invert(), afio, None, gpioa, rcc);
     pwm.set_duty(Channel::_1, 0);
 
     pwm.enable(Channel::_1);
