@@ -80,19 +80,19 @@ impl<'a> Pwm<'a, TIM1> {
         // CH4 = PA11 = alternate push-pull
         gpioa.crh.modify(|_, w| {
             w.mode8()
-                .output()
+                .output50()
                 .cnf8()
                 .alt_push()
                 .mode9()
-                .output()
+                .output50()
                 .cnf9()
                 .alt_push()
                 .mode10()
-                .output()
+                .output50()
                 .cnf10()
                 .alt_push()
                 .mode11()
-                .output()
+                .output50()
                 .cnf11()
                 .alt_push()
         });
@@ -263,19 +263,19 @@ where
             // CH4 = PA3 = alternate push-pull
             gpio.crl.modify(|_, w| {
                 w.mode0()
-                    .output()
+                    .output50()
                     .cnf0()
                     .alt_push()
                     .mode1()
-                    .output()
+                    .output50()
                     .cnf1()
                     .alt_push()
                     .mode2()
-                    .output()
+                    .output50()
                     .cnf2()
                     .alt_push()
                     .mode3()
-                    .output()
+                    .output50()
                     .cnf3()
                     .alt_push()
             });
@@ -290,11 +290,11 @@ where
             // CH4 = PB1 = alternate push-pull (TODO)
             gpio.crl.modify(|_, w| {
                 w.mode6()
-                    .output()
+                    .output50()
                     .cnf6()
                     .alt_push()
                     .mode7()
-                    .output()
+                    .output50()
                     .cnf7()
                     .alt_push()
             });
@@ -307,22 +307,22 @@ where
             // CH4 = PB9 = alternate push-pull
             gpio.crl.modify(|_, w| {
                 w.mode6()
-                    .output()
+                    .output50()
                     .cnf6()
                     .alt_push()
                     .mode7()
-                    .output()
+                    .output50()
                     .cnf7()
                     .alt_push()
             });
 
             gpio.crh.modify(|_, w| {
                 w.mode8()
-                    .output()
+                    .output50()
                     .cnf8()
                     .alt_push()
                     .mode9()
-                    .output()
+                    .output50()
                     .cnf9()
                     .alt_push()
             });
