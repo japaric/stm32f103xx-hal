@@ -1,19 +1,28 @@
 //! Direct Memory Access (DMA)
 
 use core::cell::{Cell, UnsafeCell};
-use core::marker::PhantomData;
-use core::ops;
+use core::marker::{PhantomData, Unsize};
+use core::{ops, slice};
 
 use nb;
 use stm32f103xx::DMA1;
+use volatile_register::RO;
 
 /// DMA error
 #[derive(Debug)]
 pub enum Error {
     /// DMA channel in use
     InUse,
+    /// Previous data got overwritten before it could be read because it was
+    /// not accessed in a timely fashion
+    Overrun,
     /// Transfer error
     Transfer,
+}
+
+/// Channel 1 of DMA1
+pub struct Dma1Channel1 {
+    _0: (),
 }
 
 /// Channel 2 of DMA1
@@ -249,3 +258,116 @@ impl<T> Buffer<T, Dma1Channel5> {
         }
     }
 }
+
+/// A circular buffer associated to a DMA `CHANNEL`
+pub struct CircBuffer<T, B, CHANNEL>
+where
+    B: Unsize<[T]>,
+{
+    _marker: PhantomData<CHANNEL>,
+    _t: PhantomData<[T]>,
+    buffer: UnsafeCell<[B; 2]>,
+    status: Cell<CircStatus>,
+}
+
+impl<T, B, CHANNEL> CircBuffer<T, B, CHANNEL>
+where
+    B: Unsize<[T]>,
+{
+    pub(crate) fn lock(&self) -> &[B; 2] {
+        assert_eq!(self.status.get(), CircStatus::Free);
+
+        self.status.set(CircStatus::MutatingFirstHalf);
+
+        unsafe { &*self.buffer.get() }
+    }
+}
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+enum CircStatus {
+    /// Not in use by the DMA
+    Free,
+    /// The DMA is mutating the first half of the buffer
+    MutatingFirstHalf,
+    /// The DMA is mutating the second half of the buffer
+    MutatingSecondHalf,
+}
+
+impl<T, B> CircBuffer<T, B, Dma1Channel1>
+where
+    B: Unsize<[T]>,
+    T: Atomic,
+{
+    /// Constructs a circular buffer from two halves
+    pub const fn new(buffer: [B; 2]) -> Self {
+        CircBuffer {
+            _t: PhantomData,
+            _marker: PhantomData,
+            buffer: UnsafeCell::new(buffer),
+            status: Cell::new(CircStatus::Free),
+        }
+    }
+
+    /// Yields read access to the half of the circular buffer that's not
+    /// currently being mutated by the DMA
+    pub fn read(&self, dma1: &DMA1) -> nb::Result<&[RO<T>], Error> {
+        let status = self.status.get();
+
+        assert_ne!(status, CircStatus::Free);
+
+        let isr = dma1.isr.read();
+
+        if isr.teif1().is_set() {
+            Err(nb::Error::Other(Error::Transfer))
+        } else {
+            match status {
+                CircStatus::MutatingFirstHalf => {
+                    if isr.tcif1().is_set() {
+                        Err(nb::Error::Other(Error::Overrun))
+                    } else if isr.htif1().is_set() {
+                        dma1.ifcr.write(|w| w.chtif1().set());
+
+                        self.status.set(CircStatus::MutatingSecondHalf);
+
+                        unsafe {
+                            let half: &[T] = &(*self.buffer.get())[0];
+                            Ok(slice::from_raw_parts(
+                                half.as_ptr() as *const _,
+                                half.len(),
+                            ))
+                        }
+                    } else {
+                        Err(nb::Error::WouldBlock)
+                    }
+                }
+                CircStatus::MutatingSecondHalf => {
+                    if isr.htif1().is_set() {
+                        Err(nb::Error::Other(Error::Overrun))
+                    } else if isr.tcif1().is_set() {
+                        dma1.ifcr.write(|w| w.ctcif1().set());
+
+                        self.status.set(CircStatus::MutatingFirstHalf);
+
+                        unsafe {
+                            let half: &[T] = &(*self.buffer.get())[1];
+                            Ok(slice::from_raw_parts(
+                                half.as_ptr() as *const _,
+                                half.len(),
+                            ))
+                        }
+                    } else {
+                        Err(nb::Error::WouldBlock)
+                    }
+                }
+                _ => unreachable!(),
+            }
+        }
+    }
+}
+
+/// Values that can be atomically read
+pub trait Atomic: Copy {}
+
+impl Atomic for u8 {}
+impl Atomic for u16 {}
+impl Atomic for u32 {}

@@ -11,6 +11,7 @@ version = "0.1.0"
 [dependencies]
 static-ref = "0.1.0"
 stm32f103xx = "0.6.1"
+volatile-register = "0.2.0"
 
 [dependencies.cast]
 default-features = false

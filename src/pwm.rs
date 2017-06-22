@@ -392,7 +392,7 @@ where
                 // pinc: Peripheral increment mode disabled
                 // circ: Circular mode disabled
                 // dir: Transfer from memory to peripheral
-                // tceie: Transfer complete interrupt disabled
+                // tceie: Transfer complete interrupt enabled
                 // en: Disabled
                 dma1.ccr2.write(|w| unsafe {
                     w.mem2mem()
