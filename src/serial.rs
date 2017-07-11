@@ -28,7 +28,7 @@ use core::ptr;
 use cast::u16;
 use hal;
 use nb;
-use static_ref::Ref;
+use static_ref::Static;
 use stm32f103xx::{AFIO, DMA1, GPIOA, GPIOB, RCC, USART1, USART2, USART3,
                   gpioa, usart1};
 
@@ -149,19 +149,17 @@ where
             });
         } else if usart.get_type_id() == TypeId::of::<USART2>() {
             rcc.apb1enr.modify(|_, w| w.usart2en().enabled());
-            rcc.apb2enr.modify(
-                |_, w| w.afioen().enabled().iopaen().enabled(),
-            );
+            rcc.apb2enr
+                .modify(|_, w| w.afioen().enabled().iopaen().enabled());
         } else if usart.get_type_id() == TypeId::of::<USART3>() {
             rcc.apb1enr.modify(|_, w| w.usart3en().enabled());
-            rcc.apb2enr.modify(
-                |_, w| w.afioen().enabled().iopben().enabled(),
-            );
+            rcc.apb2enr
+                .modify(|_, w| w.afioen().enabled().iopben().enabled());
         }
 
         if usart.get_type_id() == TypeId::of::<USART1>() {
             // PA9 = TX, PA10 = RX
-            afio.mapr.modify(|_, w| w.usart1_remap().clear());
+            afio.mapr.modify(|_, w| w.usart1_remap().clear_bit());
             gpio.crh.modify(|_, w| {
                 w.mode9()
                     .output()
@@ -174,7 +172,7 @@ where
             });
         } else if usart.get_type_id() == TypeId::of::<USART2>() {
             // PA2 = TX, PA3 = RX
-            afio.mapr.modify(|_, w| w.usart2_remap().clear());
+            afio.mapr.modify(|_, w| w.usart2_remap().clear_bit());
             gpio.crl.modify(|_, w| {
                 w.mode2()
                     .output()
@@ -187,9 +185,8 @@ where
             });
         } else if usart.get_type_id() == TypeId::of::<USART3>() {
             // PB10 = TX, PB11 = RX
-            afio.mapr.modify(
-                |_, w| unsafe { w.usart3_remap().bits(0b00) },
-            );
+            afio.mapr
+                .modify(|_, w| unsafe { w.usart3_remap().bits(0b00) });
             gpio.crh.modify(|_, w| {
                 w.mode10()
                     .output()
@@ -217,7 +214,7 @@ where
                 // en: Disabled
                 dma1.ccr4.write(|w| unsafe {
                     w.mem2mem()
-                        .clear()
+                        .clear_bit()
                         .pl()
                         .bits(0b01)
                         .msize()
@@ -225,17 +222,17 @@ where
                         .psize()
                         .bits(0b00)
                         .minc()
-                        .set()
+                        .set_bit()
                         .circ()
-                        .clear()
+                        .clear_bit()
                         .pinc()
-                        .clear()
+                        .clear_bit()
                         .dir()
-                        .set()
+                        .set_bit()
                         .tcie()
-                        .set()
+                        .set_bit()
                         .en()
-                        .clear()
+                        .clear_bit()
                 });
 
                 // RX DMA transfer
@@ -251,7 +248,7 @@ where
                 // en: Disabled
                 dma1.ccr5.write(|w| unsafe {
                     w.mem2mem()
-                        .clear()
+                        .clear_bit()
                         .pl()
                         .bits(0b01)
                         .msize()
@@ -259,17 +256,17 @@ where
                         .psize()
                         .bits(0b00)
                         .minc()
-                        .set()
+                        .set_bit()
                         .circ()
-                        .clear()
+                        .clear_bit()
                         .pinc()
-                        .clear()
+                        .clear_bit()
                         .dir()
-                        .clear()
+                        .clear_bit()
                         .tcie()
-                        .set()
+                        .set_bit()
                         .en()
-                        .clear()
+                        .clear_bit()
                 });
             } else {
                 // TODO enable DMA for USART{2,3}
@@ -290,23 +287,30 @@ where
         // disable hardware flow control
         // enable DMA TX and RX transfers
         usart.cr3.write(|w| {
-            w.rtse().clear().ctse().clear().dmat().set().dmar().set()
+            w.rtse()
+                .clear_bit()
+                .ctse()
+                .clear_bit()
+                .dmat()
+                .set_bit()
+                .dmar()
+                .set_bit()
         });
 
         // enable TX, RX; disable parity checking
         usart.cr1.write(|w| {
             w.ue()
-                .set()
+                .set_bit()
                 .re()
-                .set()
+                .set_bit()
                 .te()
-                .set()
+                .set_bit()
                 .m()
-                .clear()
+                .clear_bit()
                 .pce()
-                .clear()
+                .clear_bit()
                 .rxneie()
-                .clear()
+                .clear_bit()
         });
     }
 
@@ -315,9 +319,9 @@ where
         let usart = self.0;
 
         match event {
-            Event::Rxne => usart.cr1.modify(|_, w| w.rxneie().set()),
-            Event::Tc => usart.cr1.modify(|_, w| w.tcie().set()),
-            Event::Txe => usart.cr1.modify(|_, w| w.txeie().set()),
+            Event::Rxne => usart.cr1.modify(|_, w| w.rxneie().set_bit()),
+            Event::Tc => usart.cr1.modify(|_, w| w.tcie().set_bit()),
+            Event::Txe => usart.cr1.modify(|_, w| w.txeie().set_bit()),
         }
     }
 
@@ -326,9 +330,9 @@ where
         let usart = self.0;
 
         match event {
-            Event::Rxne => usart.cr1.modify(|_, w| w.rxneie().clear()),
-            Event::Tc => usart.cr1.modify(|_, w| w.tcie().clear()),
-            Event::Txe => usart.cr1.modify(|_, w| w.txeie().clear()),
+            Event::Rxne => usart.cr1.modify(|_, w| w.rxneie().clear_bit()),
+            Event::Tc => usart.cr1.modify(|_, w| w.tcie().clear_bit()),
+            Event::Txe => usart.cr1.modify(|_, w| w.txeie().clear_bit()),
         }
     }
 }
@@ -343,13 +347,13 @@ where
         let usart1 = self.0;
         let sr = usart1.sr.read();
 
-        if sr.ore().is_set() {
+        if sr.ore().bit_is_set() {
             Err(nb::Error::Other(Error::Overrun))
-        } else if sr.ne().is_set() {
+        } else if sr.ne().bit_is_set() {
             Err(nb::Error::Other(Error::Noise))
-        } else if sr.fe().is_set() {
+        } else if sr.fe().bit_is_set() {
             Err(nb::Error::Other(Error::Framing))
-        } else if sr.rxne().is_set() {
+        } else if sr.rxne().bit_is_set() {
             // NOTE(read_volatile) the register is 9 bits big but we'll only
             // work with the first 8 bits
             Ok(unsafe {
@@ -364,13 +368,13 @@ where
         let usart1 = self.0;
         let sr = usart1.sr.read();
 
-        if sr.ore().is_set() {
+        if sr.ore().bit_is_set() {
             Err(nb::Error::Other(Error::Overrun))
-        } else if sr.ne().is_set() {
+        } else if sr.ne().bit_is_set() {
             Err(nb::Error::Other(Error::Noise))
-        } else if sr.fe().is_set() {
+        } else if sr.fe().bit_is_set() {
             Err(nb::Error::Other(Error::Framing))
-        } else if sr.txe().is_set() {
+        } else if sr.txe().bit_is_set() {
             // NOTE(write_volatile) see NOTE in the `read` method
             unsafe {
                 ptr::write_volatile(&usart1.dr as *const _ as *mut u8, byte)
@@ -392,29 +396,26 @@ impl<'a> Serial<'a, USART1> {
     pub fn read_exact<B>(
         &self,
         dma1: &DMA1,
-        buffer: Ref<Buffer<B, Dma1Channel5>>,
+        buffer: &Static<Buffer<B, Dma1Channel5>>,
     ) -> ::core::result::Result<(), dma::Error>
     where
         B: Unsize<[u8]>,
     {
         let usart1 = self.0;
 
-        if dma1.ccr5.read().en().is_set() {
+        if dma1.ccr5.read().en().bit_is_set() {
             return Err(dma::Error::InUse);
         }
 
         let buffer: &mut [u8] = buffer.lock_mut();
 
-        dma1.cndtr5.write(|w| unsafe {
-            w.ndt().bits(u16(buffer.len()).unwrap())
-        });
-        dma1.cpar5.write(|w| unsafe {
-            w.bits(&usart1.dr as *const _ as u32)
-        });
-        dma1.cmar5.write(
-            |w| unsafe { w.bits(buffer.as_ptr() as u32) },
-        );
-        dma1.ccr5.modify(|_, w| w.en().set());
+        dma1.cndtr5
+            .write(|w| unsafe { w.ndt().bits(u16(buffer.len()).unwrap()) });
+        dma1.cpar5
+            .write(|w| unsafe { w.bits(&usart1.dr as *const _ as u32) });
+        dma1.cmar5
+            .write(|w| unsafe { w.bits(buffer.as_ptr() as u32) });
+        dma1.ccr5.modify(|_, w| w.en().set_bit());
 
         Ok(())
     }
@@ -426,29 +427,26 @@ impl<'a> Serial<'a, USART1> {
     pub fn write_all<B>(
         &self,
         dma1: &DMA1,
-        buffer: Ref<Buffer<B, Dma1Channel4>>,
+        buffer: &Static<Buffer<B, Dma1Channel4>>,
     ) -> ::core::result::Result<(), dma::Error>
     where
         B: Unsize<[u8]>,
     {
         let usart1 = self.0;
 
-        if dma1.ccr4.read().en().is_set() {
+        if dma1.ccr4.read().en().bit_is_set() {
             return Err(dma::Error::InUse);
         }
 
         let buffer: &[u8] = buffer.lock();
 
-        dma1.cndtr4.write(|w| unsafe {
-            w.ndt().bits(u16(buffer.len()).unwrap())
-        });
-        dma1.cpar4.write(|w| unsafe {
-            w.bits(&usart1.dr as *const _ as u32)
-        });
-        dma1.cmar4.write(
-            |w| unsafe { w.bits(buffer.as_ptr() as u32) },
-        );
-        dma1.ccr4.modify(|_, w| w.en().set());
+        dma1.cndtr4
+            .write(|w| unsafe { w.ndt().bits(u16(buffer.len()).unwrap()) });
+        dma1.cpar4
+            .write(|w| unsafe { w.bits(&usart1.dr as *const _ as u32) });
+        dma1.cmar4
+            .write(|w| unsafe { w.bits(buffer.as_ptr() as u32) });
+        dma1.ccr4.modify(|_, w| w.en().set_bit());
 
         Ok(())
     }

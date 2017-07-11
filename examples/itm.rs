@@ -19,51 +19,37 @@
 //! World
 //! ```
 
-#![feature(const_fn)]
-#![feature(used)]
+#![feature(plugin)]
 #![no_std]
+#![plugin(cortex_m_rtfm_macros)]
 
 extern crate blue_pill;
-
-// version = "0.2.9"
-#[macro_use]
+#[macro_use(iprint, iprintln)]
 extern crate cortex_m;
-
-// version = "0.2.3"
-extern crate cortex_m_rt;
-
-// version = "0.1.0"
-#[macro_use]
 extern crate cortex_m_rtfm as rtfm;
 
-use blue_pill::stm32f103xx;
-use rtfm::{P0, T0, TMax};
+rtfm! {
+    device: blue_pill::stm32f103xx,
 
-// RESOURCES
-peripherals!(stm32f103xx, {
-    ITM: Peripheral {
-        ceiling: C0,
+    init: {
+        path: init,
     },
-});
 
-// INITIALIZATION PHASE
-fn init(ref prio: P0, thr: &TMax) {
-    let itm = ITM.access(prio, thr);
-
-    iprintln!(&itm.stim[0], "Hello");
+    idle: {
+        path: idle,
+        resources: [ITM],
+    },
 }
 
-// IDLE LOOP
-fn idle(ref prio: P0, ref thr: T0) -> ! {
-    let itm = ITM.access(prio, thr);
+fn init(p: init::Peripherals) {
+    iprintln!(&p.ITM.stim[0], "Hello");
+}
 
-    iprintln!(&itm.stim[0], "World");
+fn idle(r: idle::Resources) -> ! {
+    iprintln!(&r.ITM.stim[0], "World");
 
     // Sleep
     loop {
         rtfm::wfi();
     }
 }
-
-// TASKS
-tasks!(stm32f103xx, {});

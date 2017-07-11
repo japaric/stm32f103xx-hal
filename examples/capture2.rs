@@ -1,75 +1,47 @@
 //! Input capture using TIM2
 
 #![deny(warnings)]
-#![feature(const_fn)]
-#![feature(used)]
+#![feature(plugin)]
 #![no_std]
+#![plugin(cortex_m_rtfm_macros)]
 
 extern crate blue_pill;
-
-#[macro_use]
+#[macro_use(iprint, iprintln)]
 extern crate cortex_m;
-
-extern crate embedded_hal as hal;
-
-// version = "0.2.3"
-extern crate cortex_m_rt;
-
-// version = "0.1.0"
-#[macro_use]
 extern crate cortex_m_rtfm as rtfm;
-
 extern crate nb;
 
-use blue_pill::stm32f103xx;
 use blue_pill::time::Milliseconds;
 use blue_pill::{Capture, Channel};
-use hal::prelude::*;
-use rtfm::{P0, T0, TMax};
+use blue_pill::prelude::*;
 
 // CONFIGURATION
 const RESOLUTION: Milliseconds = Milliseconds(1);
 
-// RESOURCES
-peripherals!(stm32f103xx, {
-    AFIO: Peripheral {
-        ceiling: C0,
-    },
-    GPIOA: Peripheral {
-        ceiling: C0,
-    },
-    ITM: Peripheral {
-        ceiling: C0,
-    },
-    RCC: Peripheral {
-        ceiling: C0,
-    },
-    TIM2: Peripheral {
-        ceiling: C0,
-    },
-});
+rtfm! {
+    device: blue_pill::stm32f103xx,
 
-// INITIALIZATION PHASE
-fn init(ref prio: P0, thr: &TMax) {
-    let afio = &AFIO.access(prio, thr);
-    let gpioa = &GPIOA.access(prio, thr);
-    let rcc = &RCC.access(prio, thr);
-    let tim2 = TIM2.access(prio, thr);
+    init: {
+        path: init,
+    },
 
-    let capture = Capture(&*tim2);
-
-    capture.init(RESOLUTION, afio, gpioa, rcc);
+    idle: {
+        path: idle,
+        resources: [ITM, TIM2],
+    },
 }
 
-// IDLE LOOP
-fn idle(ref prio: P0, ref thr: T0) -> ! {
+fn init(p: init::Peripherals) {
+    let capture = Capture(p.TIM2);
+
+    capture.init(RESOLUTION, p.AFIO, p.GPIOA, p.RCC);
+}
+
+fn idle(r: idle::Resources) -> ! {
     const CHANNELS: [Channel; 4] =
         [Channel::_1, Channel::_2, Channel::_3, Channel::_4];
 
-    let itm = ITM.access(prio, thr);
-    let tim2 = TIM2.access(prio, thr);
-
-    let capture = Capture(&*tim2);
+    let capture = Capture(r.TIM2);
 
     for c in &CHANNELS {
         capture.enable(*c);
@@ -79,7 +51,7 @@ fn idle(ref prio: P0, ref thr: T0) -> ! {
         for c in &CHANNELS {
             match capture.capture(*c) {
                 Ok(snapshot) => {
-                    iprintln!(&itm.stim[0], "{:?}: {:?} ms", c, snapshot);
+                    iprintln!(&r.ITM.stim[0], "{:?}: {:?} ms", c, snapshot);
                 }
                 Err(nb::Error::WouldBlock) => {}
                 Err(nb::Error::Other(e)) => panic!("{:?}", e),
@@ -87,6 +59,3 @@ fn idle(ref prio: P0, ref thr: T0) -> ! {
         }
     }
 }
-
-// TASKS
-tasks!(stm32f103xx, {});

@@ -50,14 +50,12 @@ impl<'a> Qei<'a, TIM1> {
         rcc.apb2enr.modify(|_, w| w.tim1en().enabled());
 
         // enable GPIO and AFIO
-        rcc.apb2enr.modify(
-            |_, w| w.iopaen().enabled().afioen().enabled(),
-        );
+        rcc.apb2enr
+            .modify(|_, w| w.iopaen().enabled().afioen().enabled());
 
         // no remap of TIM1 pins
-        afio.mapr.modify(
-            |_, w| unsafe { w.tim1_remap().bits(0b00) },
-        );
+        afio.mapr
+            .modify(|_, w| unsafe { w.tim1_remap().bits(0b00) });
 
         // CH1 = PA8 = floating input
         // CH2 = PA9 = floating input
@@ -73,15 +71,19 @@ impl<'a> Qei<'a, TIM1> {
         });
 
         // Configure TxC1 and TxC2 as captures
-        tim1.ccmr1_output.write(|w| unsafe {
-            w.bits({
-                (0b01 << 0) | (0b01 << 8)
-            })
-        });
+        tim1.ccmr1_output
+            .write(|w| unsafe { w.bits({ (0b01 << 0) | (0b01 << 8) }) });
 
         // enable and configure to capture on rising edge
         tim1.ccer.write(|w| {
-            w.cc1e().set().cc1p().clear().cc2e().set().cc2p().clear()
+            w.cc1e()
+                .set_bit()
+                .cc1p()
+                .clear_bit()
+                .cc2e()
+                .set_bit()
+                .cc2p()
+                .clear_bit()
         });
 
         // configure as quadrature encoder
@@ -100,7 +102,7 @@ impl<'a> hal::Qei for Qei<'a, TIM1> {
     }
 
     fn direction(&self) -> hal::Direction {
-        if self.0.cr1.read().dir().is_clear() {
+        if self.0.cr1.read().dir().bit_is_clear() {
             hal::Direction::Upcounting
         } else {
             hal::Direction::Downcounting
@@ -140,9 +142,8 @@ where
 
         // don't remap TIM pins
         if tim2.get_type_id() == TypeId::of::<TIM2>() {
-            afio.mapr.modify(
-                |_, w| unsafe { w.tim2_remap().bits(0b00) },
-            );
+            afio.mapr
+                .modify(|_, w| unsafe { w.tim2_remap().bits(0b00) });
 
             // CH1 = PA0 = floating input
             // CH2 = PA1 = floating input
@@ -157,9 +158,8 @@ where
                     .bits(0b01)
             });
         } else if tim2.get_type_id() == TypeId::of::<TIM3>() {
-            afio.mapr.modify(
-                |_, w| unsafe { w.tim3_remap().bits(0b00) },
-            );
+            afio.mapr
+                .modify(|_, w| unsafe { w.tim3_remap().bits(0b00) });
 
             // CH1 = PA6 = floating input
             // CH2 = PA7 = floating input
@@ -174,7 +174,7 @@ where
                     .bits(0b01)
             });
         } else if tim2.get_type_id() == TypeId::of::<TIM4>() {
-            afio.mapr.modify(|_, w| w.tim4_remap().clear());
+            afio.mapr.modify(|_, w| w.tim4_remap().clear_bit());
 
             // CH1 = PB6 = floating input
             // CH2 = PB7 = floating input
@@ -191,15 +191,19 @@ where
         }
 
         // Configure TxC1 and TxC2 as captures
-        tim2.ccmr1_output.write(|w| unsafe {
-            w.bits({
-                (0b01 << 0) | (0b01 << 8)
-            })
-        });
+        tim2.ccmr1_output
+            .write(|w| unsafe { w.bits({ (0b01 << 0) | (0b01 << 8) }) });
 
         // enable and configure to capture on rising edge
         tim2.ccer.write(|w| {
-            w.cc1e().set().cc1p().clear().cc2e().set().cc2p().clear()
+            w.cc1e()
+                .set_bit()
+                .cc1p()
+                .clear_bit()
+                .cc2e()
+                .set_bit()
+                .cc2p()
+                .clear_bit()
         });
 
         // configure as quadrature encoder
@@ -221,7 +225,7 @@ where
     }
 
     fn direction(&self) -> hal::Direction {
-        if self.0.cr1.read().dir().is_clear() {
+        if self.0.cr1.read().dir().bit_is_clear() {
             hal::Direction::Upcounting
         } else {
             hal::Direction::Downcounting

@@ -1,42 +1,32 @@
 //! Set PB12 high
 
-#![feature(const_fn)]
-#![feature(used)]
+#![deny(warnings)]
+#![feature(plugin)]
 #![no_std]
+#![plugin(cortex_m_rtfm_macros)]
 
 extern crate blue_pill;
-
-// version = "0.2.3"
-extern crate cortex_m_rt;
-
-// version = "0.1.0"
-#[macro_use]
 extern crate cortex_m_rtfm as rtfm;
 
 use blue_pill::gpio::{self, PB12};
-use blue_pill::stm32f103xx;
-use rtfm::{P0, T0, TMax};
 
-// RESOURCES
-peripherals!(stm32f103xx, {
-    GPIOB: Peripheral {
-        ceiling: C0,
+rtfm! {
+    device: blue_pill::stm32f103xx,
+
+    init: {
+        path: init,
     },
-    RCC: Peripheral {
-        ceiling: C0,
+
+    idle: {
+        path: idle,
     },
-});
-
-// INITIALIZATION PHASE
-fn init(ref prio: P0, thr: &TMax) {
-    let gpiob = &GPIOB.access(prio, thr);
-    let rcc = &RCC.access(prio, thr);
-
-    gpio::init(gpiob, rcc);
 }
 
-// IDLE LOOP
-fn idle(_prio: P0, _thr: T0) -> ! {
+fn init(p: init::Peripherals) {
+    gpio::init(p.GPIOB, p.RCC);
+}
+
+fn idle() -> ! {
     PB12.high();
 
     // Sleep
@@ -44,6 +34,3 @@ fn idle(_prio: P0, _thr: T0) -> ! {
         rtfm::wfi();
     }
 }
-
-// TASKS
-tasks!(stm32f103xx, {});

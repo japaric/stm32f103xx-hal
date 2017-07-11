@@ -74,7 +74,7 @@ where
             });
 
             // do not remap the SPI1 pins
-            afio.mapr.modify(|_, w| w.spi1_remap().clear());
+            afio.mapr.modify(|_, w| w.spi1_remap().clear_bit());
 
             // NSS = PA4 = Alternate function push pull
             // SCK = PA5 = Alternate function push pull
@@ -130,7 +130,7 @@ where
         }
 
         // enable SS output
-        spi.cr2.write(|w| w.ssoe().set());
+        spi.cr2.write(|w| w.ssoe().set_bit());
 
         // cpha: second clock transition is the first data capture
         // cpol: CK to 1 when idle
@@ -142,23 +142,23 @@ where
         // bidimode: 2-line unidirectional
         spi.cr1.write(|w| unsafe {
             w.cpha()
-                .set()
+                .set_bit()
                 .cpol()
-                .set()
+                .set_bit()
                 .mstr()
-                .set()
+                .set_bit()
                 .br()
                 .bits(0b10)
                 .lsbfirst()
-                .clear()
+                .clear_bit()
                 .ssm()
-                .clear()
+                .clear_bit()
                 .rxonly()
-                .clear()
+                .clear_bit()
                 .dff()
-                .clear()
+                .clear_bit()
                 .bidimode()
-                .clear()
+                .clear_bit()
         });
     }
 
@@ -166,14 +166,14 @@ where
     ///
     /// **NOTE** This drives the NSS pin high
     pub fn disable(&self) {
-        self.0.cr1.modify(|_, w| w.spe().clear())
+        self.0.cr1.modify(|_, w| w.spe().clear_bit())
     }
 
     /// Enables the SPI bus
     ///
     /// **NOTE** This drives the NSS pin low
     pub fn enable(&self) {
-        self.0.cr1.modify(|_, w| w.spe().set())
+        self.0.cr1.modify(|_, w| w.spe().set_bit())
     }
 }
 
@@ -187,13 +187,13 @@ where
         let spi1 = self.0;
         let sr = spi1.sr.read();
 
-        if sr.ovr().is_set() {
+        if sr.ovr().bit_is_set() {
             Err(nb::Error::Other(Error::Overrun))
-        } else if sr.modf().is_set() {
+        } else if sr.modf().bit_is_set() {
             Err(nb::Error::Other(Error::ModeFault))
-        } else if sr.crcerr().is_set() {
+        } else if sr.crcerr().bit_is_set() {
             Err(nb::Error::Other(Error::Crc))
-        } else if sr.rxne().is_set() {
+        } else if sr.rxne().bit_is_set() {
             Ok(unsafe {
                 ptr::read_volatile(&spi1.dr as *const _ as *const u8)
             })
@@ -206,13 +206,13 @@ where
         let spi1 = self.0;
         let sr = spi1.sr.read();
 
-        if sr.ovr().is_set() {
+        if sr.ovr().bit_is_set() {
             Err(nb::Error::Other(Error::Overrun))
-        } else if sr.modf().is_set() {
+        } else if sr.modf().bit_is_set() {
             Err(nb::Error::Other(Error::ModeFault))
-        } else if sr.crcerr().is_set() {
+        } else if sr.crcerr().bit_is_set() {
             Err(nb::Error::Other(Error::Crc))
-        } else if sr.txe().is_set() {
+        } else if sr.txe().bit_is_set() {
             // NOTE(write_volatile) see note above
             unsafe {
                 ptr::write_volatile(&spi1.dr as *const _ as *mut u8, byte)

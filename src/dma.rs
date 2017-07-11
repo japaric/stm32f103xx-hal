@@ -1,12 +1,11 @@
 //! Direct Memory Access (DMA)
 
 use core::cell::{Cell, UnsafeCell};
-use core::marker::{PhantomData, Unsize};
-use core::{ops, slice};
+use core::marker::PhantomData;
+use core::ops;
 
 use nb;
 use stm32f103xx::DMA1;
-use volatile_register::RO;
 
 /// DMA error
 #[derive(Debug)]
@@ -202,12 +201,12 @@ impl<T> Buffer<T, Dma1Channel2> {
             return Ok(());
         }
 
-        if dma1.isr.read().teif2().is_set() {
+        if dma1.isr.read().teif2().bit_is_set() {
             Err(nb::Error::Other(Error::Transfer))
-        } else if dma1.isr.read().tcif2().is_set() {
+        } else if dma1.isr.read().tcif2().bit_is_set() {
             unsafe { self.unlock(status) }
-            dma1.ifcr.write(|w| w.ctcif2().set());
-            dma1.ccr2.modify(|_, w| w.en().clear());
+            dma1.ifcr.write(|w| w.ctcif2().set_bit());
+            dma1.ccr2.modify(|_, w| w.en().clear_bit());
             Ok(())
         } else {
             Err(nb::Error::WouldBlock)
@@ -224,12 +223,12 @@ impl<T> Buffer<T, Dma1Channel4> {
             return Ok(());
         }
 
-        if dma1.isr.read().teif4().is_set() {
+        if dma1.isr.read().teif4().bit_is_set() {
             Err(nb::Error::Other(Error::Transfer))
-        } else if dma1.isr.read().tcif4().is_set() {
+        } else if dma1.isr.read().tcif4().bit_is_set() {
             unsafe { self.unlock(status) }
-            dma1.ifcr.write(|w| w.ctcif4().set());
-            dma1.ccr4.modify(|_, w| w.en().clear());
+            dma1.ifcr.write(|w| w.ctcif4().set_bit());
+            dma1.ccr4.modify(|_, w| w.en().clear_bit());
             Ok(())
         } else {
             Err(nb::Error::WouldBlock)
@@ -246,12 +245,12 @@ impl<T> Buffer<T, Dma1Channel5> {
             return Ok(());
         }
 
-        if dma1.isr.read().teif5().is_set() {
+        if dma1.isr.read().teif5().bit_is_set() {
             Err(nb::Error::Other(Error::Transfer))
-        } else if dma1.isr.read().tcif5().is_set() {
+        } else if dma1.isr.read().tcif5().bit_is_set() {
             unsafe { self.unlock(status) }
-            dma1.ifcr.write(|w| w.ctcif5().set());
-            dma1.ccr5.modify(|_, w| w.en().clear());
+            dma1.ifcr.write(|w| w.ctcif5().set_bit());
+            dma1.ccr5.modify(|_, w| w.en().clear_bit());
             Ok(())
         } else {
             Err(nb::Error::WouldBlock)
@@ -260,20 +259,13 @@ impl<T> Buffer<T, Dma1Channel5> {
 }
 
 /// A circular buffer associated to a DMA `CHANNEL`
-pub struct CircBuffer<T, B, CHANNEL>
-where
-    B: Unsize<[T]>,
-{
+pub struct CircBuffer<B, CHANNEL> {
     _marker: PhantomData<CHANNEL>,
-    _t: PhantomData<[T]>,
     buffer: UnsafeCell<[B; 2]>,
     status: Cell<CircStatus>,
 }
 
-impl<T, B, CHANNEL> CircBuffer<T, B, CHANNEL>
-where
-    B: Unsize<[T]>,
-{
+impl<B, CHANNEL> CircBuffer<B, CHANNEL> {
     pub(crate) fn lock(&self) -> &[B; 2] {
         assert_eq!(self.status.get(), CircStatus::Free);
 
@@ -293,15 +285,10 @@ enum CircStatus {
     MutatingSecondHalf,
 }
 
-impl<T, B> CircBuffer<T, B, Dma1Channel1>
-where
-    B: Unsize<[T]>,
-    T: Atomic,
-{
+impl<B> CircBuffer<B, Dma1Channel1> {
     /// Constructs a circular buffer from two halves
     pub const fn new(buffer: [B; 2]) -> Self {
         CircBuffer {
-            _t: PhantomData,
             _marker: PhantomData,
             buffer: UnsafeCell::new(buffer),
             status: Cell::new(CircStatus::Free),
@@ -310,50 +297,53 @@ where
 
     /// Yields read access to the half of the circular buffer that's not
     /// currently being mutated by the DMA
-    pub fn read(&self, dma1: &DMA1) -> nb::Result<&[RO<T>], Error> {
+    pub fn read<R, F>(&self, dma1: &DMA1, f: F) -> nb::Result<R, Error>
+    where
+        F: FnOnce(&B) -> R,
+    {
         let status = self.status.get();
 
         assert_ne!(status, CircStatus::Free);
 
         let isr = dma1.isr.read();
 
-        if isr.teif1().is_set() {
+        if isr.teif1().bit_is_set() {
             Err(nb::Error::Other(Error::Transfer))
         } else {
             match status {
                 CircStatus::MutatingFirstHalf => {
-                    if isr.tcif1().is_set() {
+                    if isr.tcif1().bit_is_set() {
                         Err(nb::Error::Other(Error::Overrun))
-                    } else if isr.htif1().is_set() {
-                        dma1.ifcr.write(|w| w.chtif1().set());
+                    } else if isr.htif1().bit_is_set() {
+                        dma1.ifcr.write(|w| w.chtif1().set_bit());
 
                         self.status.set(CircStatus::MutatingSecondHalf);
 
-                        unsafe {
-                            let half: &[T] = &(*self.buffer.get())[0];
-                            Ok(slice::from_raw_parts(
-                                half.as_ptr() as *const _,
-                                half.len(),
-                            ))
+                        let ret = f(unsafe { &(*self.buffer.get())[0] });
+
+                        if isr.tcif1().bit_is_set() {
+                            Err(nb::Error::Other(Error::Overrun))
+                        } else {
+                            Ok(ret)
                         }
                     } else {
                         Err(nb::Error::WouldBlock)
                     }
                 }
                 CircStatus::MutatingSecondHalf => {
-                    if isr.htif1().is_set() {
+                    if isr.htif1().bit_is_set() {
                         Err(nb::Error::Other(Error::Overrun))
-                    } else if isr.tcif1().is_set() {
-                        dma1.ifcr.write(|w| w.ctcif1().set());
+                    } else if isr.tcif1().bit_is_set() {
+                        dma1.ifcr.write(|w| w.ctcif1().set_bit());
 
                         self.status.set(CircStatus::MutatingFirstHalf);
 
-                        unsafe {
-                            let half: &[T] = &(*self.buffer.get())[1];
-                            Ok(slice::from_raw_parts(
-                                half.as_ptr() as *const _,
-                                half.len(),
-                            ))
+                        let ret = f(unsafe { &(*self.buffer.get())[1] });
+
+                        if isr.htif1().bit_is_set() {
+                            Err(nb::Error::Other(Error::Overrun))
+                        } else {
+                            Ok(ret)
                         }
                     } else {
                         Err(nb::Error::WouldBlock)
@@ -364,10 +354,3 @@ where
         }
     }
 }
-
-/// Values that can be atomically read
-pub trait Atomic: Copy {}
-
-impl Atomic for u8 {}
-impl Atomic for u16 {}
-impl Atomic for u32 {}

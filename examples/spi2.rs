@@ -1,61 +1,38 @@
 //! Interfacing the MPU9250 using SPI2
 
 #![deny(warnings)]
-#![feature(const_fn)]
-#![feature(used)]
+#![feature(plugin)]
 #![no_std]
+#![plugin(cortex_m_rtfm_macros)]
 
 extern crate blue_pill;
-
-#[macro_use]
+#[macro_use(iprint, iprintln)]
 extern crate cortex_m;
-
-extern crate embedded_hal as hal;
-
-// version = "0.2.3"
-extern crate cortex_m_rt;
-
-// version = "0.1.0"
-#[macro_use]
 extern crate cortex_m_rtfm as rtfm;
 
-use blue_pill::{Spi, stm32f103xx};
-use hal::prelude::*;
-use rtfm::{P0, T0, TMax};
+use blue_pill::Spi;
+use blue_pill::prelude::*;
 
-// RESOURCES
-peripherals!(stm32f103xx, {
-    AFIO: Peripheral {
-        ceiling: C0,
-    },
-    GPIOB: Peripheral {
-        ceiling: C0,
-    },
-    ITM: Peripheral {
-        ceiling: C0,
-    },
-    RCC: Peripheral {
-        ceiling: C0,
-    },
-    SPI2: Peripheral {
-        ceiling: C0,
-    },
-});
+rtfm! {
+    device: blue_pill::stm32f103xx,
 
-// INITIALIZATION PHASE
-fn init(ref prio: P0, thr: &TMax) {
-    let afio = &AFIO.access(prio, thr);
-    let gpiob = &GPIOB.access(prio, thr);
-    let rcc = &RCC.access(prio, thr);
-    let spi2 = SPI2.access(prio, thr);
+    init: {
+        path: init,
+    },
 
-    let spi = Spi(&*spi2);
-
-    spi.init(afio, gpiob, rcc);
+    idle: {
+        path: idle,
+        resources: [ITM, SPI2],
+    },
 }
 
-// IDLE LOOP
-fn idle(ref prio: P0, ref thr: T0) -> ! {
+fn init(p: init::Peripherals) {
+    let spi = Spi(p.SPI2);
+
+    spi.init(p.AFIO, p.GPIOB, p.RCC);
+}
+
+fn idle(r: idle::Resources) -> ! {
     // Register to read
     const WHO_AM_I: u8 = 117;
 
@@ -68,10 +45,7 @@ fn idle(ref prio: P0, ref thr: T0) -> ! {
     // Read mode
     pub const R: u8 = 1 << 7;
 
-    let itm = &ITM.access(prio, thr);
-    let spi2 = SPI2.access(prio, thr);
-
-    let spi = Spi(&*spi2);
+    let spi = Spi(r.SPI2);
 
     rtfm::bkpt();
 
@@ -96,17 +70,14 @@ fn idle(ref prio: P0, ref thr: T0) -> ! {
 
     spi.disable();
 
-    iprintln!(&itm.stim[0], "TESTING ...");
+    iprintln!(&r.ITM.stim[0], "TESTING ...");
 
     assert_eq!(ans, ANS);
 
-    iprintln!(&itm.stim[0], "OK");
+    iprintln!(&r.ITM.stim[0], "OK");
 
     // Sleep
     loop {
         rtfm::wfi();
     }
 }
-
-// TASKS
-tasks!(stm32f103xx, {});

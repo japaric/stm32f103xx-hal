@@ -1,59 +1,57 @@
 //! Turns the user LED on
 
-#![feature(const_fn)]
-#![feature(used)]
+#![deny(warnings)]
+#![feature(plugin)]
 #![no_std]
+#![plugin(cortex_m_rtfm_macros)]
 
 extern crate blue_pill;
 
-extern crate embedded_hal as hal;
-
-// version = "0.2.3"
-extern crate cortex_m_rt;
-
-// version = "0.1.0"
-#[macro_use]
+#[macro_use(task)]
 extern crate cortex_m_rtfm as rtfm;
 
 use blue_pill::Timer;
 use blue_pill::led::{self, Green};
-use blue_pill::stm32f103xx;
+use blue_pill::prelude::*;
 use blue_pill::time::Hertz;
-use hal::prelude::*;
-use rtfm::{Local, P0, P1, T0, T1, TMax};
-use stm32f103xx::interrupt::TIM1_UP_TIM10;
+use rtfm::Threshold;
+
+rtfm! {
+    device: blue_pill::stm32f103xx,
+
+    resources: {},
+
+    init: {
+        path: init,
+    },
+
+    idle: {
+        path: idle,
+    },
+
+    tasks: {
+        TIM2: {
+            priority: 1,
+            enabled: true,
+            resources: [TIM2],
+        },
+    },
+}
 
 // CONFIGURATION
 const FREQUENCY: Hertz = Hertz(1);
 
-// RESOURCES
-peripherals!(stm32f103xx, {
-    GPIOC: Peripheral {
-        ceiling: C0,
-    },
-    RCC: Peripheral {
-        ceiling: C0,
-    },
-    TIM1: Peripheral {
-        ceiling: C1,
-    },
-});
-
 // INITIALIZATION PHASE
-fn init(ref prio: P0, thr: &TMax) {
-    let gpioc = &GPIOC.access(prio, thr);
-    let rcc = &RCC.access(prio, thr);
-    let tim1 = TIM1.access(prio, thr);
+fn init(p: init::Peripherals) {
+    let timer = Timer(p.TIM2);
 
-    let timer = Timer(&*tim1);
-
-    led::init(gpioc, rcc);
-    timer.init(FREQUENCY.invert(), rcc);
+    led::init(p.GPIOC, p.RCC);
+    timer.init(FREQUENCY.invert(), p.RCC);
     timer.resume();
 }
 
 // IDLE LOOP
-fn idle(_prio: P0, _thr: T0) -> ! {
+fn idle() -> ! {
     // Sleep
     loop {
         rtfm::wfi();
@@ -61,29 +59,18 @@ fn idle(_prio: P0, _thr: T0) -> ! {
 }
 
 // TASKS
-tasks!(stm32f103xx, {
-    blink: Task {
-        interrupt: TIM1_UP_TIM10,
-        priority: P1,
-        enabled: true,
-    },
+task!(TIM2, blink, Local {
+    state: bool = false;
 });
 
-fn blink(mut task: TIM1_UP_TIM10, ref prio: P1, ref thr: T1) {
-    static STATE: Local<bool, TIM1_UP_TIM10> = Local::new(false);
+fn blink(_t: Threshold, l: &mut Local, r: TIM2::Resources) {
+    let timer = Timer(r.TIM2);
 
-    let tim1 = TIM1.access(prio, thr);
-
-    let timer = Timer(&*tim1);
-
-    // NOTE(wait) timeout should have already occurred
     timer.wait().unwrap();
 
-    let state = STATE.borrow_mut(&mut task);
+    l.state = !l.state;
 
-    *state = !*state;
-
-    if *state {
+    if l.state {
         Green.on();
     } else {
         Green.off();

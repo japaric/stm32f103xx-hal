@@ -4,7 +4,7 @@ use core::marker::Unsize;
 
 use cast::u16;
 use hal::prelude::*;
-use static_ref::Ref;
+use static_ref::Static;
 
 use dma::{self, CircBuffer, Dma1Channel1};
 use stm32f103xx::{ADC1, DMA1, GPIOA, RCC, TIM2};
@@ -51,7 +51,7 @@ impl<'a> Adc1<'a> {
         // en: Disabled
         dma1.ccr1.write(|w| unsafe {
             w.mem2mem()
-                .clear()
+                .clear_bit()
                 .pl()
                 .bits(0b01)
                 .msize()
@@ -59,19 +59,19 @@ impl<'a> Adc1<'a> {
                 .psize()
                 .bits(0b01)
                 .minc()
-                .set()
+                .set_bit()
                 .pinc()
-                .clear()
+                .clear_bit()
                 .circ()
-                .set()
+                .set_bit()
                 .dir()
-                .clear()
+                .clear_bit()
                 .htie()
-                .set()
+                .set_bit()
                 .tcie()
-                .set()
+                .set_bit()
                 .en()
-                .clear()
+                .clear_bit()
         });
 
         // exttrig: Conversion on external event enabled
@@ -82,29 +82,28 @@ impl<'a> Adc1<'a> {
         // adon: Disable ADC conversion
         adc1.cr2.write(|w| unsafe {
             w.exttrig()
-                .set()
+                .set_bit()
                 .extsel()
                 .bits(0b011) // T2C2
-                // .bits(0b111) // swstart
                 .align()
-                .clear()
+                .clear_bit()
                 .dma()
-                .set()
+                .set_bit()
                 .cont()
-                .clear()
+                .clear_bit()
                 .adon()
-                .clear()
+                .clear_bit()
         });
     }
 
     /// Disables the ADC
     pub fn disable(&self) {
-        self.0.cr2.modify(|_, w| w.adon().clear());
+        self.0.cr2.modify(|_, w| w.adon().clear_bit());
     }
 
     /// Enables the ADC
     pub fn enable(&self) {
-        self.0.cr2.modify(|_, w| w.adon().set());
+        self.0.cr2.modify(|_, w| w.adon().set_bit());
     }
 
     /// Starts an analog to digital conversion that will be periodically
@@ -113,7 +112,7 @@ impl<'a> Adc1<'a> {
     /// The conversions will be stored in the circular `buffer`
     pub fn start<B>(
         &self,
-        buffer: Ref<CircBuffer<u16, B, Dma1Channel1>>,
+        buffer: &Static<CircBuffer<B, Dma1Channel1>>,
         dma1: &DMA1,
         pwm: Pwm<TIM2>,
     ) -> Result<(), dma::Error>
@@ -122,8 +121,7 @@ impl<'a> Adc1<'a> {
     {
         let adc1 = self.0;
 
-
-        if dma1.ccr1.read().en().is_set() {
+        if dma1.ccr1.read().en().bit_is_set() {
             return Err(dma::Error::InUse);
         }
 
@@ -141,7 +139,7 @@ impl<'a> Adc1<'a> {
         dma1.cmar1
             .write(|w| unsafe { w.bits(buffer.as_ptr() as u32) });
 
-        dma1.ccr1.modify(|_, w| w.en().set());
+        dma1.ccr1.modify(|_, w| w.en().set_bit());
         pwm.enable(Channel::_2);
 
         Ok(())

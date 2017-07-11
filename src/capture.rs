@@ -103,9 +103,8 @@ impl<'a> Capture<'a, TIM1> {
         });
 
         // don't remap TIM1 pins
-        afio.mapr.modify(
-            |_, w| unsafe { w.tim1_remap().bits(0b00) },
-        );
+        afio.mapr
+            .modify(|_, w| unsafe { w.tim1_remap().bits(0b00) });
 
         // CH1 = PA8 = floating input
         // CH2 = PA9 = floating input
@@ -142,13 +141,13 @@ impl<'a> Capture<'a, TIM1> {
         // enable capture on rising edge
         tim1.ccer.modify(|_, w| {
             w.cc1p()
-                .clear()
+                .clear_bit()
                 .cc2p()
-                .clear()
+                .clear_bit()
                 .cc3p()
-                .clear()
+                .clear_bit()
                 .cc4p()
-                .clear()
+                .clear_bit()
         });
 
         self._set_resolution(resolution);
@@ -156,9 +155,8 @@ impl<'a> Capture<'a, TIM1> {
         tim1.arr.write(|w| w.arr().bits(u16::MAX));
 
         // configure timer as a continuous upcounter and start
-        tim1.cr1.write(
-            |w| w.dir().up().opm().continuous().cen().enabled(),
-        );
+        tim1.cr1
+            .write(|w| w.dir().up().opm().continuous().cen().enabled());
     }
 
     /// Starts listening for an interrupt `event`
@@ -166,10 +164,10 @@ impl<'a> Capture<'a, TIM1> {
         let tim1 = self.0;
 
         match event {
-            Event::Capture1 => tim1.dier.modify(|_, w| w.cc1ie().set()),
-            Event::Capture2 => tim1.dier.modify(|_, w| w.cc2ie().set()),
-            Event::Capture3 => tim1.dier.modify(|_, w| w.cc3ie().set()),
-            Event::Capture4 => tim1.dier.modify(|_, w| w.cc4ie().set()),
+            Event::Capture1 => tim1.dier.modify(|_, w| w.cc1ie().set_bit()),
+            Event::Capture2 => tim1.dier.modify(|_, w| w.cc2ie().set_bit()),
+            Event::Capture3 => tim1.dier.modify(|_, w| w.cc3ie().set_bit()),
+            Event::Capture4 => tim1.dier.modify(|_, w| w.cc4ie().set_bit()),
         }
     }
 
@@ -178,10 +176,10 @@ impl<'a> Capture<'a, TIM1> {
         let tim1 = self.0;
 
         match event {
-            Event::Capture1 => tim1.dier.modify(|_, w| w.cc1ie().clear()),
-            Event::Capture2 => tim1.dier.modify(|_, w| w.cc2ie().clear()),
-            Event::Capture3 => tim1.dier.modify(|_, w| w.cc3ie().clear()),
-            Event::Capture4 => tim1.dier.modify(|_, w| w.cc4ie().clear()),
+            Event::Capture1 => tim1.dier.modify(|_, w| w.cc1ie().clear_bit()),
+            Event::Capture2 => tim1.dier.modify(|_, w| w.cc2ie().clear_bit()),
+            Event::Capture3 => tim1.dier.modify(|_, w| w.cc3ie().clear_bit()),
+            Event::Capture4 => tim1.dier.modify(|_, w| w.cc4ie().clear_bit()),
         }
     }
 
@@ -206,36 +204,36 @@ impl<'a> hal::Capture for Capture<'a, TIM1> {
 
         match channel {
             Channel::_1 => {
-                if sr.cc1of().is_set() {
+                if sr.cc1of().bit_is_set() {
                     Err(nb::Error::Other(Error::Overcapture))
-                } else if sr.cc1if().is_set() {
+                } else if sr.cc1if().bit_is_set() {
                     Ok(tim1.ccr1.read().ccr1().bits())
                 } else {
                     Err(nb::Error::WouldBlock)
                 }
             }
             Channel::_2 => {
-                if sr.cc2of().is_set() {
+                if sr.cc2of().bit_is_set() {
                     Err(nb::Error::Other(Error::Overcapture))
-                } else if sr.cc2if().is_set() {
+                } else if sr.cc2if().bit_is_set() {
                     Ok(tim1.ccr2.read().ccr2().bits())
                 } else {
                     Err(nb::Error::WouldBlock)
                 }
             }
             Channel::_3 => {
-                if sr.cc3of().is_set() {
+                if sr.cc3of().bit_is_set() {
                     Err(nb::Error::Other(Error::Overcapture))
-                } else if sr.cc3if().is_set() {
+                } else if sr.cc3if().bit_is_set() {
                     Ok(tim1.ccr3.read().ccr3().bits())
                 } else {
                     Err(nb::Error::WouldBlock)
                 }
             }
             Channel::_4 => {
-                if sr.cc4of().is_set() {
+                if sr.cc4of().bit_is_set() {
                     Err(nb::Error::Other(Error::Overcapture))
-                } else if sr.cc4if().is_set() {
+                } else if sr.cc4if().bit_is_set() {
                     Ok(tim1.ccr4.read().ccr4().bits())
                 } else {
                     Err(nb::Error::WouldBlock)
@@ -246,19 +244,19 @@ impl<'a> hal::Capture for Capture<'a, TIM1> {
 
     fn disable(&self, channel: Channel) {
         match channel {
-            Channel::_1 => self.0.ccer.modify(|_, w| w.cc1e().clear()),
-            Channel::_2 => self.0.ccer.modify(|_, w| w.cc2e().clear()),
-            Channel::_3 => self.0.ccer.modify(|_, w| w.cc3e().clear()),
-            Channel::_4 => self.0.ccer.modify(|_, w| w.cc4e().clear()),
+            Channel::_1 => self.0.ccer.modify(|_, w| w.cc1e().clear_bit()),
+            Channel::_2 => self.0.ccer.modify(|_, w| w.cc2e().clear_bit()),
+            Channel::_3 => self.0.ccer.modify(|_, w| w.cc3e().clear_bit()),
+            Channel::_4 => self.0.ccer.modify(|_, w| w.cc4e().clear_bit()),
         }
     }
 
     fn enable(&self, channel: Channel) {
         match channel {
-            Channel::_1 => self.0.ccer.modify(|_, w| w.cc1e().set()),
-            Channel::_2 => self.0.ccer.modify(|_, w| w.cc2e().set()),
-            Channel::_3 => self.0.ccer.modify(|_, w| w.cc3e().set()),
-            Channel::_4 => self.0.ccer.modify(|_, w| w.cc4e().set()),
+            Channel::_1 => self.0.ccer.modify(|_, w| w.cc1e().set_bit()),
+            Channel::_2 => self.0.ccer.modify(|_, w| w.cc2e().set_bit()),
+            Channel::_3 => self.0.ccer.modify(|_, w| w.cc3e().set_bit()),
+            Channel::_4 => self.0.ccer.modify(|_, w| w.cc4e().set_bit()),
         }
     }
 
@@ -324,9 +322,8 @@ where
 
         // don't remap TIM pins
         if tim2.get_type_id() == TypeId::of::<TIM2>() {
-            afio.mapr.modify(
-                |_, w| unsafe { w.tim2_remap().bits(0b00) },
-            );
+            afio.mapr
+                .modify(|_, w| unsafe { w.tim2_remap().bits(0b00) });
 
             // CH1 = PA0 = floating input
             // CH2 = PA1 = floating input
@@ -351,9 +348,8 @@ where
                     .bits(0b01)
             });
         } else if tim2.get_type_id() == TypeId::of::<TIM3>() {
-            afio.mapr.modify(
-                |_, w| unsafe { w.tim3_remap().bits(0b00) },
-            );
+            afio.mapr
+                .modify(|_, w| unsafe { w.tim3_remap().bits(0b00) });
 
             // CH1 = PA6 = floating input
             // CH2 = PA7 = floating input
@@ -370,7 +366,7 @@ where
                     .bits(0b01)
             });
         } else if tim2.get_type_id() == TypeId::of::<TIM4>() {
-            afio.mapr.modify(|_, w| w.tim4_remap().clear());
+            afio.mapr.modify(|_, w| w.tim4_remap().clear_bit());
 
             // CH1 = PB6 = floating input
             // CH2 = PB7 = floating input
@@ -417,32 +413,32 @@ where
         if tim2.get_type_id() == TypeId::of::<TIM3>() {
             tim2.ccer.modify(|_, w| {
                 w.cc1p()
-                    .clear()
+                    .clear_bit()
                     .cc1e()
-                    .clear()
+                    .clear_bit()
                     .cc2p()
-                    .clear()
+                    .clear_bit()
                     .cc2e()
-                    .clear()
+                    .clear_bit()
             });
         } else {
             tim2.ccer.modify(|_, w| {
                 w.cc1p()
-                    .clear()
+                    .clear_bit()
                     .cc1e()
-                    .clear()
+                    .clear_bit()
                     .cc2p()
-                    .clear()
+                    .clear_bit()
                     .cc2e()
-                    .clear()
+                    .clear_bit()
                     .cc3p()
-                    .clear()
+                    .clear_bit()
                     .cc3e()
-                    .clear()
+                    .clear_bit()
                     .cc4p()
-                    .clear()
+                    .clear_bit()
                     .cc4e()
-                    .clear()
+                    .clear_bit()
             });
         }
 
@@ -451,9 +447,8 @@ where
         tim2.arr.write(|w| w.arr().bits(u16::MAX));
 
         // configure timer as a continuous upcounter and start
-        tim2.cr1.write(
-            |w| w.dir().up().opm().continuous().cen().enabled(),
-        );
+        tim2.cr1
+            .write(|w| w.dir().up().opm().continuous().cen().enabled());
     }
 
     /// Starts listening for an interrupt `event`
@@ -461,10 +456,10 @@ where
         let tim = self.0;
 
         match event {
-            Event::Capture1 => tim.dier.modify(|_, w| w.cc1ie().set()),
-            Event::Capture2 => tim.dier.modify(|_, w| w.cc2ie().set()),
-            Event::Capture3 => tim.dier.modify(|_, w| w.cc3ie().set()),
-            Event::Capture4 => tim.dier.modify(|_, w| w.cc4ie().set()),
+            Event::Capture1 => tim.dier.modify(|_, w| w.cc1ie().set_bit()),
+            Event::Capture2 => tim.dier.modify(|_, w| w.cc2ie().set_bit()),
+            Event::Capture3 => tim.dier.modify(|_, w| w.cc3ie().set_bit()),
+            Event::Capture4 => tim.dier.modify(|_, w| w.cc4ie().set_bit()),
         }
     }
 
@@ -473,10 +468,10 @@ where
         let tim = self.0;
 
         match event {
-            Event::Capture1 => tim.dier.modify(|_, w| w.cc1ie().clear()),
-            Event::Capture2 => tim.dier.modify(|_, w| w.cc2ie().clear()),
-            Event::Capture3 => tim.dier.modify(|_, w| w.cc3ie().clear()),
-            Event::Capture4 => tim.dier.modify(|_, w| w.cc4ie().clear()),
+            Event::Capture1 => tim.dier.modify(|_, w| w.cc1ie().clear_bit()),
+            Event::Capture2 => tim.dier.modify(|_, w| w.cc2ie().clear_bit()),
+            Event::Capture3 => tim.dier.modify(|_, w| w.cc3ie().clear_bit()),
+            Event::Capture4 => tim.dier.modify(|_, w| w.cc4ie().clear_bit()),
         }
     }
 
@@ -504,36 +499,36 @@ where
 
         match channel {
             Channel::_1 => {
-                if sr.cc1of().is_set() {
+                if sr.cc1of().bit_is_set() {
                     Err(nb::Error::Other(Error::Overcapture))
-                } else if sr.cc1if().is_set() {
+                } else if sr.cc1if().bit_is_set() {
                     Ok(tim1.ccr1.read().ccr1().bits())
                 } else {
                     Err(nb::Error::WouldBlock)
                 }
             }
             Channel::_2 => {
-                if sr.cc2of().is_set() {
+                if sr.cc2of().bit_is_set() {
                     Err(nb::Error::Other(Error::Overcapture))
-                } else if sr.cc2if().is_set() {
+                } else if sr.cc2if().bit_is_set() {
                     Ok(tim1.ccr2.read().ccr2().bits())
                 } else {
                     Err(nb::Error::WouldBlock)
                 }
             }
             Channel::_3 => {
-                if sr.cc3of().is_set() {
+                if sr.cc3of().bit_is_set() {
                     Err(nb::Error::Other(Error::Overcapture))
-                } else if sr.cc3if().is_set() {
+                } else if sr.cc3if().bit_is_set() {
                     Ok(tim1.ccr3.read().ccr3().bits())
                 } else {
                     Err(nb::Error::WouldBlock)
                 }
             }
             Channel::_4 => {
-                if sr.cc4of().is_set() {
+                if sr.cc4of().bit_is_set() {
                     Err(nb::Error::Other(Error::Overcapture))
-                } else if sr.cc4if().is_set() {
+                } else if sr.cc4if().bit_is_set() {
                     Ok(tim1.ccr4.read().ccr4().bits())
                 } else {
                     Err(nb::Error::WouldBlock)
@@ -544,19 +539,19 @@ where
 
     fn disable(&self, channel: Channel) {
         match channel {
-            Channel::_1 => self.0.ccer.modify(|_, w| w.cc1e().clear()),
-            Channel::_2 => self.0.ccer.modify(|_, w| w.cc2e().clear()),
-            Channel::_3 => self.0.ccer.modify(|_, w| w.cc3e().clear()),
-            Channel::_4 => self.0.ccer.modify(|_, w| w.cc4e().clear()),
+            Channel::_1 => self.0.ccer.modify(|_, w| w.cc1e().clear_bit()),
+            Channel::_2 => self.0.ccer.modify(|_, w| w.cc2e().clear_bit()),
+            Channel::_3 => self.0.ccer.modify(|_, w| w.cc3e().clear_bit()),
+            Channel::_4 => self.0.ccer.modify(|_, w| w.cc4e().clear_bit()),
         }
     }
 
     fn enable(&self, channel: Channel) {
         match channel {
-            Channel::_1 => self.0.ccer.modify(|_, w| w.cc1e().set()),
-            Channel::_2 => self.0.ccer.modify(|_, w| w.cc2e().set()),
-            Channel::_3 => self.0.ccer.modify(|_, w| w.cc3e().set()),
-            Channel::_4 => self.0.ccer.modify(|_, w| w.cc4e().set()),
+            Channel::_1 => self.0.ccer.modify(|_, w| w.cc1e().set_bit()),
+            Channel::_2 => self.0.ccer.modify(|_, w| w.cc2e().set_bit()),
+            Channel::_3 => self.0.ccer.modify(|_, w| w.cc3e().set_bit()),
+            Channel::_4 => self.0.ccer.modify(|_, w| w.cc4e().set_bit()),
         }
     }
 

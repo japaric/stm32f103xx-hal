@@ -76,7 +76,7 @@ impl<'a> Timer<'a, TIM1> {
         tim1.cr1.write(|w| w.opm().continuous());
 
         // Enable update event interrupt
-        tim1.dier.modify(|_, w| w.uie().set());
+        tim1.dier.modify(|_, w| w.uie().set_bit());
     }
 
     fn _set_timeout(&self, timeout: ::apb2::Ticks) {
@@ -120,10 +120,10 @@ impl<'a> hal::Timer for Timer<'a, TIM1> {
     }
 
     fn wait(&self) -> nb::Result<(), !> {
-        if self.0.sr.read().uif().is_clear() {
+        if self.0.sr.read().uif().bit_is_clear() {
             Err(Error::WouldBlock)
         } else {
-            self.0.sr.modify(|_, w| w.uif().clear());
+            self.0.sr.modify(|_, w| w.uif().clear_bit());
             Ok(())
         }
     }
@@ -162,7 +162,7 @@ where
         tim2.cr1.write(|w| w.opm().continuous());
 
         // Enable the update event interrupt
-        tim2.dier.modify(|_, w| w.uie().set());
+        tim2.dier.modify(|_, w| w.uie().set_bit());
     }
 
     fn _set_timeout(&self, timeout: ::apb1::Ticks) {
@@ -209,10 +209,10 @@ where
     }
 
     fn wait(&self) -> nb::Result<(), !> {
-        if self.0.sr.read().uif().is_clear() {
+        if self.0.sr.read().uif().bit_is_clear() {
             Err(Error::WouldBlock)
         } else {
-            self.0.sr.modify(|_, w| w.uif().clear());
+            self.0.sr.modify(|_, w| w.uif().clear_bit());
             Ok(())
         }
     }

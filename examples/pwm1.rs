@@ -2,55 +2,36 @@
 // FIXME doesn't seem to work :-(
 
 #![deny(warnings)]
-#![feature(const_fn)]
-#![feature(used)]
+#![feature(plugin)]
 #![no_std]
+#![plugin(cortex_m_rtfm_macros)]
 
 extern crate blue_pill;
-
-extern crate embedded_hal as hal;
-
-// version = "0.2.3"
-extern crate cortex_m_rt;
-
-// version = "0.1.0"
-#[macro_use]
 extern crate cortex_m_rtfm as rtfm;
 
-use blue_pill::{Channel, Pwm, stm32f103xx};
+use blue_pill::prelude::*;
 use blue_pill::time::Hertz;
-use hal::prelude::*;
-use rtfm::{P0, T0, TMax};
+use blue_pill::{Channel, Pwm};
 
 // CONFIGURATION
 const FREQUENCY: Hertz = Hertz(1_000);
 
-// RESOURCES
-peripherals!(stm32f103xx, {
-    AFIO: Peripheral {
-        ceiling: C0,
-    },
-    GPIOA: Peripheral {
-        ceiling: C0,
-    },
-    RCC: Peripheral {
-        ceiling: C0,
-    },
-    TIM1: Peripheral {
-        ceiling: C0,
-    },
-});
+rtfm! {
+    device: blue_pill::stm32f103xx,
 
-// INITIALIZATION PHASE
-fn init(ref prio: P0, thr: &TMax) {
-    let afio = &AFIO.access(prio, thr);
-    let gpioa = &GPIOA.access(prio, thr);
-    let rcc = &RCC.access(prio, thr);
-    let tim1 = TIM1.access(prio, thr);
+    init: {
+        path: init,
+    },
 
-    let pwm = Pwm(&*tim1);
+    idle: {
+        path: idle,
+    },
+}
 
-    pwm.init(FREQUENCY.invert(), afio, gpioa, rcc);
+fn init(p: init::Peripherals) {
+    let pwm = Pwm(p.TIM1);
+
+    pwm.init(FREQUENCY.invert(), p.AFIO, p.GPIOA, p.RCC);
     let duty = pwm.get_max_duty() / 16;
 
     const CHANNELS: [Channel; 4] =
@@ -66,13 +47,8 @@ fn init(ref prio: P0, thr: &TMax) {
     }
 }
 
-// IDLE LOOP
-fn idle(_prio: P0, _thr: T0) -> ! {
-    // Sleep
+fn idle() -> ! {
     loop {
         rtfm::wfi();
     }
 }
-
-// TASKS
-tasks!(stm32f103xx, {});

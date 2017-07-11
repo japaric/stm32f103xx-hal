@@ -1,38 +1,54 @@
 //! Prints "Hello" and then "World" on the OpenOCD console
 
-#![feature(used)]
+#![deny(warnings)]
+#![feature(const_fn)]
+#![feature(plugin)]
 #![no_std]
+#![plugin(cortex_m_rtfm_macros)]
 
 extern crate blue_pill;
-
-// version = "0.2.9"
-#[macro_use]
 extern crate cortex_m;
-
-// version = "0.2.3"
-extern crate cortex_m_rt;
-
-// version = "0.1.0"
-#[macro_use]
 extern crate cortex_m_rtfm as rtfm;
+extern crate cortex_m_semihosting;
 
-use blue_pill::stm32f103xx;
-use rtfm::{P0, T0, TMax};
+use core::fmt::Write;
+
+use cortex_m_semihosting::hio::{self, HStdout};
+
+rtfm! {
+    device: blue_pill::stm32f103xx,
+
+    resources: {
+        HSTDOUT: Option<HStdout> = None;
+    },
+
+    init: {
+        path: init,
+    },
+
+    idle: {
+        path: idle,
+        resources: [HSTDOUT],
+    },
+}
 
 // INITIALIZATION PHASE
-fn init(_prio: P0, _thr: &TMax) {
-    hprintln!("Hello");
+fn init(_p: init::Peripherals, r: init::Resources) {
+    let mut hstdout = hio::hstdout().unwrap();
+
+    writeln!(hstdout, "Hello").unwrap();
+
+    **r.HSTDOUT = Some(hstdout);
 }
 
 // IDLE LOOP
-fn idle(_prio: P0, _thr: T0) -> ! {
-    hprintln!("World");
+fn idle(r: idle::Resources) -> ! {
+    if let Some(mut hstdout) = r.HSTDOUT.take() {
+        writeln!(hstdout, "World").unwrap();
+    }
 
     // Sleep
     loop {
         rtfm::wfi();
     }
 }
-
-// TASKS
-tasks!(stm32f103xx, {});

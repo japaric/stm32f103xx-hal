@@ -3,111 +3,79 @@
 //! Periodically reports the readings of the QEI
 
 #![deny(warnings)]
-#![feature(const_fn)]
-#![feature(used)]
+#![feature(plugin)]
 #![no_std]
+#![plugin(cortex_m_rtfm_macros)]
 
 extern crate blue_pill;
-
-extern crate embedded_hal as hal;
-
-#[macro_use]
+#[macro_use(iprint, iprintln)]
 extern crate cortex_m;
-
-// version = "0.2.3"
-extern crate cortex_m_rt;
-
-// version = "0.1.0"
-#[macro_use]
+#[macro_use(task)]
 extern crate cortex_m_rtfm as rtfm;
 
+use blue_pill::prelude::*;
 use blue_pill::time::Hertz;
-use blue_pill::{Qei, Timer, stm32f103xx};
-use hal::prelude::*;
-use rtfm::{Local, P0, P1, T0, T1, TMax};
-use stm32f103xx::interrupt::TIM4;
+use blue_pill::{Qei, Timer};
+use rtfm::Threshold;
 
 // CONFIGURATION
 const FREQUENCY: Hertz = Hertz(1);
 
-// RESOURCES
-peripherals!(stm32f103xx, {
-    AFIO: Peripheral {
-        ceiling: C0,
-    },
-    GPIOA: Peripheral {
-        ceiling: C0,
-    },
-    ITM: Peripheral {
-        ceiling: C1,
-    },
-    RCC: Peripheral {
-        ceiling: C0,
-    },
-    TIM2: Peripheral {
-        ceiling: C1,
-    },
-    TIM4: Peripheral {
-        ceiling: C1,
-    },
-});
+rtfm! {
+    device: blue_pill::stm32f103xx,
 
-// INITIALIZATION PHASE
-fn init(ref prio: P0, thr: &TMax) {
-    let afio = &AFIO.access(prio, thr);
-    let gpioa = &GPIOA.access(prio, thr);
-    let rcc = &RCC.access(prio, thr);
-    let tim2 = TIM2.access(prio, thr);
-    let tim4 = TIM4.access(prio, thr);
+    init: {
+        path: init,
+    },
 
-    let qei = Qei(&*tim2);
-    let timer = Timer(&*tim4);
+    idle: {
+        path: idle,
+    },
 
-    qei.init(afio, gpioa, rcc);
+    tasks: {
+        TIM4: {
+            enabled: true,
+            priority: 1,
+            resources: [ITM, TIM2, TIM4],
+        },
+    },
+}
 
-    timer.init(FREQUENCY.invert(), rcc);
+fn init(p: init::Peripherals) {
+    let qei = Qei(p.TIM2);
+    let timer = Timer(p.TIM4);
+
+    qei.init(p.AFIO, p.GPIOA, p.RCC);
+
+    timer.init(FREQUENCY.invert(), p.RCC);
     timer.resume();
 }
 
-// IDLE LOOP
-fn idle(_prio: P0, _thr: T0) -> ! {
-    // Sleep
+fn idle() -> ! {
     loop {
         rtfm::wfi();
     }
 }
 
-// TASKS
-tasks!(stm32f103xx, {
-    periodic: Task {
-        interrupt: TIM4,
-        priority: P1,
-        enabled: true,
-    },
+task!(TIM4, periodic, Locals {
+    previous: Option<u16> = None;
 });
 
-fn periodic(ref mut task: TIM4, ref prio: P1, ref thr: T1) {
-    static PREVIOUS: Local<Option<u16>, TIM4> = Local::new(None);
-
-    let itm = &ITM.access(prio, thr);
-    let previous = PREVIOUS.borrow_mut(task);
-    let tim2 = TIM2.access(prio, thr);
-    let tim4 = TIM4.access(prio, thr);
-
-    let qei = Qei(&*tim2);
-    let timer = Timer(&*tim4);
+fn periodic(_t: Threshold, l: &mut Locals, r: TIM4::Resources) {
+    let qei = Qei(r.TIM2);
+    let timer = Timer(r.TIM4);
 
     // NOTE(unwrap) timeout should have already occurred
-    timer.wait().unwrap_or_else(|_| unreachable!());
+    timer.wait().unwrap();
 
     let curr = qei.count();
     let dir = qei.direction();
 
-    if let Some(prev) = previous.take() {
+    if let Some(prev) = l.previous.take() {
         let speed = (curr as i16).wrapping_sub(prev as i16);
 
-        iprintln!(&itm.stim[0], "{} - {} - {:?}", curr, speed, dir);
+        iprintln!(&r.ITM.stim[0], "{} - {} - {:?}", curr, speed, dir);
     }
 
-    *previous = Some(curr);
+    l.previous = Some(curr);
 }

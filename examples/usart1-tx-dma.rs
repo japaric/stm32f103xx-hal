@@ -1,92 +1,67 @@
 //! Test sending serial data using the DMA
 
+#![deny(warnings)]
 #![feature(const_fn)]
-#![feature(used)]
+#![feature(plugin)]
 #![no_std]
+#![plugin(cortex_m_rtfm_macros)]
 
 extern crate blue_pill;
-
-extern crate embedded_hal as hal;
-
-// version = "0.2.3"
-extern crate cortex_m_rt;
-
-// version = "0.1.0"
-#[macro_use]
+#[macro_use(task)]
 extern crate cortex_m_rtfm as rtfm;
-
 extern crate nb;
 
+use blue_pill::Serial;
 use blue_pill::dma::{Buffer, Dma1Channel4};
 use blue_pill::time::Hertz;
-use blue_pill::{Serial, stm32f103xx};
-use rtfm::{C1, P0, P1, Resource, T0, T1, TMax};
-use stm32f103xx::interrupt::DMA1_CHANNEL4;
+use rtfm::Threshold;
 
 // CONFIGURATION
 pub const BAUD_RATE: Hertz = Hertz(115_200);
 
-// RESOURCES
-peripherals!(stm32f103xx, {
-    AFIO: Peripheral {
-        ceiling: C0,
-    },
-    DMA1: Peripheral {
-        ceiling: C1,
-    },
-    GPIOA: Peripheral {
-        ceiling: C0,
-    },
-    RCC: Peripheral {
-        ceiling: C0,
-    },
-    USART1: Peripheral {
-        ceiling: C1,
-    },
-});
+rtfm! {
+    device: blue_pill::stm32f103xx,
 
-static BUFFER: Resource<Buffer<[u8; 14], Dma1Channel4>, C1> =
-    Resource::new(Buffer::new([0; 14]));
+    resources: {
+        BUFFER: Buffer<[u8; 14], Dma1Channel4> = Buffer::new([0; 14]);
+    },
 
-// INITIALIZATION PHASE
-fn init(ref prio: P0, thr: &TMax) {
-    let afio = &AFIO.access(prio, thr);
-    let dma1 = &DMA1.access(prio, thr);
-    let gpioa = &GPIOA.access(prio, thr);
-    let rcc = &RCC.access(prio, thr);
-    let usart1 = USART1.access(prio, thr);
-    let buffer = BUFFER.access(prio, thr);
+    init: {
+        path: init,
+    },
 
-    let serial = Serial(&*usart1);
+    idle: {
+        path: idle,
+    },
 
-    serial.init(BAUD_RATE.invert(), afio, Some(dma1), gpioa, rcc);
-    buffer.borrow_mut().clone_from_slice(b"Hello, world!\n");
-
-    serial.write_all(dma1, buffer).unwrap();
+    tasks: {
+        DMA1_CHANNEL4: {
+            enabled: true,
+            priority: 1,
+            resources: [BUFFER, DMA1],
+        },
+    },
 }
 
-// IDLE LOOP
-fn idle(_prio: P0, _thr: T0) -> ! {
-    // Sleep
+fn init(p: init::Peripherals, r: init::Resources) {
+    let serial = Serial(p.USART1);
+
+    serial.init(BAUD_RATE.invert(), p.AFIO, Some(p.DMA1), p.GPIOA, p.RCC);
+    r.BUFFER.borrow_mut().clone_from_slice(b"Hello, world!\n");
+
+    serial.write_all(p.DMA1, r.BUFFER).unwrap();
+}
+
+fn idle() -> ! {
     loop {
         rtfm::wfi();
     }
 }
 
-// TASKS
-tasks!(stm32f103xx, {
-    done: Task {
-        interrupt: DMA1_CHANNEL4,
-        priority: P1,
-        enabled: true,
-    },
-});
+task!(DMA1_CHANNEL4, transfer_done);
 
-fn done(_task: DMA1_CHANNEL4, ref prio: P1, ref thr: T1) {
-    let buffer = BUFFER.access(prio, thr);
-    let dma1 = &DMA1.access(prio, thr);
-
-    buffer.release(dma1).unwrap();
+fn transfer_done(_t: Threshold, r: DMA1_CHANNEL4::Resources) {
+    r.BUFFER.release(r.DMA1).unwrap();
 
     rtfm::bkpt();
 }

@@ -35,7 +35,7 @@ use core::marker::Unsize;
 
 use cast::{u16, u32};
 use hal;
-use static_ref::Ref;
+use static_ref::Static;
 use stm32f103xx::{AFIO, DMA1, GPIOA, RCC, TIM1, TIM2, TIM3, TIM4};
 
 use dma::{self, Buffer, Dma1Channel2};
@@ -70,9 +70,8 @@ impl<'a> Pwm<'a, TIM1> {
         });
 
         // no remap of TIM1 pins
-        afio.mapr.modify(
-            |_, w| unsafe { w.tim1_remap().bits(0b00) },
-        );
+        afio.mapr
+            .modify(|_, w| unsafe { w.tim1_remap().bits(0b00) });
 
         // CH1 = PA8 = alternate push-pull
         // CH2 = PA9 = alternate push-pull
@@ -99,20 +98,34 @@ impl<'a> Pwm<'a, TIM1> {
 
         // PWM mode 1
         tim1.ccmr1_output.modify(|_, w| {
-            w.oc1pe().set().oc1m().pwm1().oc2pe().set().oc2m().pwm1()
+            w.oc1pe()
+                .set_bit()
+                .oc1m()
+                .pwm1()
+                .oc2pe()
+                .set_bit()
+                .oc2m()
+                .pwm1()
         });
         tim1.ccmr2_output.modify(|_, w| {
-            w.oc3pe().set().oc3m().pwm1().oc4pe().set().oc4m().pwm1()
+            w.oc3pe()
+                .set_bit()
+                .oc3m()
+                .pwm1()
+                .oc4pe()
+                .set_bit()
+                .oc4m()
+                .pwm1()
         });
         tim1.ccer.modify(|_, w| {
             w.cc1p()
-                .clear()
+                .clear_bit()
                 .cc2p()
-                .clear()
+                .clear_bit()
                 .cc3p()
-                .clear()
+                .clear_bit()
                 .cc4p()
-                .clear()
+                .clear_bit()
         });
 
         self._set_period(period);
@@ -147,19 +160,19 @@ impl<'a> hal::Pwm for Pwm<'a, TIM1> {
 
     fn disable(&self, channel: Channel) {
         match channel {
-            Channel::_1 => self.0.ccer.modify(|_, w| w.cc1e().clear()),
-            Channel::_2 => self.0.ccer.modify(|_, w| w.cc2e().clear()),
-            Channel::_3 => self.0.ccer.modify(|_, w| w.cc3e().clear()),
-            Channel::_4 => self.0.ccer.modify(|_, w| w.cc4e().clear()),
+            Channel::_1 => self.0.ccer.modify(|_, w| w.cc1e().clear_bit()),
+            Channel::_2 => self.0.ccer.modify(|_, w| w.cc2e().clear_bit()),
+            Channel::_3 => self.0.ccer.modify(|_, w| w.cc3e().clear_bit()),
+            Channel::_4 => self.0.ccer.modify(|_, w| w.cc4e().clear_bit()),
         }
     }
 
     fn enable(&self, channel: Channel) {
         match channel {
-            Channel::_1 => self.0.ccer.modify(|_, w| w.cc1e().set()),
-            Channel::_2 => self.0.ccer.modify(|_, w| w.cc2e().set()),
-            Channel::_3 => self.0.ccer.modify(|_, w| w.cc3e().set()),
-            Channel::_4 => self.0.ccer.modify(|_, w| w.cc4e().set()),
+            Channel::_1 => self.0.ccer.modify(|_, w| w.cc1e().set_bit()),
+            Channel::_2 => self.0.ccer.modify(|_, w| w.cc2e().set_bit()),
+            Channel::_3 => self.0.ccer.modify(|_, w| w.cc3e().set_bit()),
+            Channel::_4 => self.0.ccer.modify(|_, w| w.cc4e().set_bit()),
         }
     }
 
@@ -253,9 +266,8 @@ where
         });
 
         if tim2.get_type_id() == TypeId::of::<TIM2>() {
-            afio.mapr.modify(
-                |_, w| unsafe { w.tim2_remap().bits(0b00) },
-            );
+            afio.mapr
+                .modify(|_, w| unsafe { w.tim2_remap().bits(0b00) });
 
             // CH1 = PA0 = alternate push-pull
             // CH2 = PA1 = alternate push-pull
@@ -280,9 +292,8 @@ where
                     .alt_push()
             });
         } else if tim2.get_type_id() == TypeId::of::<TIM3>() {
-            afio.mapr.modify(
-                |_, w| unsafe { w.tim3_remap().bits(0b00) },
-            );
+            afio.mapr
+                .modify(|_, w| unsafe { w.tim3_remap().bits(0b00) });
 
             // CH1 = PA6 = alternate push-pull
             // CH2 = PA7 = alternate push-pull
@@ -299,7 +310,7 @@ where
                     .alt_push()
             });
         } else if tim2.get_type_id() == TypeId::of::<TIM4>() {
-            afio.mapr.modify(|_, w| w.tim4_remap().clear());
+            afio.mapr.modify(|_, w| w.tim4_remap().clear_bit());
 
             // CH1 = PB6 = alternate push-pull
             // CH2 = PB7 = alternate push-pull
@@ -332,55 +343,56 @@ where
         if tim2.get_type_id() == TypeId::of::<TIM3>() {
             tim2.ccmr1_output.modify(|_, w| unsafe {
                 w.oc1pe()
-                    .set()
+                    .set_bit()
                     .oc1m()
                     .bits(0b110)
                     .oc2pe()
-                    .set()
+                    .set_bit()
                     .oc2m()
                     .bits(0b110)
             });
 
-            tim2.ccer.modify(|_, w| w.cc1p().clear().cc2p().clear());
+            tim2.ccer
+                .modify(|_, w| w.cc1p().clear_bit().cc2p().clear_bit());
         } else {
             tim2.ccmr1_output.modify(|_, w| unsafe {
                 w.oc1pe()
-                    .set()
+                    .set_bit()
                     .oc1m()
                     .bits(0b110)
                     .oc2pe()
-                    .set()
+                    .set_bit()
                     .oc2m()
                     .bits(0b110)
             });
 
             tim2.ccmr2_output.modify(|_, w| unsafe {
                 w.oc3pe()
-                    .set()
+                    .set_bit()
                     .oc3m()
                     .bits(0b110)
                     .oc4pe()
-                    .set()
+                    .set_bit()
                     .oc4m()
                     .bits(0b110)
             });
 
             tim2.ccer.modify(|_, w| {
                 w.cc1p()
-                    .clear()
+                    .clear_bit()
                     .cc2p()
-                    .clear()
+                    .clear_bit()
                     .cc3p()
-                    .clear()
+                    .clear_bit()
                     .cc4p()
-                    .clear()
+                    .clear_bit()
             });
         }
 
         self._set_period(period);
 
         if let Some(dma1) = dma1 {
-            tim2.dier.modify(|_, w| w.ude().set());
+            tim2.dier.modify(|_, w| w.ude().set_bit());
 
             if tim2.get_type_id() == TypeId::of::<TIM2>() {
                 // TIM2_UP
@@ -396,7 +408,7 @@ where
                 // en: Disabled
                 dma1.ccr2.write(|w| unsafe {
                     w.mem2mem()
-                        .clear()
+                        .clear_bit()
                         .pl()
                         .bits(0b01)
                         .msize()
@@ -404,17 +416,17 @@ where
                         .psize()
                         .bits(0b01)
                         .minc()
-                        .set()
+                        .set_bit()
                         .pinc()
-                        .clear()
+                        .clear_bit()
                         .circ()
-                        .clear()
+                        .clear_bit()
                         .dir()
-                        .set()
+                        .set_bit()
                         .tcie()
-                        .set()
+                        .set_bit()
                         .en()
-                        .clear()
+                        .clear_bit()
                 });
             } else {
                 unimplemented!()
@@ -448,7 +460,7 @@ where
         &self,
         dma1: &DMA1,
         channel: Channel,
-        buffer: Ref<Buffer<B, Dma1Channel2>>,
+        buffer: &Static<Buffer<B, Dma1Channel2>>,
     ) -> ::core::result::Result<(), dma::Error>
     where
         B: Unsize<[u8]>,
@@ -456,15 +468,14 @@ where
         let tim2 = self.0;
 
         if tim2.get_type_id() == TypeId::of::<TIM2>() {
-            if dma1.ccr2.read().en().is_set() {
+            if dma1.ccr2.read().en().bit_is_set() {
                 return Err(dma::Error::InUse);
             }
 
             let buffer: &[u8] = buffer.lock();
 
-            dma1.cndtr2.write(|w| unsafe {
-                w.ndt().bits(u16(buffer.len()).unwrap())
-            });
+            dma1.cndtr2
+                .write(|w| unsafe { w.ndt().bits(u16(buffer.len()).unwrap()) });
             dma1.cpar2.write(|w| unsafe {
                 match channel {
                     Channel::_1 => w.bits(&tim2.ccr1 as *const _ as u32),
@@ -473,10 +484,9 @@ where
                     Channel::_4 => w.bits(&tim2.ccr4 as *const _ as u32),
                 }
             });
-            dma1.cmar2.write(
-                |w| unsafe { w.bits(buffer.as_ptr() as u32) },
-            );
-            dma1.ccr2.modify(|_, w| w.en().set());
+            dma1.cmar2
+                .write(|w| unsafe { w.bits(buffer.as_ptr() as u32) });
+            dma1.ccr2.modify(|_, w| w.en().set_bit());
 
             Ok(())
 
@@ -505,19 +515,19 @@ where
 
     fn disable(&self, channel: Channel) {
         match channel {
-            Channel::_1 => self.0.ccer.modify(|_, w| w.cc1e().clear()),
-            Channel::_2 => self.0.ccer.modify(|_, w| w.cc2e().clear()),
-            Channel::_3 => self.0.ccer.modify(|_, w| w.cc3e().clear()),
-            Channel::_4 => self.0.ccer.modify(|_, w| w.cc4e().clear()),
+            Channel::_1 => self.0.ccer.modify(|_, w| w.cc1e().clear_bit()),
+            Channel::_2 => self.0.ccer.modify(|_, w| w.cc2e().clear_bit()),
+            Channel::_3 => self.0.ccer.modify(|_, w| w.cc3e().clear_bit()),
+            Channel::_4 => self.0.ccer.modify(|_, w| w.cc4e().clear_bit()),
         }
     }
 
     fn enable(&self, channel: Channel) {
         match channel {
-            Channel::_1 => self.0.ccer.modify(|_, w| w.cc1e().set()),
-            Channel::_2 => self.0.ccer.modify(|_, w| w.cc2e().set()),
-            Channel::_3 => self.0.ccer.modify(|_, w| w.cc3e().set()),
-            Channel::_4 => self.0.ccer.modify(|_, w| w.cc4e().set()),
+            Channel::_1 => self.0.ccer.modify(|_, w| w.cc1e().set_bit()),
+            Channel::_2 => self.0.ccer.modify(|_, w| w.cc2e().set_bit()),
+            Channel::_3 => self.0.ccer.modify(|_, w| w.cc3e().set_bit()),
+            Channel::_4 => self.0.ccer.modify(|_, w| w.cc4e().set_bit()),
         }
     }
 

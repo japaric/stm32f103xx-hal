@@ -38,6 +38,7 @@ pub mod serial;
 pub mod spi;
 pub mod time;
 pub mod timer;
+pub use hal::prelude;
 
 pub use capture::Capture;
 pub use pwm::Pwm;

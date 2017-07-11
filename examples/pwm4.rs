@@ -1,55 +1,36 @@
 //! Output a PWM with a duty cycle of ~6% on all the channels of TIM4
 
 #![deny(warnings)]
-#![feature(const_fn)]
-#![feature(used)]
+#![feature(plugin)]
 #![no_std]
+#![plugin(cortex_m_rtfm_macros)]
 
 extern crate blue_pill;
-
-extern crate embedded_hal as hal;
-
-// version = "0.2.3"
-extern crate cortex_m_rt;
-
-// version = "0.1.0"
-#[macro_use]
 extern crate cortex_m_rtfm as rtfm;
 
-use blue_pill::{Channel, Pwm, stm32f103xx};
+use blue_pill::prelude::*;
 use blue_pill::time::Hertz;
-use hal::prelude::*;
-use rtfm::{P0, T0, TMax};
+use blue_pill::{Channel, Pwm};
 
 // CONFIGURATION
 const FREQUENCY: Hertz = Hertz(1_000);
 
-// RESOURCES
-peripherals!(stm32f103xx, {
-    AFIO: Peripheral {
-        ceiling: C0,
-    },
-    GPIOB: Peripheral {
-        ceiling: C0,
-    },
-    RCC: Peripheral {
-        ceiling: C0,
-    },
-    TIM4: Peripheral {
-        ceiling: C0,
-    },
-});
+rtfm! {
+    device: blue_pill::stm32f103xx,
 
-// INITIALIZATION PHASE
-fn init(ref prio: P0, thr: &TMax) {
-    let afio = &AFIO.access(prio, thr);
-    let gpiob = &GPIOB.access(prio, thr);
-    let rcc = &RCC.access(prio, thr);
-    let tim4 = TIM4.access(prio, thr);
+    init: {
+        path: init,
+    },
 
-    let pwm = Pwm(&*tim4);
+    idle: {
+        path: idle,
+    },
+}
 
-    pwm.init(FREQUENCY.invert(), afio, None, gpiob, rcc);
+fn init(p: init::Peripherals) {
+    let pwm = Pwm(p.TIM4);
+
+    pwm.init(FREQUENCY.invert(), p.AFIO, None, p.GPIOB, p.RCC);
     let duty = pwm.get_max_duty() / 16;
 
     const CHANNELS: [Channel; 4] =
@@ -65,13 +46,8 @@ fn init(ref prio: P0, thr: &TMax) {
     }
 }
 
-// IDLE LOOP
-fn idle(_prio: P0, _thr: T0) -> ! {
-    // Sleep
+fn idle() -> ! {
     loop {
         rtfm::wfi();
     }
 }
-
-// TASKS
-tasks!(stm32f103xx, {});
