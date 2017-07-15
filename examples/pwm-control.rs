@@ -6,9 +6,8 @@
 //! - '/' decrease duty by a factor of 2
 
 #![deny(warnings)]
-#![feature(plugin)]
+#![feature(proc_macro)]
 #![no_std]
-#![plugin(cortex_m_rtfm_macros)]
 
 extern crate blue_pill;
 #[macro_use(task)]
@@ -19,22 +18,13 @@ use core::u16;
 use blue_pill::prelude::*;
 use blue_pill::time::Hertz;
 use blue_pill::{Channel, Pwm, Serial};
-use rtfm::Threshold;
+use rtfm::{Threshold, app};
 
-// CONFIGURATION
 const BAUD_RATE: Hertz = Hertz(115_200);
 const FREQUENCY: Hertz = Hertz(1_000);
 
-rtfm! {
+app! {
     device: blue_pill::stm32f103xx,
-
-    init: {
-        path: init,
-    },
-
-    idle: {
-        path: idle,
-    },
 
     tasks: {
         USART1: {

@@ -2,9 +2,8 @@
 
 #![deny(warnings)]
 #![feature(const_fn)]
-#![feature(plugin)]
+#![feature(proc_macro)]
 #![no_std]
-#![plugin(cortex_m_rtfm_macros)]
 
 extern crate blue_pill;
 extern crate cortex_m;
@@ -14,20 +13,16 @@ extern crate cortex_m_semihosting;
 use core::fmt::Write;
 
 use cortex_m_semihosting::hio::{self, HStdout};
+use rtfm::app;
 
-rtfm! {
+app! {
     device: blue_pill::stm32f103xx,
 
     resources: {
         HSTDOUT: Option<HStdout> = None;
     },
 
-    init: {
-        path: init,
-    },
-
     idle: {
-        path: idle,
         resources: [HSTDOUT],
     },
 }

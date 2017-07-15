@@ -1,9 +1,8 @@
 //! Input capture using TIM4
 
 #![deny(warnings)]
-#![feature(plugin)]
+#![feature(proc_macro)]
 #![no_std]
-#![plugin(cortex_m_rtfm_macros)]
 
 extern crate blue_pill;
 #[macro_use]
@@ -14,19 +13,15 @@ extern crate nb;
 use blue_pill::time::Milliseconds;
 use blue_pill::{Capture, Channel};
 use blue_pill::prelude::*;
+use rtfm::app;
 
 // CONFIGURATION
 const RESOLUTION: Milliseconds = Milliseconds(1);
 
-rtfm! {
+app! {
     device: blue_pill::stm32f103xx,
 
-    init: {
-        path: init,
-    },
-
     idle: {
-        path: idle,
         resources: [ITM, TIM4],
     },
 }

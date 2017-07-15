@@ -2,9 +2,8 @@
 
 #![deny(warnings)]
 #![feature(const_fn)]
-#![feature(plugin)]
+#![feature(proc_macro)]
 #![no_std]
-#![plugin(cortex_m_rtfm_macros)]
 
 extern crate blue_pill;
 #[macro_use(task)]
@@ -14,24 +13,15 @@ extern crate nb;
 use blue_pill::Serial;
 use blue_pill::dma::{Buffer, Dma1Channel5};
 use blue_pill::time::Hertz;
-use rtfm::Threshold;
+use rtfm::{Threshold, app};
 
-// CONFIGURATION
 pub const BAUD_RATE: Hertz = Hertz(115_200);
 
-rtfm! {
+app! {
     device: blue_pill::stm32f103xx,
 
     resources: {
         BUFFER: Buffer<[u8; 8], Dma1Channel5> = Buffer::new([0; 8]);
-    },
-
-    init: {
-        path: init,
-    },
-
-    idle: {
-        path: idle,
     },
 
     tasks: {

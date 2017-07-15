@@ -4,9 +4,8 @@
 
 #![deny(warnings)]
 #![feature(const_fn)]
-#![feature(plugin)]
+#![feature(proc_macro)]
 #![no_std]
-#![plugin(cortex_m_rtfm_macros)]
 
 extern crate blue_pill;
 extern crate cortex_m_rtfm as rtfm;
@@ -17,25 +16,21 @@ use blue_pill::dma::{Buffer, Dma1Channel2};
 use blue_pill::prelude::*;
 use blue_pill::time::Hertz;
 use blue_pill::{Channel, Pwm};
+use rtfm::app;
 
 // CONFIGURATION
 const FREQUENCY: Hertz = Hertz(200_000);
 const _0: u8 = 3;
 const _1: u8 = 5;
 
-rtfm! {
+app! {
     device: blue_pill::stm32f103xx,
 
     resources: {
         BUFFER: Buffer<[u8; 577], Dma1Channel2> = Buffer::new([_0; 577]);
     },
 
-    init: {
-        path: init,
-    },
-
     idle: {
-        path: idle,
         resources: [BUFFER, DMA1, TIM2],
     },
 }

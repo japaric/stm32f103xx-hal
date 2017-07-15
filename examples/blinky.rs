@@ -1,53 +1,36 @@
-//! Turns the user LED on
+//! Blinks the user LED
 
 #![deny(warnings)]
-#![feature(plugin)]
+#![feature(proc_macro)]
 #![no_std]
-#![plugin(cortex_m_rtfm_macros)]
 
 extern crate blue_pill;
-
+extern crate cortex_m;
 #[macro_use(task)]
 extern crate cortex_m_rtfm as rtfm;
 
-use blue_pill::Timer;
 use blue_pill::led::{self, Green};
-use blue_pill::prelude::*;
-use blue_pill::time::Hertz;
-use rtfm::Threshold;
+use cortex_m::peripheral::SystClkSource;
+use rtfm::{app, Threshold};
 
-rtfm! {
+app! {
     device: blue_pill::stm32f103xx,
 
-    resources: {},
-
-    init: {
-        path: init,
-    },
-
-    idle: {
-        path: idle,
-    },
-
     tasks: {
-        TIM2: {
+        SYS_TICK: {
             priority: 1,
-            enabled: true,
-            resources: [TIM2],
         },
     },
 }
 
-// CONFIGURATION
-const FREQUENCY: Hertz = Hertz(1);
-
 // INITIALIZATION PHASE
 fn init(p: init::Peripherals) {
-    let timer = Timer(p.TIM2);
-
     led::init(p.GPIOC, p.RCC);
-    timer.init(FREQUENCY.invert(), p.RCC);
-    timer.resume();
+
+    p.SYST.set_clock_source(SystClkSource::Core);
+    p.SYST.set_reload(8_000_000); // 1s
+    p.SYST.enable_interrupt();
+    p.SYST.enable_counter();
 }
 
 // IDLE LOOP
@@ -59,15 +42,11 @@ fn idle() -> ! {
 }
 
 // TASKS
-task!(TIM2, blink, Local {
+task!(SYS_TICK, blink, Local {
     state: bool = false;
 });
 
-fn blink(_t: Threshold, l: &mut Local, r: TIM2::Resources) {
-    let timer = Timer(r.TIM2);
-
-    timer.wait().unwrap();
-
+fn blink(_t: Threshold, l: &mut Local, _r: SYS_TICK::Resources) {
     l.state = !l.state;
 
     if l.state {

@@ -1,9 +1,8 @@
 //! Serial loopback
 
 #![deny(warnings)]
-#![feature(plugin)]
+#![feature(proc_macro)]
 #![no_std]
-#![plugin(cortex_m_rtfm_macros)]
 
 extern crate blue_pill;
 
@@ -15,18 +14,10 @@ use blue_pill::prelude::*;
 use blue_pill::serial::Event;
 use blue_pill::time::Hertz;
 use blue_pill::{Serial, Timer, stm32f103xx};
-use rtfm::Threshold;
+use rtfm::{Threshold, app};
 
-rtfm! {
+app! {
     device: stm32f103xx,
-
-    init: {
-        path: init,
-    },
-
-    idle: {
-        path: idle,
-    },
 
     tasks: {
         TIM2: {
@@ -34,6 +25,7 @@ rtfm! {
             enabled: true,
             resources: [TIM2],
         },
+
         USART1: {
             priority: 1,
             enabled: true,

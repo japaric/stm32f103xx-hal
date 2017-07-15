@@ -2,9 +2,8 @@
 
 #![deny(warnings)]
 #![feature(const_fn)]
-#![feature(plugin)]
+#![feature(proc_macro)]
 #![no_std]
-#![plugin(cortex_m_rtfm_macros)]
 
 extern crate blue_pill;
 
@@ -18,21 +17,16 @@ use blue_pill::Timer;
 use blue_pill::stm32f103xx;
 use blue_pill::time::Hertz;
 use blue_pill::prelude::*;
-use rtfm::Threshold;
+use rtfm::{Threshold, app};
 
-rtfm! {
+app! {
     device: stm32f103xx,
 
     resources: {
         SLEEP_TIME: u32 = 0;
     },
 
-    init: {
-        path: init,
-    },
-
     idle: {
-        path: idle,
         resources: [DWT, SLEEP_TIME],
     },
 

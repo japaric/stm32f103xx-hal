@@ -1,9 +1,8 @@
 //! Interfacing the MPU9250 using SPI2
 
 #![deny(warnings)]
-#![feature(plugin)]
+#![feature(proc_macro)]
 #![no_std]
-#![plugin(cortex_m_rtfm_macros)]
 
 extern crate blue_pill;
 #[macro_use(iprint, iprintln)]
@@ -12,16 +11,12 @@ extern crate cortex_m_rtfm as rtfm;
 
 use blue_pill::Spi;
 use blue_pill::prelude::*;
+use rtfm::app;
 
-rtfm! {
+app! {
     device: blue_pill::stm32f103xx,
 
-    init: {
-        path: init,
-    },
-
     idle: {
-        path: idle,
         resources: [ITM, SPI2],
     },
 }

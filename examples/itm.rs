@@ -19,24 +19,21 @@
 //! World
 //! ```
 
-#![feature(plugin)]
+#![deny(warnings)]
+#![feature(proc_macro)]
 #![no_std]
-#![plugin(cortex_m_rtfm_macros)]
 
 extern crate blue_pill;
 #[macro_use(iprint, iprintln)]
 extern crate cortex_m;
 extern crate cortex_m_rtfm as rtfm;
 
-rtfm! {
+use rtfm::app;
+
+app! {
     device: blue_pill::stm32f103xx,
 
-    init: {
-        path: init,
-    },
-
     idle: {
-        path: idle,
         resources: [ITM],
     },
 }

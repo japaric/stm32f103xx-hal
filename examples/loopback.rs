@@ -1,9 +1,8 @@
 //! Serial loopback via USART1
 
 #![deny(warnings)]
-#![feature(plugin)]
+#![feature(proc_macro)]
 #![no_std]
-#![plugin(cortex_m_rtfm_macros)]
 
 extern crate blue_pill;
 #[macro_use(task)]
@@ -13,21 +12,13 @@ use blue_pill::Serial;
 use blue_pill::prelude::*;
 use blue_pill::serial::Event;
 use blue_pill::time::Hertz;
-use rtfm::Threshold;
+use rtfm::{Threshold, app};
 
 // CONFIGURATION
 pub const BAUD_RATE: Hertz = Hertz(115_200);
 
-rtfm! {
+app! {
     device: blue_pill::stm32f103xx,
-
-    init: {
-        path: init,
-    },
-
-    idle: {
-        path: idle,
-    },
 
     tasks: {
         USART1: {

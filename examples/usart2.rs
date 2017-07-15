@@ -3,8 +3,7 @@
 //! Connect the TX and RX pins to run this test
 
 #![deny(warnings)]
-#![feature(plugin)]
-#![plugin(cortex_m_rtfm_macros)]
+#![feature(proc_macro)]
 #![no_std]
 
 extern crate blue_pill;
@@ -15,20 +14,13 @@ use blue_pill::Serial;
 use blue_pill::time::Hertz;
 use blue_pill::prelude::*;
 use nb::Error;
+use rtfm::app;
 
 // CONFIGURATION
 pub const BAUD_RATE: Hertz = Hertz(115_200);
 
-rtfm! {
+app! {
     device: blue_pill::stm32f103xx,
-
-    init: {
-        path: init,
-    },
-
-    idle: {
-        path: idle,
-    },
 }
 
 fn init(p: init::Peripherals) {
