@@ -5,6 +5,7 @@
 //! - '-' decrease duty by 1
 //! - '/' decrease duty by a factor of 2
 
+#![deny(unsafe_code)]
 #![deny(warnings)]
 #![feature(proc_macro)]
 #![no_std]
@@ -18,7 +19,7 @@ use core::u16;
 use blue_pill::prelude::*;
 use blue_pill::time::Hertz;
 use blue_pill::{Channel, Pwm, Serial};
-use rtfm::{Threshold, app};
+use rtfm::{app, Threshold};
 
 const BAUD_RATE: Hertz = Hertz(115_200);
 const FREQUENCY: Hertz = Hertz(1_000);
@@ -55,9 +56,9 @@ fn idle() -> ! {
 
 task!(USART1, rx);
 
-fn rx(_t: Threshold, r: USART1::Resources) {
-    let pwm = Pwm(r.TIM2);
-    let serial = Serial(r.USART1);
+fn rx(_t: &mut Threshold, r: USART1::Resources) {
+    let pwm = Pwm(&**r.TIM2);
+    let serial = Serial(&**r.USART1);
 
     let byte = serial.read().unwrap();
     // Echo back to signal we are alive

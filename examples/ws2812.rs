@@ -2,6 +2,7 @@
 //!
 //! To test this demo connect the data-in pin of the LED ring to pin PA0
 
+#![deny(unsafe_code)]
 #![deny(warnings)]
 #![feature(const_fn)]
 #![feature(proc_macro)]
@@ -27,7 +28,7 @@ app! {
     device: blue_pill::stm32f103xx,
 
     resources: {
-        BUFFER: Buffer<[u8; 577], Dma1Channel2> = Buffer::new([_0; 577]);
+        static BUFFER: Buffer<[u8; 577], Dma1Channel2> = Buffer::new([_0; 577]);
     },
 
     idle: {
@@ -51,7 +52,7 @@ fn init(p: init::Peripherals, r: init::Resources) {
 }
 
 fn idle(r: idle::Resources) -> ! {
-    let pwm = Pwm(r.TIM2);
+    let pwm = Pwm(&**r.TIM2);
 
     pwm.set_duties(r.DMA1, Channel::_1, r.BUFFER).unwrap();
 

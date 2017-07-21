@@ -1,5 +1,6 @@
 //! Output a PWM with a duty cycle of ~6% on all the channels of TIM3
 
+#![deny(unsafe_code)]
 #![deny(warnings)]
 #![feature(proc_macro)]
 #![no_std]

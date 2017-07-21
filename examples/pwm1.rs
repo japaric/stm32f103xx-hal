@@ -1,6 +1,7 @@
 //! Output a PWM with a duty cycle of ~6% on all the channels of TIM1
 // FIXME doesn't seem to work :-(
 
+#![deny(unsafe_code)]
 #![deny(warnings)]
 #![feature(proc_macro)]
 #![no_std]

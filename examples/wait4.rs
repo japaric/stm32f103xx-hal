@@ -1,5 +1,6 @@
 //! Periodic timeouts with TIM4
 
+#![deny(unsafe_code)]
 #![deny(warnings)]
 #![feature(proc_macro)]
 #![no_std]
@@ -33,7 +34,7 @@ fn init(p: init::Peripherals) {
 }
 
 fn idle(r: idle::Resources) -> ! {
-    let timer = Timer(r.TIM4);
+    let timer = Timer(&**r.TIM4);
 
     let mut state = false;
     loop {

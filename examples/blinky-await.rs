@@ -1,6 +1,7 @@
 //! Blinky using `await!`
 
 #![allow(unreachable_code)] // for the `await!` macro
+#![deny(unsafe_code)]
 #![deny(warnings)]
 #![feature(const_fn)]
 #![feature(used)]

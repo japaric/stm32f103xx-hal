@@ -1,5 +1,6 @@
 //! Serial loopback via USART1
 
+#![deny(unsafe_code)]
 #![deny(warnings)]
 #![feature(proc_macro)]
 #![no_std]
@@ -12,7 +13,7 @@ use blue_pill::Serial;
 use blue_pill::prelude::*;
 use blue_pill::serial::Event;
 use blue_pill::time::Hertz;
-use rtfm::{Threshold, app};
+use rtfm::{app, Threshold};
 
 // CONFIGURATION
 pub const BAUD_RATE: Hertz = Hertz(115_200);
@@ -44,8 +45,8 @@ fn idle() -> ! {
 
 task!(USART1, loopback);
 
-fn loopback(_t: Threshold, r: USART1::Resources) {
-    let serial = Serial(r.USART1);
+fn loopback(_t: &mut Threshold, r: USART1::Resources) {
+    let serial = Serial(&**r.USART1);
 
     let byte = serial.read().unwrap();
     serial.write(byte).unwrap();

@@ -2,6 +2,7 @@
 //!
 //! Connect the TX and RX pins to run this test
 
+#![deny(unsafe_code)]
 #![deny(warnings)]
 #![feature(proc_macro)]
 #![no_std]

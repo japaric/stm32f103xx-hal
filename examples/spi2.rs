@@ -1,5 +1,6 @@
 //! Interfacing the MPU9250 using SPI2
 
+#![deny(unsafe_code)]
 #![deny(warnings)]
 #![feature(proc_macro)]
 #![no_std]
@@ -40,7 +41,7 @@ fn idle(r: idle::Resources) -> ! {
     // Read mode
     pub const R: u8 = 1 << 7;
 
-    let spi = Spi(r.SPI2);
+    let spi = Spi(&**r.SPI2);
 
     rtfm::bkpt();
 

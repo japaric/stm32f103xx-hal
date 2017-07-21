@@ -1,6 +1,7 @@
 //! Blocking version of blinky
 
 #![allow(unreachable_code)] // for the `block!` macro
+#![deny(unsafe_code)]
 #![deny(warnings)]
 #![feature(const_fn)]
 #![feature(used)]

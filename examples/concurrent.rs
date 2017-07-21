@@ -1,6 +1,8 @@
 //! Serial loopback
 
+#![deny(unsafe_code)]
 #![deny(warnings)]
+#![feature(const_fn)]
 #![feature(proc_macro)]
 #![no_std]
 
@@ -14,7 +16,7 @@ use blue_pill::prelude::*;
 use blue_pill::serial::Event;
 use blue_pill::time::Hertz;
 use blue_pill::{Serial, Timer, stm32f103xx};
-use rtfm::{Threshold, app};
+use rtfm::{app, Threshold};
 
 app! {
     device: stm32f103xx,
@@ -62,17 +64,17 @@ fn idle() -> ! {
 
 // TASKS
 task!(TIM2, blinky, Local {
-    state: bool = false;
+    static STATE: bool = false;
 });
 
-fn blinky(_t: Threshold, l: &mut Local, r: TIM2::Resources) {
-    let timer = Timer(r.TIM2);
+fn blinky(_t: &mut Threshold, l: &mut Local, r: TIM2::Resources) {
+    let timer = Timer(&**r.TIM2);
 
     timer.wait().unwrap();
 
-    l.state = !l.state;
+    *l.STATE = !*l.STATE;
 
-    if l.state {
+    if *l.STATE {
         Green.on();
     } else {
         Green.off();
@@ -81,8 +83,8 @@ fn blinky(_t: Threshold, l: &mut Local, r: TIM2::Resources) {
 
 task!(USART1, loopback);
 
-fn loopback(_t: Threshold, r: USART1::Resources) {
-    let serial = Serial(r.USART1);
+fn loopback(_t: &mut Threshold, r: USART1::Resources) {
+    let serial = Serial(&**r.USART1);
 
     let byte = serial.read().unwrap();
     serial.write(byte).unwrap();

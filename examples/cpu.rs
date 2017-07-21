@@ -1,5 +1,6 @@
 //! CPU usage monitor
 
+#![deny(unsafe_code)]
 #![deny(warnings)]
 #![feature(const_fn)]
 #![feature(proc_macro)]
@@ -17,13 +18,13 @@ use blue_pill::Timer;
 use blue_pill::stm32f103xx;
 use blue_pill::time::Hertz;
 use blue_pill::prelude::*;
-use rtfm::{Threshold, app};
+use rtfm::{app, Resource, Threshold};
 
 app! {
     device: stm32f103xx,
 
     resources: {
-        SLEEP_TIME: u32 = 0;
+        static SLEEP_TIME: u32 = 0;
     },
 
     idle: {
@@ -53,7 +54,7 @@ fn init(p: init::Peripherals, _r: init::Resources) {
 }
 
 // IDLE LOOP
-fn idle(_t: Threshold, mut r: idle::Resources) -> ! {
+fn idle(_t: &mut Threshold, mut r: idle::Resources) -> ! {
     loop {
         // For the span of this critical section the processor will not service
         // interrupts (tasks)
@@ -77,8 +78,8 @@ fn idle(_t: Threshold, mut r: idle::Resources) -> ! {
 
 task!(TIM2, periodic);
 
-fn periodic(_t: Threshold, r: TIM2::Resources) {
-    let timer = Timer(r.TIM2);
+fn periodic(_t: &mut Threshold, r: TIM2::Resources) {
+    let timer = Timer(&**r.TIM2);
 
     timer.wait().unwrap();
 

@@ -1,6 +1,8 @@
 //! Blinks the user LED
 
+#![deny(unsafe_code)]
 #![deny(warnings)]
+#![feature(const_fn)]
 #![feature(proc_macro)]
 #![no_std]
 
@@ -42,14 +44,14 @@ fn idle() -> ! {
 }
 
 // TASKS
-task!(SYS_TICK, blink, Local {
-    state: bool = false;
+task!(SYS_TICK, blink, Locals {
+    static STATE: bool = false;
 });
 
-fn blink(_t: Threshold, l: &mut Local, _r: SYS_TICK::Resources) {
-    l.state = !l.state;
+fn blink(_t: &mut Threshold, l: &mut Locals, _r: SYS_TICK::Resources) {
+    *l.STATE = !*l.STATE;
 
-    if l.state {
+    if *l.STATE {
         Green.on();
     } else {
         Green.off();

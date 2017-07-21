@@ -1,5 +1,6 @@
 //! Prints "Hello" and then "World" on the OpenOCD console
 
+#![deny(unsafe_code)]
 #![deny(warnings)]
 #![feature(const_fn)]
 #![feature(proc_macro)]
@@ -19,7 +20,7 @@ app! {
     device: blue_pill::stm32f103xx,
 
     resources: {
-        HSTDOUT: Option<HStdout> = None;
+        static HSTDOUT: Option<HStdout> = None;
     },
 
     idle: {

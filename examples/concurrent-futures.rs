@@ -1,6 +1,7 @@
 //! Two concurrent tasks using futures
 
 #![allow(unreachable_code)] // for the `try_nb!` macro
+#![deny(unsafe_code)]
 #![deny(warnings)]
 #![feature(const_fn)]
 #![feature(used)]
