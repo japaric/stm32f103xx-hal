@@ -36,7 +36,7 @@ fn init(p: init::Peripherals) {
 fn idle(r: idle::Resources) -> ! {
     const CHANNELS: [Channel; 2] = [Channel::_1, Channel::_2];
 
-    let capture = Capture(&**r.TIM3);
+    let capture = Capture(&*r.TIM3);
 
     for c in &CHANNELS {
         capture.enable(*c);

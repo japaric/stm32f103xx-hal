@@ -17,7 +17,7 @@ use blue_pill::dma::{Buffer, Dma1Channel2};
 use blue_pill::prelude::*;
 use blue_pill::time::Hertz;
 use blue_pill::{Channel, Pwm};
-use rtfm::app;
+use rtfm::{app, Static};
 
 // CONFIGURATION
 const FREQUENCY: Hertz = Hertz(200_000);
@@ -52,11 +52,12 @@ fn init(p: init::Peripherals, r: init::Resources) {
 }
 
 fn idle(r: idle::Resources) -> ! {
-    let pwm = Pwm(&**r.TIM2);
+    let pwm = Pwm(&*r.TIM2);
+    let buffer = Static::wrap_mut(r.BUFFER);
 
-    pwm.set_duties(r.DMA1, Channel::_1, r.BUFFER).unwrap();
+    pwm.set_duties(r.DMA1, Channel::_1, buffer).unwrap();
 
-    block!(r.BUFFER.release(r.DMA1)).unwrap();
+    block!(buffer.release(r.DMA1)).unwrap();
 
     rtfm::bkpt();
 

@@ -19,7 +19,6 @@
 #![no_std]
 
 extern crate cast;
-extern crate either;
 extern crate embedded_hal as hal;
 extern crate nb;
 extern crate static_ref;

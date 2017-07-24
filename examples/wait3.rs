@@ -34,7 +34,7 @@ fn init(p: init::Peripherals) {
 }
 
 fn idle(r: idle::Resources) -> ! {
-    let timer = Timer(&**r.TIM3);
+    let timer = Timer(&*r.TIM3);
 
     let mut state = false;
     loop {

@@ -41,7 +41,7 @@ fn idle(r: idle::Resources) -> ! {
     // Read mode
     pub const R: u8 = 1 << 7;
 
-    let spi = Spi(&**r.SPI1);
+    let spi = Spi(&*r.SPI1);
 
     rtfm::bkpt();
 

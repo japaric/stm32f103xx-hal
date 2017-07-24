@@ -37,7 +37,7 @@ fn idle(r: idle::Resources) -> ! {
     const CHANNELS: [Channel; 4] =
         [Channel::_1, Channel::_2, Channel::_3, Channel::_4];
 
-    let capture = Capture(&**r.TIM1);
+    let capture = Capture(&*r.TIM1);
 
     for c in &CHANNELS {
         capture.enable(*c);

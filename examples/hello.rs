@@ -1,49 +1,28 @@
-//! Prints "Hello" and then "World" on the OpenOCD console
+//! Prints "Hello, World" in the OpenOCD console
 
 #![deny(unsafe_code)]
 #![deny(warnings)]
-#![feature(const_fn)]
 #![feature(proc_macro)]
 #![no_std]
 
 extern crate blue_pill;
-extern crate cortex_m;
 extern crate cortex_m_rtfm as rtfm;
-extern crate cortex_m_semihosting;
+extern crate cortex_m_semihosting as semihosting;
 
 use core::fmt::Write;
 
-use cortex_m_semihosting::hio::{self, HStdout};
 use rtfm::app;
+use semihosting::hio;
 
 app! {
     device: blue_pill::stm32f103xx,
-
-    resources: {
-        static HSTDOUT: Option<HStdout> = None;
-    },
-
-    idle: {
-        resources: [HSTDOUT],
-    },
 }
 
-// INITIALIZATION PHASE
-fn init(_p: init::Peripherals, r: init::Resources) {
-    let mut hstdout = hio::hstdout().unwrap();
+fn init(_p: init::Peripherals) {}
 
-    writeln!(hstdout, "Hello").unwrap();
+fn idle() -> ! {
+    writeln!(hio::hstdout().unwrap(), "Hello, world!").unwrap();
 
-    **r.HSTDOUT = Some(hstdout);
-}
-
-// IDLE LOOP
-fn idle(r: idle::Resources) -> ! {
-    if let Some(mut hstdout) = r.HSTDOUT.take() {
-        writeln!(hstdout, "World").unwrap();
-    }
-
-    // Sleep
     loop {
         rtfm::wfi();
     }
