@@ -22,7 +22,7 @@ use core::ptr;
 
 use hal;
 use nb;
-use stm32f103xx::{AFIO, GPIOA, GPIOB, RCC, SPI1, SPI2, gpioa, spi1};
+use stm32f103xx::{gpioa, SPI1, SPI2, spi1, AFIO, GPIOA, GPIOB, RCC};
 
 /// SPI instance that can be used with the `Spi` abstraction
 pub unsafe trait SPI: Deref<Target = spi1::RegisterBlock> {
@@ -101,9 +101,8 @@ where
         } else if spi.get_type_id() == TypeId::of::<SPI2>() {
             // enable AFIO, SPI1, GPIOA
             rcc.apb1enr.modify(|_, w| w.spi2en().enabled());
-            rcc.apb2enr.modify(
-                |_, w| w.afioen().enabled().iopben().enabled(),
-            );
+            rcc.apb2enr
+                .modify(|_, w| w.afioen().enabled().iopben().enabled());
 
             // NSS = PB12 = Alternate function push pull
             // SCK = PB13 = Alternate function push pull

@@ -36,7 +36,7 @@ use core::marker::Unsize;
 use cast::{u16, u32};
 use hal;
 use static_ref::Static;
-use stm32f103xx::{AFIO, DMA1, GPIOA, RCC, TIM1, TIM2, TIM3, TIM4};
+use stm32f103xx::{DMA1, TIM1, TIM2, TIM3, TIM4, AFIO, GPIOA, RCC};
 
 use dma::{self, Buffer, Dma1Channel2};
 use timer::{Channel, TIM};

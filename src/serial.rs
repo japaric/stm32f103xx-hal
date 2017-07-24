@@ -29,8 +29,8 @@ use cast::u16;
 use hal;
 use nb;
 use static_ref::Static;
-use stm32f103xx::{AFIO, DMA1, GPIOA, GPIOB, RCC, USART1, USART2, USART3,
-                  gpioa, usart1};
+use stm32f103xx::{gpioa, DMA1, USART1, USART2, USART3, usart1, AFIO, GPIOA,
+                  GPIOB, RCC};
 
 use dma::{self, Buffer, Dma1Channel4, Dma1Channel5};
 

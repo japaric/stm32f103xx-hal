@@ -24,7 +24,7 @@ use core::any::{Any, TypeId};
 use core::u16;
 
 use hal;
-use stm32f103xx::{AFIO, GPIOA, RCC, TIM1, TIM2, TIM3, TIM4};
+use stm32f103xx::{TIM1, TIM2, TIM3, TIM4, AFIO, GPIOA, RCC};
 
 use timer::TIM;
 

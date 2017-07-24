@@ -7,7 +7,7 @@ use hal::prelude::*;
 use static_ref::Static;
 
 use dma::{self, CircBuffer, Dma1Channel1};
-use stm32f103xx::{ADC1, DMA1, GPIOA, RCC, TIM2};
+use stm32f103xx::{ADC1, DMA1, TIM2, GPIOA, RCC};
 use {Channel, Pwm};
 
 /// ADC Channel 1 (PA1)

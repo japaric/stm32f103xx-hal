@@ -39,7 +39,7 @@ use core::u16;
 use cast::{u16, u32};
 use hal;
 use nb;
-use stm32f103xx::{AFIO, GPIOA, RCC, TIM1, TIM2, TIM3, TIM4};
+use stm32f103xx::{TIM1, TIM2, TIM3, TIM4, AFIO, GPIOA, RCC};
 
 use timer::{Channel, TIM};
 
@@ -203,42 +203,34 @@ impl<'a> hal::Capture for Capture<'a, TIM1> {
         let sr = tim1.sr.read();
 
         match channel {
-            Channel::_1 => {
-                if sr.cc1of().bit_is_set() {
-                    Err(nb::Error::Other(Error::Overcapture))
-                } else if sr.cc1if().bit_is_set() {
-                    Ok(tim1.ccr1.read().ccr1().bits())
-                } else {
-                    Err(nb::Error::WouldBlock)
-                }
-            }
-            Channel::_2 => {
-                if sr.cc2of().bit_is_set() {
-                    Err(nb::Error::Other(Error::Overcapture))
-                } else if sr.cc2if().bit_is_set() {
-                    Ok(tim1.ccr2.read().ccr2().bits())
-                } else {
-                    Err(nb::Error::WouldBlock)
-                }
-            }
-            Channel::_3 => {
-                if sr.cc3of().bit_is_set() {
-                    Err(nb::Error::Other(Error::Overcapture))
-                } else if sr.cc3if().bit_is_set() {
-                    Ok(tim1.ccr3.read().ccr3().bits())
-                } else {
-                    Err(nb::Error::WouldBlock)
-                }
-            }
-            Channel::_4 => {
-                if sr.cc4of().bit_is_set() {
-                    Err(nb::Error::Other(Error::Overcapture))
-                } else if sr.cc4if().bit_is_set() {
-                    Ok(tim1.ccr4.read().ccr4().bits())
-                } else {
-                    Err(nb::Error::WouldBlock)
-                }
-            }
+            Channel::_1 => if sr.cc1of().bit_is_set() {
+                Err(nb::Error::Other(Error::Overcapture))
+            } else if sr.cc1if().bit_is_set() {
+                Ok(tim1.ccr1.read().ccr1().bits())
+            } else {
+                Err(nb::Error::WouldBlock)
+            },
+            Channel::_2 => if sr.cc2of().bit_is_set() {
+                Err(nb::Error::Other(Error::Overcapture))
+            } else if sr.cc2if().bit_is_set() {
+                Ok(tim1.ccr2.read().ccr2().bits())
+            } else {
+                Err(nb::Error::WouldBlock)
+            },
+            Channel::_3 => if sr.cc3of().bit_is_set() {
+                Err(nb::Error::Other(Error::Overcapture))
+            } else if sr.cc3if().bit_is_set() {
+                Ok(tim1.ccr3.read().ccr3().bits())
+            } else {
+                Err(nb::Error::WouldBlock)
+            },
+            Channel::_4 => if sr.cc4of().bit_is_set() {
+                Err(nb::Error::Other(Error::Overcapture))
+            } else if sr.cc4if().bit_is_set() {
+                Ok(tim1.ccr4.read().ccr4().bits())
+            } else {
+                Err(nb::Error::WouldBlock)
+            },
         }
     }
 
@@ -498,42 +490,34 @@ where
         let sr = tim1.sr.read();
 
         match channel {
-            Channel::_1 => {
-                if sr.cc1of().bit_is_set() {
-                    Err(nb::Error::Other(Error::Overcapture))
-                } else if sr.cc1if().bit_is_set() {
-                    Ok(tim1.ccr1.read().ccr1().bits())
-                } else {
-                    Err(nb::Error::WouldBlock)
-                }
-            }
-            Channel::_2 => {
-                if sr.cc2of().bit_is_set() {
-                    Err(nb::Error::Other(Error::Overcapture))
-                } else if sr.cc2if().bit_is_set() {
-                    Ok(tim1.ccr2.read().ccr2().bits())
-                } else {
-                    Err(nb::Error::WouldBlock)
-                }
-            }
-            Channel::_3 => {
-                if sr.cc3of().bit_is_set() {
-                    Err(nb::Error::Other(Error::Overcapture))
-                } else if sr.cc3if().bit_is_set() {
-                    Ok(tim1.ccr3.read().ccr3().bits())
-                } else {
-                    Err(nb::Error::WouldBlock)
-                }
-            }
-            Channel::_4 => {
-                if sr.cc4of().bit_is_set() {
-                    Err(nb::Error::Other(Error::Overcapture))
-                } else if sr.cc4if().bit_is_set() {
-                    Ok(tim1.ccr4.read().ccr4().bits())
-                } else {
-                    Err(nb::Error::WouldBlock)
-                }
-            }
+            Channel::_1 => if sr.cc1of().bit_is_set() {
+                Err(nb::Error::Other(Error::Overcapture))
+            } else if sr.cc1if().bit_is_set() {
+                Ok(tim1.ccr1.read().ccr1().bits())
+            } else {
+                Err(nb::Error::WouldBlock)
+            },
+            Channel::_2 => if sr.cc2of().bit_is_set() {
+                Err(nb::Error::Other(Error::Overcapture))
+            } else if sr.cc2if().bit_is_set() {
+                Ok(tim1.ccr2.read().ccr2().bits())
+            } else {
+                Err(nb::Error::WouldBlock)
+            },
+            Channel::_3 => if sr.cc3of().bit_is_set() {
+                Err(nb::Error::Other(Error::Overcapture))
+            } else if sr.cc3if().bit_is_set() {
+                Ok(tim1.ccr3.read().ccr3().bits())
+            } else {
+                Err(nb::Error::WouldBlock)
+            },
+            Channel::_4 => if sr.cc4of().bit_is_set() {
+                Err(nb::Error::Other(Error::Overcapture))
+            } else if sr.cc4if().bit_is_set() {
+                Ok(tim1.ccr4.read().ccr4().bits())
+            } else {
+                Err(nb::Error::WouldBlock)
+            },
         }
     }
 
