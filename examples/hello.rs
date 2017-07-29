@@ -1,5 +1,4 @@
 //! Prints "Hello, World" in the OpenOCD console
-
 #![deny(unsafe_code)]
 #![deny(warnings)]
 #![feature(proc_macro)]

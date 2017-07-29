@@ -12,7 +12,7 @@ extern crate cortex_m_rtfm as rtfm;
 
 use blue_pill::Spi;
 use blue_pill::prelude::*;
-use rtfm::app;
+use rtfm::{app, Threshold};
 
 app! {
     device: blue_pill::stm32f103xx,
@@ -28,7 +28,7 @@ fn init(p: init::Peripherals) {
     spi.init(p.AFIO, p.GPIOA, p.RCC);
 }
 
-fn idle(r: idle::Resources) -> ! {
+fn idle(_t: &mut Threshold, r: idle::Resources) -> ! {
     // Register to read
     const WHO_AM_I: u8 = 117;
 
@@ -39,7 +39,7 @@ fn idle(r: idle::Resources) -> ! {
     const ANS: u8 = 0x73;
 
     // Read mode
-    pub const R: u8 = 1 << 7;
+    const R: u8 = 1 << 7;
 
     let spi = Spi(&*r.SPI1);
 

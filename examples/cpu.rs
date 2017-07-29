@@ -1,27 +1,21 @@
 //! CPU usage monitor
-
 #![deny(unsafe_code)]
 #![deny(warnings)]
-#![feature(const_fn)]
 #![feature(proc_macro)]
 #![no_std]
 
 extern crate blue_pill;
-
 #[macro_use(iprint, iprintln)]
 extern crate cortex_m;
-
-#[macro_use]
 extern crate cortex_m_rtfm as rtfm;
 
 use blue_pill::Timer;
-use blue_pill::stm32f103xx;
 use blue_pill::time::Hertz;
 use blue_pill::prelude::*;
 use rtfm::{app, Resource, Threshold};
 
 app! {
-    device: stm32f103xx,
+    device: blue_pill::stm32f103xx,
 
     resources: {
         static SLEEP_TIME: u32 = 0;
@@ -33,17 +27,14 @@ app! {
 
     tasks: {
         TIM2: {
-            priority: 1,
-            enabled: true,
+            path: periodic,
             resources: [ITM, SLEEP_TIME, TIM2],
         },
     },
 }
 
-// CONFIGURATION
 const FREQUENCY: Hertz = Hertz(1);
 
-// INITIALIZATION PHASE
 fn init(p: init::Peripherals, _r: init::Resources) {
     let timer = Timer(p.TIM2);
 
@@ -53,13 +44,12 @@ fn init(p: init::Peripherals, _r: init::Resources) {
     timer.resume();
 }
 
-// IDLE LOOP
-fn idle(_t: &mut Threshold, mut r: idle::Resources) -> ! {
+fn idle(t: &mut Threshold, mut r: idle::Resources) -> ! {
     loop {
         // For the span of this critical section the processor will not service
         // interrupts (tasks)
-        rtfm::atomic(|cs| {
-            let sleep_time = r.SLEEP_TIME.borrow_mut(cs);
+        rtfm::atomic(t, |t| {
+            let sleep_time = r.SLEEP_TIME.borrow_mut(t);
 
             // Sleep
             let before = r.DWT.cyccnt.read();
@@ -75,8 +65,6 @@ fn idle(_t: &mut Threshold, mut r: idle::Resources) -> ! {
         // Tasks are serviced at this point
     }
 }
-
-task!(TIM2, periodic);
 
 fn periodic(_t: &mut Threshold, r: TIM2::Resources) {
     let timer = Timer(&**r.TIM2);

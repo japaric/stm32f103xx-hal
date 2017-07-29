@@ -1,5 +1,4 @@
 //! Sets PB12 high
-
 #![deny(unsafe_code)]
 #![deny(warnings)]
 #![feature(proc_macro)]

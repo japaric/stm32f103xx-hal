@@ -1,5 +1,4 @@
 //! Input capture using TIM1
-
 #![deny(unsafe_code)]
 #![deny(warnings)]
 #![feature(proc_macro)]
@@ -14,7 +13,7 @@ extern crate nb;
 use blue_pill::prelude::*;
 use blue_pill::time::Milliseconds;
 use blue_pill::{Capture, Channel};
-use rtfm::app;
+use rtfm::{app, Threshold};
 
 // CONFIGURATION
 const RESOLUTION: Milliseconds = Milliseconds(1);
@@ -33,7 +32,7 @@ fn init(p: init::Peripherals) {
     capture.init(RESOLUTION, p.AFIO, p.GPIOA, p.RCC);
 }
 
-fn idle(r: idle::Resources) -> ! {
+fn idle(_t: &mut Threshold, r: idle::Resources) -> ! {
     const CHANNELS: [Channel; 4] =
         [Channel::_1, Channel::_2, Channel::_3, Channel::_4];
 

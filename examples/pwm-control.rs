@@ -4,14 +4,12 @@
 //! - '+' increase duty by 1
 //! - '-' decrease duty by 1
 //! - '/' decrease duty by a factor of 2
-
 #![deny(unsafe_code)]
 #![deny(warnings)]
 #![feature(proc_macro)]
 #![no_std]
 
 extern crate blue_pill;
-#[macro_use(task)]
 extern crate cortex_m_rtfm as rtfm;
 
 use core::u16;
@@ -29,8 +27,7 @@ app! {
 
     tasks: {
         USART1: {
-            enabled: true,
-            priority: 1,
+            path: rx,
             resources: [TIM2, USART1],
         },
     },
@@ -53,8 +50,6 @@ fn idle() -> ! {
         rtfm::wfi();
     }
 }
-
-task!(USART1, rx);
 
 fn rx(_t: &mut Threshold, r: USART1::Resources) {
     let pwm = Pwm(&**r.TIM2);

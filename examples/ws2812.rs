@@ -1,7 +1,6 @@
 //! Drive a ring of 24 WS2812 LEDs
 //!
 //! To test this demo connect the data-in pin of the LED ring to pin PA0
-
 #![deny(unsafe_code)]
 #![deny(warnings)]
 #![feature(const_fn)]
@@ -17,7 +16,7 @@ use blue_pill::dma::{Buffer, Dma1Channel2};
 use blue_pill::prelude::*;
 use blue_pill::time::Hertz;
 use blue_pill::{Channel, Pwm};
-use rtfm::{app, Static};
+use rtfm::{app, Static, Threshold};
 
 // CONFIGURATION
 const FREQUENCY: Hertz = Hertz(200_000);
@@ -51,7 +50,7 @@ fn init(p: init::Peripherals, r: init::Resources) {
     }
 }
 
-fn idle(r: idle::Resources) -> ! {
+fn idle(_t: &mut Threshold, r: idle::Resources) -> ! {
     let pwm = Pwm(&*r.TIM2);
     let buffer = Static::wrap_mut(r.BUFFER);
 

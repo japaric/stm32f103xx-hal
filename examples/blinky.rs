@@ -1,14 +1,11 @@
 //! Blinks the user LED
-
 #![deny(unsafe_code)]
 #![deny(warnings)]
-#![feature(const_fn)]
 #![feature(proc_macro)]
 #![no_std]
 
 extern crate blue_pill;
 extern crate cortex_m;
-#[macro_use(task)]
 extern crate cortex_m_rtfm as rtfm;
 
 use blue_pill::led::{self, Green};
@@ -18,15 +15,19 @@ use rtfm::{app, Threshold};
 app! {
     device: blue_pill::stm32f103xx,
 
+    resources: {
+        static ON: bool = false;
+    },
+
     tasks: {
         SYS_TICK: {
-            priority: 1,
+            path: toggle,
+            resources: [ON],
         },
     },
 }
 
-// INITIALIZATION PHASE
-fn init(p: init::Peripherals) {
+fn init(p: init::Peripherals, _r: init::Resources) {
     led::init(p.GPIOC, p.RCC);
 
     p.SYST.set_clock_source(SystClkSource::Core);
@@ -35,7 +36,6 @@ fn init(p: init::Peripherals) {
     p.SYST.enable_counter();
 }
 
-// IDLE LOOP
 fn idle() -> ! {
     // Sleep
     loop {
@@ -44,14 +44,10 @@ fn idle() -> ! {
 }
 
 // TASKS
-task!(SYS_TICK, blink, Locals {
-    static STATE: bool = false;
-});
+fn toggle(_t: &mut Threshold, r: SYS_TICK::Resources) {
+    **r.ON = !**r.ON;
 
-fn blink(_t: &mut Threshold, l: &mut Locals, _r: SYS_TICK::Resources) {
-    *l.STATE = !*l.STATE;
-
-    if *l.STATE {
+    if **r.ON {
         Green.on();
     } else {
         Green.off();

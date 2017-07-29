@@ -1,8 +1,6 @@
 //! Prints "Hello" and then "World" in the OpenOCD console
-
 #![deny(unsafe_code)]
 #![deny(warnings)]
-#![feature(const_fn)]
 #![feature(proc_macro)]
 #![no_std]
 
@@ -12,7 +10,7 @@ extern crate cortex_m_semihosting as semihosting;
 
 use core::fmt::Write;
 
-use rtfm::app;
+use rtfm::{app, Threshold};
 use semihosting::hio::{self, HStdout};
 
 app! {
@@ -35,7 +33,7 @@ fn init(_p: init::Peripherals, r: init::Resources) {
     **r.HSTDOUT = Some(hstdout);
 }
 
-fn idle(r: idle::Resources) -> ! {
+fn idle(_t: &mut Threshold, r: idle::Resources) -> ! {
     writeln!(r.HSTDOUT.as_mut().unwrap(), "World").unwrap();
 
     loop {

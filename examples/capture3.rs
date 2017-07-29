@@ -14,9 +14,8 @@ extern crate nb;
 use blue_pill::prelude::*;
 use blue_pill::time::Milliseconds;
 use blue_pill::{Capture, Channel};
-use rtfm::app;
+use rtfm::{app, Threshold};
 
-// CONFIGURATION
 const RESOLUTION: Milliseconds = Milliseconds(1);
 
 app! {
@@ -33,7 +32,7 @@ fn init(p: init::Peripherals) {
     capture.init(RESOLUTION, p.AFIO, p.GPIOA, p.RCC);
 }
 
-fn idle(r: idle::Resources) -> ! {
+fn idle(_t: &mut Threshold, r: idle::Resources) -> ! {
     const CHANNELS: [Channel; 2] = [Channel::_1, Channel::_2];
 
     let capture = Capture(&*r.TIM3);

@@ -1,4 +1,4 @@
-//! Running two tasks concurrently
+//! Running two tasks that share data concurrently
 #![deny(unsafe_code)]
 #![deny(warnings)]
 #![feature(proc_macro)]
@@ -14,7 +14,7 @@ use blue_pill::prelude::*;
 use blue_pill::serial::Event;
 use blue_pill::time::Hertz;
 use cortex_m::peripheral::SystClkSource;
-use rtfm::{app, Threshold};
+use rtfm::{app, Resource, Threshold};
 
 const BAUD_RATE: Hertz = Hertz(115_200);
 
@@ -22,18 +22,21 @@ app! {
     device: blue_pill::stm32f103xx,
 
     resources: {
+        static CONTEXT_SWITCHES: u32 = 0;
         static ON: bool = false;
     },
 
     tasks: {
         SYS_TICK: {
             path: toggle,
-            resources: [ON],
+            priority: 1,
+            resources: [CONTEXT_SWITCHES, ON],
         },
 
         USART1: {
             path: loopback,
-            resources: [USART1],
+            priority: 2,
+            resources: [CONTEXT_SWITCHES, USART1],
         },
     },
 }
@@ -59,13 +62,20 @@ fn idle() -> ! {
 }
 
 fn loopback(_t: &mut Threshold, r: USART1::Resources) {
+    **r.CONTEXT_SWITCHES += 1;
+
     let serial = Serial(&**r.USART1);
 
     let byte = serial.read().unwrap();
     serial.write(byte).unwrap();
 }
 
-fn toggle(_t: &mut Threshold, r: SYS_TICK::Resources) {
+fn toggle(t: &mut Threshold, mut r: SYS_TICK::Resources) {
+    r.CONTEXT_SWITCHES.claim_mut(t, |context_switches, _t| {
+        // inside a critical section
+        **context_switches += 1;
+    });
+
     **r.ON = !**r.ON;
 
     if **r.ON {

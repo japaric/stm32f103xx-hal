@@ -12,7 +12,7 @@ use blue_pill::Timer;
 use blue_pill::led::{self, Green};
 use blue_pill::prelude::*;
 use blue_pill::time::Hertz;
-use rtfm::app;
+use rtfm::{app, Threshold};
 
 const FREQUENCY: Hertz = Hertz(1);
 
@@ -32,7 +32,7 @@ fn init(p: init::Peripherals) {
     timer.resume();
 }
 
-fn idle(r: idle::Resources) -> ! {
+fn idle(_t: &mut Threshold, r: idle::Resources) -> ! {
     let timer = Timer(&*r.TIM2);
 
     let mut state = false;

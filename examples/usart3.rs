@@ -17,8 +17,7 @@ use blue_pill::time::Hertz;
 use nb::Error;
 use rtfm::app;
 
-// CONFIGURATION
-pub const BAUD_RATE: Hertz = Hertz(115_200);
+const BAUD_RATE: Hertz = Hertz(115_200);
 
 app! {
     device: blue_pill::stm32f103xx,

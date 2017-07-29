@@ -43,10 +43,10 @@ pub struct Dma1Channel5 {
 // NOTE(packed) workaround for rust-lang/rust#41315
 #[repr(packed)]
 pub struct Buffer<T, CHANNEL> {
-    _marker: PhantomData<CHANNEL>,
     data: UnsafeCell<T>,
     flag: Cell<BorrowFlag>,
     state: Cell<State>,
+    _marker: PhantomData<CHANNEL>,
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]

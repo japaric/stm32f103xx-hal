@@ -1,5 +1,4 @@
 //! Test receiving serial data using the DMA
-
 #![deny(unsafe_code)]
 #![deny(warnings)]
 #![feature(const_fn)]
@@ -7,7 +6,6 @@
 #![no_std]
 
 extern crate blue_pill;
-#[macro_use(task)]
 extern crate cortex_m_rtfm as rtfm;
 extern crate nb;
 
@@ -16,7 +14,7 @@ use blue_pill::dma::{Buffer, Dma1Channel5};
 use blue_pill::time::Hertz;
 use rtfm::{app, Threshold};
 
-pub const BAUD_RATE: Hertz = Hertz(115_200);
+const BAUD_RATE: Hertz = Hertz(115_200);
 
 app! {
     device: blue_pill::stm32f103xx,
@@ -27,8 +25,7 @@ app! {
 
     tasks: {
         DMA1_CHANNEL5: {
-            enabled: true,
-            priority: 1,
+            path: transfer_done,
             resources: [BUFFER, DMA1],
         },
     },
@@ -47,8 +44,6 @@ fn idle() -> ! {
         rtfm::wfi();
     }
 }
-
-task!(DMA1_CHANNEL5, transfer_done);
 
 fn transfer_done(_t: &mut Threshold, r: DMA1_CHANNEL5::Resources) {
     r.BUFFER.release(r.DMA1).unwrap();

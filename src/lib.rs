@@ -22,7 +22,6 @@ extern crate cast;
 extern crate embedded_hal as hal;
 extern crate nb;
 extern crate static_ref;
-extern crate volatile_register;
 
 pub extern crate stm32f103xx;
 

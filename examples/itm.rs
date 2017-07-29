@@ -18,7 +18,6 @@
 //! Hello
 //! World
 //! ```
-
 #![deny(unsafe_code)]
 #![deny(warnings)]
 #![feature(proc_macro)]
@@ -29,7 +28,7 @@ extern crate blue_pill;
 extern crate cortex_m;
 extern crate cortex_m_rtfm as rtfm;
 
-use rtfm::app;
+use rtfm::{app, Threshold};
 
 app! {
     device: blue_pill::stm32f103xx,
@@ -43,7 +42,7 @@ fn init(p: init::Peripherals) {
     iprintln!(&p.ITM.stim[0], "Hello");
 }
 
-fn idle(r: idle::Resources) -> ! {
+fn idle(_t: &mut Threshold, r: idle::Resources) -> ! {
     iprintln!(&r.ITM.stim[0], "World");
 
     // Sleep
