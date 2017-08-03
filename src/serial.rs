@@ -337,7 +337,7 @@ where
     }
 }
 
-impl<'a, U> hal::Serial for Serial<'a, U>
+impl<'a, U> hal::serial::Read<u8> for Serial<'a, U>
 where
     U: Any + Usart,
 {
@@ -363,6 +363,13 @@ where
             Err(nb::Error::WouldBlock)
         }
     }
+}
+
+impl<'a, U> hal::serial::Write<u8> for Serial<'a, U>
+where
+    U: Any + Usart,
+{
+    type Error = Error;
 
     fn write(&self, byte: u8) -> Result<()> {
         let usart1 = self.0;

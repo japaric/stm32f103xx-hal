@@ -18,7 +18,7 @@ version = "0.2.2"
 
 [dependencies.embedded-hal]
 git = "https://github.com/japaric/embedded-hal"
-rev = "5295697669f5b48a900aa325b8ebb4d4e8d4b236"
+rev = "7d904f515d15fd5fe7ea34e18820ea83e2651fa2"
 
 [dependencies.nb]
 git = "https://github.com/japaric/nb"
