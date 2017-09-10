@@ -7,7 +7,6 @@
 
 extern crate blue_pill;
 extern crate cortex_m_rtfm as rtfm;
-extern crate nb;
 
 use blue_pill::Serial;
 use blue_pill::dma::{Buffer, Dma1Channel4};

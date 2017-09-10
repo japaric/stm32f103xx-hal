@@ -2,7 +2,6 @@
 #![no_std]
 
 extern crate blue_pill;
-extern crate cortex_m;
 extern crate cortex_m_rtfm as rtfm;
 
 use blue_pill::stm32f103xx::Interrupt;
