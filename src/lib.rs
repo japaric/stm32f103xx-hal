@@ -12,7 +12,9 @@
 
 #![deny(missing_docs)]
 #![deny(warnings)]
+#![feature(const_cell_new)]
 #![feature(const_fn)]
+#![feature(const_unsafe_cell_new)]
 #![feature(get_type_id)]
 #![feature(never_type)]
 #![feature(unsize)]
