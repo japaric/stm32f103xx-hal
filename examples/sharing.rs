@@ -9,7 +9,7 @@ extern crate cortex_m;
 extern crate cortex_m_rtfm as rtfm;
 
 use blue_pill::Serial;
-use blue_pill::led::{self, Green};
+use blue_pill::led::{self, PC13};
 use blue_pill::prelude::*;
 use blue_pill::serial::Event;
 use blue_pill::time::Hertz;
@@ -74,8 +74,8 @@ fn toggle(_t: &mut Threshold, r: SYS_TICK::Resources) {
     **r.ON = !**r.ON;
 
     if **r.ON {
-        Green.on();
+        PC13.on();
     } else {
-        Green.off();
+        PC13.off();
     }
 }

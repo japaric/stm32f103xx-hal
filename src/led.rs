@@ -1,11 +1,11 @@
 //! User LEDs
 //!
-//! - Green = PC13
+//! - PC13
 
 use stm32f103xx::{GPIOC, RCC};
 
-/// Green LED (PC13)
-pub struct Green;
+/// LED connected to pin PC13
+pub struct PC13;
 
 /// Initializes the user LED
 pub fn init(gpioc: &GPIOC, rcc: &RCC) {
@@ -17,7 +17,7 @@ pub fn init(gpioc: &GPIOC, rcc: &RCC) {
     gpioc.crh.modify(|_, w| w.mode13().output().cnf13().push());
 }
 
-impl Green {
+impl PC13 {
     /// Turns the LED on
     pub fn on(&self) {
         unsafe {
