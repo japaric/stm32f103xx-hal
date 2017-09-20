@@ -127,6 +127,8 @@ impl<'a> Pwm<'a, TIM1> {
                 .cc4p()
                 .clear_bit()
         });
+        
+        tim1.bdtr.modify(|_, w| w.moe().set_bit());
 
         self._set_period(period);
 
