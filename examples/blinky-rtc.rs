@@ -5,12 +5,11 @@
 #![no_std]
 
 extern crate blue_pill;
-extern crate cortex_m;
 extern crate cortex_m_rtfm as rtfm;
 
 use blue_pill::Rtc;
 use blue_pill::rtc::{RtcClkSource, RtcEvent};
-use blue_pill::led::{self, Green};
+use blue_pill::led::{self, PC13};
 use blue_pill::stm32f103xx::Interrupt;
 use rtfm::{app, Threshold};
 
@@ -55,8 +54,8 @@ fn toggle(_t: &mut Threshold, r: RTC::Resources) {
     **r.ON = !**r.ON;
 
     if **r.ON {
-        Green.on();
+        PC13.on();
     } else {
-        Green.off();
+        PC13.off();
     }
 }
