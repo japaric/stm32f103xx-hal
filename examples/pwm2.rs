@@ -25,8 +25,7 @@ fn init(p: init::Peripherals) {
     pwm.init(FREQUENCY.invert(), p.AFIO, None, p.GPIOA, p.RCC);
     let duty = pwm.get_max_duty() / 16;
 
-    const CHANNELS: [Channel; 4] =
-        [Channel::_1, Channel::_2, Channel::_3, Channel::_4];
+    const CHANNELS: [Channel; 4] = [Channel::_1, Channel::_2, Channel::_3, Channel::_4];
 
     for c in &CHANNELS {
         pwm.set_duty(*c, duty);

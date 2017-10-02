@@ -66,10 +66,7 @@ fn rx(_t: &mut Threshold, r: USART1::Resources) {
             match byte {
                 b'+' => {
                     let max = pwm.get_max_duty();
-                    pwm.set_duty(
-                        Channel::_1,
-                        if duty < max { duty + 1 } else { max },
-                    );
+                    pwm.set_duty(Channel::_1, if duty < max { duty + 1 } else { max });
                 }
                 b'-' => {
                     pwm.set_duty(Channel::_1, duty.checked_sub(1).unwrap_or(0));

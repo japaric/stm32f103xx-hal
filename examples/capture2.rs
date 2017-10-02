@@ -33,8 +33,7 @@ fn init(p: init::Peripherals) {
 }
 
 fn idle(_t: &mut Threshold, r: idle::Resources) -> ! {
-    const CHANNELS: [Channel; 4] =
-        [Channel::_1, Channel::_2, Channel::_3, Channel::_4];
+    const CHANNELS: [Channel; 4] = [Channel::_1, Channel::_2, Channel::_3, Channel::_4];
 
     let capture = Capture(&*r.TIM2);
 

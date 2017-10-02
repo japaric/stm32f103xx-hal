@@ -5,7 +5,7 @@
 use stm32f103xx::{GPIOC, RCC};
 
 /// LED connected to pin PC13
-pub type LED = PC13;
+pub const LED: PC13 = PC13;
 
 /// Pin PC13. There's an LED connected to this pin
 pub struct PC13;

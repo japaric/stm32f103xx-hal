@@ -9,7 +9,7 @@ extern crate blue_pill;
 extern crate cortex_m_rtfm as rtfm;
 
 use blue_pill::Timer;
-use blue_pill::led::{self, PC13};
+use blue_pill::led::{self, LED};
 use blue_pill::prelude::*;
 use blue_pill::time::Hertz;
 use rtfm::{app, Threshold};
@@ -43,9 +43,9 @@ fn idle(_t: &mut Threshold, r: idle::Resources) -> ! {
         state = !state;
 
         if state {
-            PC13.on();
+            LED.on();
         } else {
-            PC13.off();
+            LED.off();
         }
     }
 }

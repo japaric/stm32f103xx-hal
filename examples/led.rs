@@ -8,7 +8,7 @@
 extern crate blue_pill;
 extern crate cortex_m_rtfm as rtfm;
 
-use blue_pill::led::{self, PC13};
+use blue_pill::led::{self, LED};
 use rtfm::app;
 
 app! {
@@ -20,7 +20,7 @@ fn init(p: init::Peripherals) {
 }
 
 fn idle() -> ! {
-    PC13.on();
+    LED.on();
 
     // Sleep
     loop {
