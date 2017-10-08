@@ -7,7 +7,7 @@
 extern crate blue_pill;
 extern crate cortex_m_rtfm as rtfm;
 
-use blue_pill::gpio::{self, PB12};
+use blue_pill::gpio::{self, PB12, GPIOPin, Output, GPIOMode};
 use rtfm::app;
 
 app! {
@@ -16,10 +16,11 @@ app! {
 
 fn init(p: init::Peripherals) {
     gpio::init(p.GPIOB, p.RCC);
+    PB12.set_mode(GPIOMode::OUTPUT);
 }
 
 fn idle() -> ! {
-    PB12.high();
+    PB12.set_high();
 
     // Sleep
     loop {
