@@ -54,7 +54,7 @@ impl GPIO for GPIOE {
     const PORT: GPIOPort = GPIOPort::E;
 }
 
-/// Initializes the digital outputs, enabled associated I/O port clock
+/// Initializes the digital outputs, enables associated I/O port clock
 pub fn init<T: GPIO>(_gpio: &T, rcc: &RCC) {
     match T::PORT {
         GPIOPort::A => rcc.apb2enr.modify(|_, w| w.iopaen().enabled()),
@@ -77,6 +77,7 @@ pub enum GPIOMode {
     Output50(OutputConfig),
 }
 
+// Associated constants for easy access to the most common mode / config combinations
 impl GPIOMode {
     /// Output mode, general purpose push-pull
     pub const OUTPUT: GPIOMode = GPIOMode::Output(OutputConfig::GeneralPurposePushPull);
@@ -116,14 +117,6 @@ fn input_cnf(config: &InputConfig) -> u8 {
     }
 }
 
-fn input_odr(config: &InputConfig) -> Option<u8> {
-    match *config {
-        InputConfig::PullDown => Some(0b0),
-        InputConfig::PullUp => Some(0b1),
-        _ => None,
-    }
-}
-
 /// Possible configurations for a GPIO pin in output mode
 pub enum OutputConfig {
     /// General purpose output Push-pull
@@ -141,7 +134,7 @@ fn output_cnf(config: &OutputConfig) -> u8 {
         OutputConfig::GeneralPurposePushPull => 0b00,
         OutputConfig::GeneralPurposeOpenDrain => 0b01,
         OutputConfig::AlternateFunctionPushPull => 0b10,
-        OutputConfig::AlternateFunctionOpenDrain => 0b10,
+        OutputConfig::AlternateFunctionOpenDrain => 0b11,
     }
 }
 
@@ -196,15 +189,10 @@ macro_rules! pin {
             fn configure_input(&self, config: InputConfig) {
                 unsafe {
                     (*$GPIOY.get()).$crZ.modify(|_, w| w.$cnfX().bits(input_cnf(&config)));
-                    match input_odr(&config) {
-                        Some(odr) => {
-                            if odr == 0b1 { // input pull-up
-                                (*$GPIOY.get()).bsrr.write(|w| w.$bsX().bit(true));
-                            } else { // input pull-down
-                                (*$GPIOY.get()).bsrr.write(|w| w.$brX().bit(true));
-                            }
-                        },
-                        None => ()
+                    match config {
+                        InputConfig::PullDown => (*$GPIOY.get()).bsrr.write(|w| w.$brX().bit(true)),
+                        InputConfig::PullUp => (*$GPIOY.get()).bsrr.write(|w| w.$bsX().bit(true)),
+                        _ => (),
                     }
                 }
             }
