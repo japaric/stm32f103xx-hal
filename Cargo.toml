@@ -1,0 +1,59 @@
+[package]
+authors = ["Jorge Aparicio <jorge@japaric.io>"]
+categories = [
+    "asynchronous",
+    "embedded",
+    "hardware-support",
+    "no-std",
+]
+description = "Board Support Crate for the Blue Pill"
+keywords = [
+    "arm",
+    "cortex-m",
+    "stm32",
+]
+license = "MIT OR Apache-2.0"
+name = "blue-pill"
+repository = "https://github.com/japaric/blue-pill"
+version = "0.1.0"
+
+[dependencies]
+static-ref = "0.2.0"
+volatile-register = "0.2.0"
+
+[dependencies.cast]
+default-features = false
+version = "0.2.2"
+
+[dependencies.either]
+default-features = false
+version = "1.3.0"
+
+[dependencies.embedded-hal]
+git = "https://github.com/japaric/embedded-hal"
+
+[dependencies.nb]
+git = "https://github.com/japaric/nb"
+
+[dependencies.stm32f103xx]
+features = ["rt"]
+git = "https://github.com/japaric/stm32f103xx"
+branch = "singletons"
+
+[dev-dependencies]
+heapless = "0.2.0"
+
+[dev-dependencies.cortex-m]
+branch = "singletons"
+git = "https://github.com/japaric/cortex-m"
+
+[dev-dependencies.cortex-m-rt]
+features = ["abort-on-panic"]
+version = "0.3.6"
+
+[dev-dependencies.cortex-m-rtfm]
+branch = "singletons"
+git = "https://github.com/japaric/cortex-m-rtfm"
+[profile.release]
+debug = true
+lto = true
