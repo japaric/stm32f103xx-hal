@@ -16,7 +16,7 @@ app! {
 
 fn init(p: init::Peripherals) {
     let mut rcc = p.device.RCC.split();
-    let mut afio = p.device.AFIO.split();
+    let mut afio = p.device.AFIO.split(&mut rcc.enr);
     let mut gpioa = p.device.GPIOA.split(&mut rcc.enr);
     let mut flash = p.device.FLASH.split();
 

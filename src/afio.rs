@@ -1,7 +1,9 @@
 use stm32f103xx::{afio, AFIO};
 
+use rcc::ENR;
+
 pub trait AfioExt {
-    fn split(self) -> Parts;
+    fn split(self, enr: &mut ENR) -> Parts;
 }
 
 pub struct Parts {
@@ -19,8 +21,8 @@ impl MAPR {
 }
 
 impl AfioExt for AFIO {
-    fn split(self) -> Parts {
-        // TODO enable AFIOEN in RCC
+    fn split(self, enr: &mut ENR) -> Parts {
+        enr.apb2().modify(|_, w| w.afioen().enabled());
 
         Parts {
             mapr: MAPR { _0: () },

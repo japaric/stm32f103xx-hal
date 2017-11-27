@@ -18,8 +18,10 @@ pub mod prelude;
 pub mod pwm;
 pub mod rcc;
 pub mod serial;
+pub mod spi;
 pub mod time;
 pub mod timer;
 
-pub use timer::Timer;
 pub use serial::Serial;
+pub use spi::Spi;
+pub use timer::Timer;
