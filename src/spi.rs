@@ -1,15 +1,16 @@
 use core::ptr;
 
-use hal;
+use hal::spi::{self, Mode, Phase, Polarity};
 use nb;
 use stm32f103xx::SPI1;
 
 use afio::MAPR;
-use gpio::{AltPush, InputFloating, PA4, PA5, PA6, PA7};
+use gpio::{AltPush, InputFloating, PA5, PA6, PA7};
 use rcc::{Clocks, ENR};
+use time::Hertz;
 
 /// SPI error
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum Error {
     /// Overrun occurred
     Overrun,
@@ -25,26 +26,32 @@ pub struct Spi {
 }
 
 impl Spi {
-    /// - PA4 - NSS1
+    /// MSB format
+    ///
     /// - PA5 - SCK1
     /// - PA6 - MISO1
     /// - PA7 - MOSI1
-    pub fn new(
+    pub fn new<F>(
         spi: SPI1,
-        _: (PA4<AltPush>, PA5<AltPush>, PA6<InputFloating>, PA7<AltPush>),
+        (_sck, _miso, _mosi): (PA5<AltPush>, PA6<InputFloating>, PA7<AltPush>),
+        mode: Mode,
+        freq: F,
         clocks: Clocks,
         enr: &mut ENR,
         mapr: &mut MAPR,
-    ) -> Self {
+    ) -> Self
+    where
+        F: Into<Hertz>,
+    {
         // enable the SPI peripheral
         enr.apb2().modify(|_, w| w.spi1en().enabled());
 
         mapr.mapr().modify(|_, w| w.spi1_remap().clear_bit());
 
-        // enable SS output
-        spi.cr2.write(|w| w.ssoe().set_bit());
+        // disable SS output
+        spi.cr2.write(|w| w.ssoe().clear_bit());
 
-        let br = match clocks.pclk2().0 / 1_000_000 {
+        let br = match clocks.pclk2().0 / freq.into().0 {
             0 => unreachable!(),
             1...2 => 0b000,
             3...5 => 0b001,
@@ -56,19 +63,21 @@ impl Spi {
             _ => 0b111,
         };
 
-        // cpha: second clock transition is the first data capture
-        // cpol: CK to 1 when idle
+        let cpol = mode.polarity == Polarity::IdleHigh;
+        let cpha = mode.phase == Phase::CaptureOnSecondTransition;
+
         // mstr: master configuration
-        // br: 1 MHz frequency
         // lsbfirst: MSB first
-        // ssm: disable software slave management
+        // ssm: enable software slave management (NSS pin free for other uses)
+        // ssi: set nss high = master mode
         // dff: 8 bit frames
         // bidimode: 2-line unidirectional
+        // spe: enable the SPI bus
         spi.cr1.write(|w| {
             w.cpha()
-                .set_bit()
+                .bit(cpha)
                 .cpol()
-                .set_bit()
+                .bit(cpol)
                 .mstr()
                 .set_bit()
                 .br()
@@ -76,34 +85,24 @@ impl Spi {
                 .lsbfirst()
                 .clear_bit()
                 .ssm()
-                .clear_bit()
+                .set_bit()
+                .ssi()
+                .set_bit()
                 .rxonly()
                 .clear_bit()
                 .dff()
                 .clear_bit()
                 .bidimode()
                 .clear_bit()
+                .spe()
+                .set_bit()
         });
 
         Spi { spi }
     }
-
-    /// Disables the SPI bus
-    ///
-    /// **NOTE** This drives the NSS pin high
-    pub fn disable(&mut self) {
-        self.spi.cr1.modify(|_, w| w.spe().clear_bit());
-    }
-
-    /// Enables the SPI bus
-    ///
-    /// **NOTE** This drives the NSS pin low
-    pub fn enable(&mut self) {
-        self.spi.cr1.modify(|_, w| w.spe().set_bit());
-    }
 }
 
-impl hal::Spi<u8> for Spi {
+impl spi::FullDuplex<u8> for Spi {
     type Error = Error;
 
     fn read(&mut self) -> nb::Result<u8, Error> {

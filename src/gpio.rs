@@ -1,4 +1,5 @@
 use stm32f103xx::{GPIOA, GPIOB, GPIOC};
+use hal::digital;
 
 use rcc::ENR;
 
@@ -164,22 +165,22 @@ macro_rules! gpio {
                 }
             }
 
-            impl $PIN<Output> {
-                pub fn is_high(&self) -> bool {
+            impl digital::OutputPin for $PIN<Output> {
+                fn is_high(&self) -> bool {
                     !self.is_low()
                 }
 
-                pub fn is_low(&self) -> bool {
+                fn is_low(&self) -> bool {
                     // NOTE atomic read with not side effects
                     unsafe { (*$GPIO::ptr()).odr.read().bits() & (1 << $n) == 0 }
                 }
 
-                pub fn set_high(&mut self) {
+                fn set_high(&mut self) {
                     // NOTE atomic write to a stateless register
                     unsafe { (*$GPIO::ptr()).bsrr.write(|w| w.bits(1 << $n)) }
                 }
 
-                pub fn set_low(&mut self) {
+                fn set_low(&mut self) {
                     // NOTE atomic write to a stateless register
                     unsafe { (*$GPIO::ptr()).bsrr.write(|w| w.bits(1 << (16 + $n))) }
                 }

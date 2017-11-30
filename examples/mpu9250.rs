@@ -1,16 +1,18 @@
 //! MPU9250
 
+#![deny(unsafe_code)]
+#![deny(warnings)]
 #![feature(proc_macro)]
 #![no_std]
 
 extern crate blue_pill;
 extern crate cortex_m_rtfm as rtfm;
-#[macro_use]
-extern crate nb;
+extern crate mpu9250;
 
 use blue_pill::Spi;
 use blue_pill::prelude::*;
 use blue_pill::stm32f103xx;
+use mpu9250::Mpu9250;
 use rtfm::app;
 
 app! {
@@ -25,33 +27,30 @@ fn init(p: init::Peripherals) {
 
     let clocks = rcc.cfgr.freeze(&mut flash.acr);
 
-    let pa4 = gpioa.pa4.as_alt_push(&mut gpioa.crl);
-    let pa5 = gpioa.pa5.as_alt_push(&mut gpioa.crl);
-    let pa6 = gpioa.pa6;
-    let pa7 = gpioa.pa7.as_alt_push(&mut gpioa.crl);
-    let mut spi = Spi::new(
+    let sck = gpioa.pa5.as_alt_push(&mut gpioa.crl);
+    let miso = gpioa.pa6;
+    let mosi = gpioa.pa7.as_alt_push(&mut gpioa.crl);
+    let spi = Spi::new(
         p.device.SPI1,
-        (pa4, pa5, pa6, pa7),
+        (sck, miso, mosi),
+        mpu9250::MODE,
+        1.mhz(),
         clocks,
         &mut rcc.enr,
         &mut afio.mapr,
     );
 
-    const WHO_AM_I: u8 = 0x75;
-    const R: u8 = 1 << 7;
-    const JUNK: u8 = 0xAA;
-    const ANS: u8 = 0x73;
-    // const W: u8 = 0 << 7;
+    let ncs = gpioa.pa4.as_output(&mut gpioa.crl);
+    let mut mpu9250 = Mpu9250::new(spi, ncs);
 
-    spi.enable();
-    block!(spi.send(WHO_AM_I | R)).unwrap();
-    let _ = block!(spi.read()).unwrap();
-    block!(spi.send(JUNK)).unwrap();
-    let byte = block!(spi.read()).unwrap();
-    spi.disable();
+    let byte = mpu9250.who_am_i().unwrap();
 
     rtfm::bkpt();
-    assert_eq!(byte, ANS);
+    assert_eq!(byte, 0x71);
+
+    let _measurements = mpu9250.all().unwrap();
+
+    rtfm::bkpt();
 }
 
 fn idle() -> ! {
