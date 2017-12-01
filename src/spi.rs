@@ -1,5 +1,6 @@
 use core::ptr;
 
+use hal::blocking;
 use hal::spi::{self, Mode, Phase, Polarity};
 use nb;
 use stm32f103xx::SPI1;
@@ -139,5 +140,48 @@ impl spi::FullDuplex<u8> for Spi {
         } else {
             Err(nb::Error::WouldBlock)
         }
+    }
+}
+
+impl blocking::spi::FullDuplex<u8> for Spi {
+    type Error = Error;
+
+    fn transfer<'b>(&mut self, bytes: &'b mut [u8]) -> Result<&'b [u8], Error> {
+        blocking::spi::transfer(self, bytes)
+    }
+
+    fn write(&mut self, bytes: &[u8]) -> Result<(), Error> {
+        for byte in bytes {
+            'l: loop {
+                let sr = self.spi.sr.read();
+
+                // ignore overruns because we don't care about the incoming data
+                // if sr.ovr().bit_is_set() {
+                // Err(nb::Error::Other(Error::Overrun))
+                // } else
+                if sr.modf().bit_is_set() {
+                    return Err(Error::ModeFault);
+                } else if sr.crcerr().bit_is_set() {
+                    return Err(Error::Crc);
+                } else if sr.txe().bit_is_set() {
+                    // NOTE(write_volatile) see note above
+                    unsafe { ptr::write_volatile(&self.spi.dr as *const _ as *mut u8, *byte) }
+                    break 'l;
+                } else {
+                    // try again
+                }
+            }
+        }
+
+        // wait until the transmission of the last byte is done
+        while self.spi.sr.read().bsy().bit_is_set() {}
+
+        // clear OVR flag
+        unsafe {
+            ptr::read_volatile(&self.spi.dr as *const _ as *const u8);
+        }
+        self.spi.sr.read();
+
+        Ok(())
     }
 }
