@@ -2,6 +2,7 @@
 
 #![deny(unsafe_code)]
 #![deny(warnings)]
+#![feature(asm)]
 #![feature(proc_macro)]
 #![no_std]
 
@@ -41,14 +42,22 @@ fn init(p: init::Peripherals) {
     );
 
     let ncs = gpioa.pa4.as_output(&mut gpioa.crl);
-    let mut mpu9250 = Mpu9250::new(spi, ncs);
+    let mut mpu9250 = Mpu9250::new(spi, ncs).unwrap();
 
-    let byte = mpu9250.who_am_i().unwrap();
+    // sanity checks
+    assert_eq!(mpu9250.who_am_i().unwrap(), 0x71);
+    assert_eq!(mpu9250.ak8963_who_am_i().unwrap(), 0x48);
 
-    rtfm::bkpt();
-    assert_eq!(byte, 0x71);
+    let _a1 = mpu9250.all().unwrap();
 
-    let _measurements = mpu9250.all().unwrap();
+    // delay so that we can see a different magnetometer reading
+    for _ in 0..1_000 {
+        unsafe { asm!("nop"::::"volatile") }
+    }
+
+    let _a2 = mpu9250.all().unwrap();
+
+    let _m = mpu9250.mag().unwrap();
 
     rtfm::bkpt();
 }
