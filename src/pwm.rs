@@ -1,6 +1,7 @@
 use core::marker::PhantomData;
 
 use cast::{u16, u32};
+use hal::PwmPin;
 use stm32f103xx::{TIM2, TIM3};
 
 use afio::MAPR;
@@ -23,64 +24,72 @@ pub struct Pwm<CHANNEL, PIN> {
 }
 
 impl<PIN> Pwm<T2C2, PIN> {
-    pub fn disable(&mut self) {
-        unsafe {
-            bb::clear(&(*TIM2::ptr()).ccer, 4);
-        }
-    }
-
-    pub fn enable(&mut self) {
-        unsafe {
-            bb::set(&(*TIM2::ptr()).ccer, 4);
-        }
-    }
-
-    pub fn get_duty(&self) -> u16 {
-        unsafe { (*TIM3::ptr()).ccr2.read().ccr2().bits() }
-    }
-
-    pub fn get_max_duty(&self) -> u16 {
-        unsafe { (*TIM3::ptr()).arr.read().arr().bits() }
-    }
-
-    pub fn set_duty(&mut self, duty: u16) {
-        unsafe { (*TIM3::ptr()).ccr2.write(|w| w.ccr2().bits(duty)) }
-    }
-
     pub fn unwrap(mut self) -> PIN {
         self.disable();
         self.pin
     }
 }
 
+impl<PIN> PwmPin for Pwm<T2C2, PIN> {
+    type Duty = u16;
+
+    fn disable(&mut self) {
+        unsafe {
+            bb::clear(&(*TIM2::ptr()).ccer, 4);
+        }
+    }
+
+    fn enable(&mut self) {
+        unsafe {
+            bb::set(&(*TIM2::ptr()).ccer, 4);
+        }
+    }
+
+    fn get_duty(&self) -> u16 {
+        unsafe { (*TIM3::ptr()).ccr2.read().ccr2().bits() }
+    }
+
+    fn get_max_duty(&self) -> u16 {
+        unsafe { (*TIM3::ptr()).arr.read().arr().bits() }
+    }
+
+    fn set_duty(&mut self, duty: u16) {
+        unsafe { (*TIM3::ptr()).ccr2.write(|w| w.ccr2().bits(duty)) }
+    }
+}
+
 impl<PIN> Pwm<T3C1, PIN> {
-    pub fn disable(&mut self) {
+    pub fn unwrap(mut self) -> PIN {
+        self.disable();
+        self.pin
+    }
+}
+
+impl<PIN> PwmPin for Pwm<T3C1, PIN> {
+    type Duty = u16;
+
+    fn disable(&mut self) {
         unsafe {
             bb::clear(&(*TIM3::ptr()).ccer, 0);
         }
     }
 
-    pub fn enable(&mut self) {
+    fn enable(&mut self) {
         unsafe {
             bb::set(&(*TIM3::ptr()).ccer, 0);
         }
     }
 
-    pub fn get_duty(&self) -> u16 {
+    fn get_duty(&self) -> u16 {
         unsafe { (*TIM3::ptr()).ccr1.read().ccr1().bits() }
     }
 
-    pub fn get_max_duty(&self) -> u16 {
+    fn get_max_duty(&self) -> u16 {
         unsafe { (*TIM3::ptr()).arr.read().arr().bits() }
     }
 
-    pub fn set_duty(&mut self, duty: u16) {
+    fn set_duty(&mut self, duty: u16) {
         unsafe { (*TIM3::ptr()).ccr1.write(|w| w.ccr1().bits(duty)) }
-    }
-
-    pub fn unwrap(mut self) -> PIN {
-        self.disable();
-        self.pin
     }
 }
 

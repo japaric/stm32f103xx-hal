@@ -28,7 +28,7 @@ app! {
     },
 }
 
-fn init(p: init::Peripherals) -> init::LateResourceValues {
+fn init(p: init::Peripherals) -> init::LateResources {
     let mut flash = p.device.FLASH.split();
     let mut rcc = p.device.RCC.split();
 
@@ -42,7 +42,7 @@ fn init(p: init::Peripherals) -> init::LateResourceValues {
 
     timer.resume();
 
-    init::LateResourceValues {
+    init::LateResources {
         PC13: pc13,
         TIMER: timer,
     }
@@ -54,7 +54,7 @@ fn idle() -> ! {
     }
 }
 
-fn tim2(_t: &mut Threshold, r: TIM2::Resources) {
+fn tim2(_t: &mut Threshold, mut r: TIM2::Resources) {
     r.TIMER.wait().unwrap();
 
     if r.PC13.is_high() {

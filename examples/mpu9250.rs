@@ -1,6 +1,5 @@
 //! MPU9250
 
-#![deny(unsafe_code)]
 #![deny(warnings)]
 #![feature(asm)]
 #![feature(proc_macro)]

@@ -5,12 +5,16 @@
 
 extern crate blue_pill;
 extern crate cortex_m_rtfm as rtfm;
+extern crate cortex_m_semihosting;
 extern crate mfrc522;
+
+use core::fmt::Write;
 
 use blue_pill::Spi;
 use blue_pill::prelude::*;
 use blue_pill::stm32f103xx;
-use mfrc522::{Error, Mfrc522};
+use cortex_m_semihosting::hio;
+use mfrc522::Mfrc522;
 use rtfm::app;
 
 app! {
@@ -45,30 +49,12 @@ fn init(p: init::Peripherals) {
     let mut led = gpioc.pc13.as_output(&mut gpioc.crh);
     led.set_high();
 
+    let mut hstdout = hio::hstdout().unwrap();
     loop {
-        const CARD_UID: [u8; 4] = [34, 246, 178, 171];
-        const TAG_UID: [u8; 4] = [128, 170, 179, 76];
-
-        match mfrc522.reqa() {
-            Ok(atqa) => {
-                let uid = match mfrc522.select(&atqa) {
-                    Ok(uid) => uid,
-                    // unreliable link, try again
-                    Err(Error::IncompleteFrame) => continue,
-                    Err(e) => panic!("{:?}", e),
-                };
-
-                if uid.bytes() == &CARD_UID {
-                    led.set_high();
-                } else if uid.bytes() == &TAG_UID {
-                    led.set_low()
-                }
+        if let Ok(atqa) = mfrc522.reqa() {
+            if let Ok(uid) = mfrc522.select(&atqa) {
+                writeln!(hstdout, "{:?}", uid).unwrap();
             }
-            // no tag nearby, try again
-            Err(Error::Timeout) => {}
-            // unreliable link, try again
-            Err(Error::IncompleteFrame) => {}
-            Err(e) => panic!("{:?}", e),
         }
     }
 }

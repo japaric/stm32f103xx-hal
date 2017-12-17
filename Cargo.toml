@@ -18,13 +18,16 @@ repository = "https://github.com/japaric/blue-pill"
 version = "0.1.0"
 
 [dependencies]
-cortex-m = { git = "https://github.com/japaric/cortex-m", branch = "singletons" }
+cortex-m-semihosting = "0.2.0"
 static-ref = "0.2.0"
 volatile-register = "0.2.0"
 
 [dependencies.cast]
 default-features = false
 version = "0.2.2"
+
+[dependencies.cortex-m]
+git = "https://github.com/japaric/cortex-m"
 
 [dependencies.either]
 default-features = false
@@ -37,23 +40,18 @@ git = "https://github.com/japaric/embedded-hal"
 git = "https://github.com/japaric/nb"
 
 [dependencies.stm32f103xx]
-branch = "singletons"
 features = ["rt"]
 git = "https://github.com/japaric/stm32f103xx"
 
 [dev-dependencies]
 heapless = "0.2.0"
 
-[dev-dependencies.cortex-m]
-branch = "singletons"
-git = "https://github.com/japaric/cortex-m"
-
 [dev-dependencies.cortex-m-rt]
 version = "0.3.6"
 
 [dev-dependencies.cortex-m-rtfm]
-branch = "singletons"
 git = "https://github.com/japaric/cortex-m-rtfm"
+branch = "init-resources"
 
 [dev-dependencies.mfrc522]
 git = "https://github.com/japaric/mfrc522"
@@ -61,9 +59,5 @@ git = "https://github.com/japaric/mfrc522"
 [dev-dependencies.mpu9250]
 git = "https://github.com/japaric/mpu9250"
 
-[profile.dev]
-codegen-units = 1
-
 [profile.release]
-# debug = true
 lto = true

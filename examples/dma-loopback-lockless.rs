@@ -53,7 +53,7 @@ app! {
     }
 }
 
-fn init(p: init::Peripherals, r: init::Resources) -> init::LateResourceValues {
+fn init(p: init::Peripherals, r: init::Resources) -> init::LateResources {
     let mut rcc = p.device.RCC.split();
     let mut afio = p.device.AFIO.split(&mut rcc.enr);
     let mut flash = p.device.FLASH.split();
@@ -83,7 +83,7 @@ fn init(p: init::Peripherals, r: init::Resources) -> init::LateResourceValues {
 
     let (p2, c2) = r.RB2.split();
 
-    init::LateResourceValues {
+    init::LateResources {
         T1: Some(rx.read_exact(channels.5, r.RX_BUFFER)),
         C1: c1,
         P1: p1,
@@ -98,7 +98,7 @@ fn idle() -> ! {
     }
 }
 
-fn rx_end(_t: &mut Threshold, r: DMA1_CHANNEL5::Resources) {
+fn rx_end(_t: &mut Threshold, mut r: DMA1_CHANNEL5::Resources) {
     if let Some(transfer) = r.T1.take() {
         // sanity check: this task starts when the transfer is done
         debug_assert!(transfer.is_done().unwrap());
@@ -110,7 +110,7 @@ fn rx_end(_t: &mut Threshold, r: DMA1_CHANNEL5::Resources) {
         tx_buf.copy_from_slice(rx_buf);
         r.P2.enqueue(tx.write_all(tx_chan, tx_buf)).unwrap();
 
-        **r.T1 = Some(rx.read_exact(rx_chan, rx_buf));
+        *r.T1 = Some(rx.read_exact(rx_chan, rx_buf));
     } else {
         // NOTE(unreachable!) `T1` is always populated
         #[cfg(debug_assertions)]
@@ -118,7 +118,7 @@ fn rx_end(_t: &mut Threshold, r: DMA1_CHANNEL5::Resources) {
     }
 }
 
-fn tx_end(_t: &mut Threshold, r: DMA1_CHANNEL4::Resources) {
+fn tx_end(_t: &mut Threshold, mut r: DMA1_CHANNEL4::Resources) {
     if let Some(transfer) = r.C2.dequeue() {
         // sanity check: this task starts when the transfer is done
         debug_assert!(transfer.is_done().unwrap());

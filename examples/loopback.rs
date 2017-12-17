@@ -27,7 +27,7 @@ app! {
     },
 }
 
-fn init(p: init::Peripherals) -> init::LateResourceValues {
+fn init(p: init::Peripherals) -> init::LateResources {
     let mut rcc = p.device.RCC.split();
     let mut afio = p.device.AFIO.split(&mut rcc.enr);
     let mut flash = p.device.FLASH.split();
@@ -54,7 +54,7 @@ fn init(p: init::Peripherals) -> init::LateResourceValues {
 
     let (tx, rx) = serial.split();
 
-    init::LateResourceValues { RX: rx, TX: tx }
+    init::LateResources { RX: rx, TX: tx }
 }
 
 fn idle() -> ! {
@@ -63,7 +63,7 @@ fn idle() -> ! {
     }
 }
 
-fn usart1(_t: &mut Threshold, r: USART1::Resources) {
+fn usart1(_t: &mut Threshold, mut r: USART1::Resources) {
     let byte = r.RX.read().unwrap();
     r.TX.write(byte).unwrap();
 }

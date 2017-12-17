@@ -1,6 +1,7 @@
 use core::marker::Unsize;
 
 use cast::u16;
+use hal::PwmPin;
 use stm32f103xx::{ADC1, DMA1};
 
 use dma::{CircTransfer, D1C1, Static};
