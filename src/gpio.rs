@@ -126,7 +126,7 @@ macro_rules! gpio {
                     $PIN { _state: InputPullDown }
                 }
 
-                pub fn as_pull_up_input(self, cr: &mut $gpio::$CR) -> $PIN<InputPullDown> {
+                pub fn as_pull_up_input(self, cr: &mut $gpio::$CR) -> $PIN<InputPullUp> {
                     // MODE = 0b10 = input pull-X
                     // CNF = 0b01 = input mode
                     cr.$cr()
@@ -139,7 +139,7 @@ macro_rules! gpio {
                         (*$GPIO::ptr()).bsrr.write(|w| w.bits(1 << $n))
                     }
 
-                    $PIN { _state: InputPullDown }
+                    $PIN { _state: InputPullUp }
                 }
 
                 pub fn as_output(self, cr: &mut $gpio::$CR) -> $PIN<Output> {
