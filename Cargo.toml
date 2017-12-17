@@ -50,14 +50,17 @@ heapless = "0.2.0"
 version = "0.3.6"
 
 [dev-dependencies.cortex-m-rtfm]
-git = "https://github.com/japaric/cortex-m-rtfm"
 branch = "init-resources"
+git = "https://github.com/japaric/cortex-m-rtfm"
 
 [dev-dependencies.mfrc522]
 git = "https://github.com/japaric/mfrc522"
 
 [dev-dependencies.mpu9250]
 git = "https://github.com/japaric/mpu9250"
+
+[dev-dependencies.tb6612fng]
+git = "https://github.com/japaric/tb6612fng"
 
 [profile.release]
 lto = true
