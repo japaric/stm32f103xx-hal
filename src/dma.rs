@@ -136,13 +136,13 @@ impl<T, CHANNEL> Buffer<T, CHANNEL> {
     ///
     /// Panics if the value is currently mutably borrowed.
     pub fn borrow(&self) -> Ref<T> {
-        assert_ne!(self.flag.get(), WRITING);
+        assert_ne!(unsafe { self.flag.get() }, WRITING);
 
-        self.flag.set(self.flag.get() + 1);
+        unsafe { self.flag.set(self.flag.get() + 1) }
 
         Ref {
             data: unsafe { &*self.data.get() },
-            flag: &self.flag,
+            flag: unsafe { &self.flag },
         }
     }
 
@@ -155,21 +155,21 @@ impl<T, CHANNEL> Buffer<T, CHANNEL> {
     ///
     /// Panics if the value is currently borrowed.
     pub fn borrow_mut(&self) -> RefMut<T> {
-        assert_eq!(self.flag.get(), UNUSED);
+        assert_eq!(unsafe { self.flag.get() }, UNUSED);
 
-        self.flag.set(WRITING);
+        unsafe { self.flag.set(WRITING) }
 
         RefMut {
             data: unsafe { &mut *self.data.get() },
-            flag: &self.flag,
+            flag: unsafe { &self.flag },
         }
     }
 
     pub(crate) fn lock(&self) -> &T {
         assert_eq!(self.state.get(), State::Unlocked);
-        assert_ne!(self.flag.get(), WRITING);
+        assert_ne!(unsafe { self.flag.get() }, WRITING);
 
-        self.flag.set(self.flag.get() + 1);
+        unsafe { self.flag.set(self.flag.get() + 1) }
         self.state.set(State::Locked);
 
         unsafe { &*self.data.get() }
@@ -177,9 +177,9 @@ impl<T, CHANNEL> Buffer<T, CHANNEL> {
 
     pub(crate) fn lock_mut(&self) -> &mut T {
         assert_eq!(self.state.get(), State::Unlocked);
-        assert_eq!(self.flag.get(), UNUSED);
+        assert_eq!(unsafe { self.flag.get() }, UNUSED);
 
-        self.flag.set(WRITING);
+        unsafe { self.flag.set(WRITING) }
         self.state.set(State::MutLocked);
 
         unsafe { &mut *self.data.get() }
