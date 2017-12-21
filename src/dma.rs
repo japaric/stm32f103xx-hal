@@ -40,8 +40,6 @@ pub struct Dma1Channel5 {
 }
 
 /// Buffer to be used with a certain DMA `CHANNEL`
-// NOTE(packed) workaround for rust-lang/rust#41315
-#[repr(packed)]
 pub struct Buffer<T, CHANNEL> {
     data: UnsafeCell<T>,
     flag: Cell<BorrowFlag>,
