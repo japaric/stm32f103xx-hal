@@ -7,7 +7,7 @@ main() {
     fi
 
     xargo check --target $TARGET
-    xargo test --target $TARGET --examples
+    xargo check --target $TARGET --examples
 }
 
 main
