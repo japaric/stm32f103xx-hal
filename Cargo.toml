@@ -47,10 +47,9 @@ git = "https://github.com/japaric/stm32f103xx"
 heapless = "0.2.0"
 
 [dev-dependencies.cortex-m-rt]
-version = "0.3.6"
+version = "0.3.8"
 
 [dev-dependencies.cortex-m-rtfm]
-branch = "init-resources"
 git = "https://github.com/japaric/cortex-m-rtfm"
 
 [dev-dependencies.mfrc522]

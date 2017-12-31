@@ -165,9 +165,8 @@ impl Rx {
                 .write(|w| unsafe { w.bits(slice.as_ptr() as u32) });
         }
 
-        dma.cpar5.write(|w| unsafe {
-            w.bits(&(*USART1::ptr()).dr as *const _ as u32)
-        });
+        dma.cpar5
+            .write(|w| unsafe { w.bits(&(*USART1::ptr()).dr as *const _ as u32) });
 
         // MEM2MEM: memory to memory mode disabled
         // MSIZE: memory is 8 bit wide
@@ -221,9 +220,8 @@ impl Rx {
                 .write(|w| unsafe { w.bits(slice.as_ptr() as u32) });
         }
 
-        dma.cpar5.write(|w| unsafe {
-            w.bits(&(*USART1::ptr()).dr as *const _ as u32)
-        });
+        dma.cpar5
+            .write(|w| unsafe { w.bits(&(*USART1::ptr()).dr as *const _ as u32) });
 
         // MEM2MEM: memory to memory mode disabled
         // MSIZE: memory is 8 bit wide
@@ -275,9 +273,7 @@ impl hal::serial::Read<u8> for Rx {
         } else if sr.rxne().bit_is_set() {
             // NOTE(read_volatile) the register is 9 bits big but we'll only
             // work with the first 8 bits
-            Ok(unsafe {
-                ptr::read_volatile(&usart.dr as *const _ as *const u8)
-            })
+            Ok(unsafe { ptr::read_volatile(&usart.dr as *const _ as *const u8) })
         } else {
             Err(nb::Error::WouldBlock)
         }
@@ -308,9 +304,8 @@ impl Tx {
                 .write(|w| unsafe { w.bits(slice.as_ptr() as u32) });
         }
 
-        dma.cpar4.write(|w| unsafe {
-            w.bits(&(*USART1::ptr()).dr as *const _ as u32)
-        });
+        dma.cpar4
+            .write(|w| unsafe { w.bits(&(*USART1::ptr()).dr as *const _ as u32) });
 
         // MEM2MEM: memory to memory mode disabled
         // MSIZE: memory is 8 bit wide
@@ -349,9 +344,20 @@ impl Tx {
 impl hal::serial::Write<u8> for Tx {
     type Error = Error;
 
+    fn flush(&mut self) -> nb::Result<(), Error> {
+        // NOTE(unsafe) atomic read with no side effects
+        let sr = unsafe { (*USART1::ptr()).sr.read() };
+
+        if sr.tc().bit_is_set() {
+            Ok(())
+        } else {
+            Err(nb::Error::WouldBlock)
+        }
+    }
+
     fn write(&mut self, byte: u8) -> nb::Result<(), Error> {
-        let usart = unsafe { &*USART1::ptr() };
-        let sr = usart.sr.read();
+        // NOTE(unsafe) atomic read with no side effects
+        let sr = unsafe { (*USART1::ptr()).sr.read() };
 
         if sr.ore().bit_is_set() {
             Err(nb::Error::Other(Error::Overrun))
@@ -361,7 +367,7 @@ impl hal::serial::Write<u8> for Tx {
             Err(nb::Error::Other(Error::Framing))
         } else if sr.txe().bit_is_set() {
             // NOTE(write_volatile) see NOTE in the `read` method
-            unsafe { ptr::write_volatile(&usart.dr as *const _ as *mut u8, byte) }
+            unsafe { ptr::write_volatile(&(*USART1::ptr()).dr as *const _ as *mut u8, byte) }
             Ok(())
         } else {
             Err(nb::Error::WouldBlock)
