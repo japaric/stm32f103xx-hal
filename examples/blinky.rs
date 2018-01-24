@@ -1,55 +1,36 @@
-//! Blinks the user LED using sysclk
-#![deny(unsafe_code)]
-#![deny(warnings)]
-#![feature(proc_macro)]
+//! Turns the user LED on
+
 #![no_std]
 
 extern crate blue_pill;
-extern crate cortex_m;
-extern crate cortex_m_rtfm as rtfm;
+#[macro_use(block)]
+extern crate nb;
 
-use blue_pill::led::{self, LED};
-use cortex_m::peripheral::SystClkSource;
-use rtfm::{app, Threshold};
+use blue_pill::hal::prelude::*;
+use blue_pill::hal::timer::Timer;
 
-app! {
-    device: blue_pill::stm32f103xx,
+fn main() {
+    let p = blue_pill::hal::stm32f103xx::Peripherals::take().unwrap();
 
-    resources: {
-        static ON: bool = false;
-    },
+    let mut flash = p.FLASH.constrain();
+    let mut rcc = p.RCC.constrain();
 
-    tasks: {
-        SYS_TICK: {
-            path: toggle,
-            resources: [ON],
-        },
-    },
-}
+    // Try a different clock configuration
+    // let clocks = rcc.cfgr.freeze(&mut flash.acr);
+    let clocks = rcc.cfgr
+        .sysclk(64.mhz())
+        .pclk1(32.mhz())
+        .freeze(&mut flash.acr);
 
-fn init(p: init::Peripherals, _r: init::Resources) {
-    led::init(p.GPIOC, p.RCC);
+    let mut gpioc = p.GPIOC.split(&mut rcc.apb2);
 
-    p.SYST.set_clock_source(SystClkSource::Core);
-    p.SYST.set_reload(8_000_000); // 1s
-    p.SYST.enable_interrupt();
-    p.SYST.enable_counter();
-}
-
-fn idle() -> ! {
-    // Sleep
+    let mut led = gpioc.pc13.into_push_pull_output(&mut gpioc.crh);
+    // Try a different timer
+    let mut timer = Timer::tim2(p.TIM2, 1.hz(), clocks, &mut rcc.apb1);
     loop {
-        rtfm::wfi();
-    }
-}
-
-// TASKS
-fn toggle(_t: &mut Threshold, r: SYS_TICK::Resources) {
-    **r.ON = !**r.ON;
-
-    if **r.ON {
-        LED.on();
-    } else {
-        LED.off();
+        block!(timer.wait()).unwrap();
+        led.set_high();
+        block!(timer.wait()).unwrap();
+        led.set_low();
     }
 }
