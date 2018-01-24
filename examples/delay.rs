@@ -1,15 +1,16 @@
-//! Turns the user LED on
+//! "Blinky" using delays instead of a timer
 
 #![no_std]
 
-extern crate blue_pill;
 extern crate cortex_m;
+extern crate stm32f103xx_hal as hal;
 
-use blue_pill::hal::prelude::*;
-use blue_pill::hal::delay::Delay;
+use hal::delay::Delay;
+use hal::prelude::*;
+use hal::stm32f103xx;
 
 fn main() {
-    let dp = blue_pill::hal::stm32f103xx::Peripherals::take().unwrap();
+    let dp = stm32f103xx::Peripherals::take().unwrap();
     let cp = cortex_m::Peripherals::take().unwrap();
 
     let mut flash = dp.FLASH.constrain();

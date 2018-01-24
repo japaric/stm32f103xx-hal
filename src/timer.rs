@@ -1,5 +1,5 @@
 use cast::{u16, u32};
-use hal::timer::CountDown;
+use hal::timer::{CountDown, Periodic};
 use nb;
 use stm32f103xx::{TIM2, TIM3, TIM4};
 
@@ -67,6 +67,8 @@ macro_rules! hal {
                     }
                 }
             }
+
+            impl Periodic for Timer<$TIMX> {}
         )+
     }
 }

@@ -5,7 +5,7 @@ main() {
         return
     fi
 
-    xargo doc --target $TARGET
+    xargo doc --features doc --target $TARGET
 
     mkdir ghp-import
 

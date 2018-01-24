@@ -2,12 +2,13 @@
 
 #![no_std]
 
-extern crate blue_pill;
+extern crate stm32f103xx_hal as hal;
 
-use blue_pill::hal::prelude::*;
+use hal::prelude::*;
+use hal::stm32f103xx;
 
 fn main() {
-    let p = blue_pill::hal::stm32f103xx::Peripherals::take().unwrap();
+    let p = stm32f103xx::Peripherals::take().unwrap();
 
     let mut rcc = p.RCC.constrain();
     let mut gpioc = p.GPIOC.split(&mut rcc.apb2);
