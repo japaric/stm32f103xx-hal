@@ -1,29 +1,16 @@
 //! Turns the user LED on
 
-#![deny(unsafe_code)]
-#![deny(warnings)]
-#![feature(proc_macro)]
 #![no_std]
 
 extern crate blue_pill;
-extern crate cortex_m_rtfm as rtfm;
 
-use blue_pill::led::{self, LED};
-use rtfm::app;
+use blue_pill::hal::prelude::*;
 
-app! {
-    device: blue_pill::stm32f103xx,
-}
+fn main() {
+    let p = blue_pill::hal::stm32f103xx::Peripherals::take().unwrap();
 
-fn init(p: init::Peripherals) {
-    led::init(p.GPIOC, p.RCC);
-}
+    let mut rcc = p.RCC.constrain();
+    let mut gpioc = p.GPIOC.split(&mut rcc.apb2);
 
-fn idle() -> ! {
-    LED.on();
-
-    // Sleep
-    loop {
-        rtfm::wfi();
-    }
+    gpioc.pc13.into_push_pull_output(&mut gpioc.crh);
 }
