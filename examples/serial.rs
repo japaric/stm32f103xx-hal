@@ -1,18 +1,21 @@
-//! Turns the user LED on
+//! Serial interface loopback test
+//!
+//! You have to short the TX and RX pins to make this program work
 
 #![no_std]
 
-extern crate blue_pill;
 extern crate cortex_m;
 #[macro_use(block)]
 extern crate nb;
+extern crate stm32f103xx_hal as hal;
 
-use blue_pill::hal::prelude::*;
-use blue_pill::hal::serial::Serial;
 use cortex_m::asm;
+use hal::prelude::*;
+use hal::serial::Serial;
+use hal::stm32f103xx;
 
 fn main() {
-    let p = blue_pill::hal::stm32f103xx::Peripherals::take().unwrap();
+    let p = stm32f103xx::Peripherals::take().unwrap();
 
     let mut flash = p.FLASH.constrain();
     let mut rcc = p.RCC.constrain();

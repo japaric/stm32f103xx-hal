@@ -1,16 +1,17 @@
-//! Turns the user LED on
+//! Blinks an LED
 
 #![no_std]
 
-extern crate blue_pill;
+extern crate stm32f103xx_hal as hal;
 #[macro_use(block)]
 extern crate nb;
 
-use blue_pill::hal::prelude::*;
-use blue_pill::hal::timer::Timer;
+use hal::prelude::*;
+use hal::stm32f103xx;
+use hal::timer::Timer;
 
 fn main() {
-    let p = blue_pill::hal::stm32f103xx::Peripherals::take().unwrap();
+    let p = stm32f103xx::Peripherals::take().unwrap();
 
     let mut flash = p.FLASH.constrain();
     let mut rcc = p.RCC.constrain();

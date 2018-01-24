@@ -1,15 +1,16 @@
-//! Turns the user LED on
+//! Testing PWM output
 
 #![no_std]
 
-extern crate blue_pill;
 extern crate cortex_m;
+extern crate stm32f103xx_hal as hal;
 
-use blue_pill::hal::prelude::*;
 use cortex_m::asm;
+use hal::prelude::*;
+use hal::stm32f103xx;
 
 fn main() {
-    let p = blue_pill::hal::stm32f103xx::Peripherals::take().unwrap();
+    let p = stm32f103xx::Peripherals::take().unwrap();
 
     let mut flash = p.FLASH.constrain();
     let mut rcc = p.RCC.constrain();
@@ -53,7 +54,7 @@ fn main() {
 
     pwm.enable();
 
-    // on
+    // full
     pwm.set_duty(max);
 
     asm::bkpt();
@@ -63,7 +64,7 @@ fn main() {
 
     asm::bkpt();
 
-    // off
+    // zero
     pwm.set_duty(0);
 
     asm::bkpt();

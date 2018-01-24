@@ -1,29 +1,36 @@
 [package]
 authors = ["Jorge Aparicio <jorge@japaric.io>"]
-name = "blue-pill"
+name = "stm32f103xx-hal"
 version = "0.1.0"
 
-[dependencies.stm32f103xx-hal]
-path = "stm32f103xx-hal"
+[dependencies]
+stm32f103xx = "0.8.0"
+cortex-m = "0.4.2"
+nb = "0.1.1"
+
+[dependencies.cast]
+default-features = false
+version = "0.2.2"
+
+[dependencies.embedded-hal]
+features = ["unproven"]
 version = "0.1.0"
 
 [dev-dependencies]
-nb = "0.1.1"
-cortex-m = "0.4.2"
-mpu9250 = { git = "https://github.com/japaric/mpu9250" }
 cortex-m-semihosting = "0.2.0"
+mpu9250 = { git = "https://github.com/japaric/mpu9250" }
 
 [dev-dependencies.cortex-m-rt]
 features = ["abort-on-panic"]
 version = "0.3.12"
 
-[dev-dependencies.stm32f103xx-hal]
+[dev-dependencies.stm32f103xx]
 features = ["rt"]
-path = "stm32f103xx-hal"
-version = "0.1.0"
+version = "0.8.0"
 
 [features]
-rt = ["stm32f103xx-hal/rt"]
+doc = []
+rt = ["stm32f103xx/rt"]
 
 [profile.dev]
 incremental = false
@@ -32,5 +39,3 @@ codegen-units = 1
 [profile.release]
 debug = true
 lto = true
-
-[workspace]

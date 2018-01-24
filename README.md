@@ -1,10 +1,10 @@
-# `blue-pill`
+# `stm32f103xx-hal`
 
-> Board Support Crate for [Blue Pill]
+> [HAL] for the STM32F103xx family of microcontrollers
 
-[Blue Pill]: http://wiki.stm32duino.com/index.php?title=Blue_Pill
+[HAL]: https://crates.io/crates/embedded-hal
 
-## [Documentation](https://japaric.github.io/blue-pill/blue_pill)
+## [Documentation](https://japaric.github.io/stm32f103xx-hal/stm32f103xx_hal)
 
 ## License
 

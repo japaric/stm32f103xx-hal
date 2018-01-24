@@ -1,20 +1,21 @@
-//! Turns the user LED on
+//! Testing the Quadrature Encoder Interface
 
 #![no_std]
 
-extern crate blue_pill;
 extern crate cortex_m;
 extern crate cortex_m_semihosting as semihosting;
+extern crate stm32f103xx_hal as hal;
 
 use core::fmt::Write;
 
-use blue_pill::hal::prelude::*;
-use blue_pill::hal::delay::Delay;
-use blue_pill::hal::qei::Qei;
+use hal::delay::Delay;
+use hal::prelude::*;
+use hal::qei::Qei;
+use hal::stm32f103xx;
 use semihosting::hio;
 
 fn main() {
-    let dp = blue_pill::hal::stm32f103xx::Peripherals::take().unwrap();
+    let dp = stm32f103xx::Peripherals::take().unwrap();
     let cp = cortex_m::Peripherals::take().unwrap();
 
     let mut flash = dp.FLASH.constrain();
