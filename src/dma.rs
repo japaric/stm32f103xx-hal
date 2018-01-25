@@ -11,6 +11,11 @@ pub enum Error {
     #[doc(hidden)] _Extensible,
 }
 
+pub enum Event {
+    HalfTransfer,
+    TransferComplete,
+}
+
 #[derive(Clone, Copy, PartialEq)]
 pub enum Half {
     First,
@@ -125,7 +130,7 @@ macro_rules! dma {
 
                 use stm32f103xx::{$DMAX, dma1};
 
-                use dma::{DmaExt, CircBuffer, Error, Half, Transfer};
+                use dma::{CircBuffer, DmaExt, Error, Event, Half, Transfer};
                 use rcc::AHB;
 
                 pub struct Channels((), $(pub $CX),+);
@@ -134,6 +139,26 @@ macro_rules! dma {
                     pub struct $CX { _0: () }
 
                     impl $CX {
+                        pub fn listen(&mut self, event: Event) {
+                            match event {
+                                Event::HalfTransfer => self.ccr().modify(|_, w| w.htie().set_bit()),
+                                Event::TransferComplete => {
+                                    self.ccr().modify(|_, w| w.tcie().set_bit())
+                                }
+                            }
+                        }
+
+                        pub fn unlisten(&mut self, event: Event) {
+                            match event {
+                                Event::HalfTransfer => {
+                                    self.ccr().modify(|_, w| w.htie().clear_bit())
+                                },
+                                Event::TransferComplete => {
+                                    self.ccr().modify(|_, w| w.tcie().clear_bit())
+                                }
+                            }
+                        }
+
                         pub(crate) fn isr(&self) -> dma1::isr::R {
                             // NOTE(unsafe) atomic read with no side effects
                             unsafe { (*$DMAX::ptr()).isr.read() }
