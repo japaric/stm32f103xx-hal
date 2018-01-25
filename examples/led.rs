@@ -1,5 +1,7 @@
 //! Turns the user LED on
 
+#![deny(unsafe_code)]
+#![deny(warnings)]
 #![no_std]
 
 extern crate stm32f103xx_hal as hal;

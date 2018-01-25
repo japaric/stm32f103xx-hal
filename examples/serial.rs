@@ -2,6 +2,8 @@
 //!
 //! You have to short the TX and RX pins to make this program work
 
+#![deny(unsafe_code)]
+#![deny(warnings)]
 #![no_std]
 
 extern crate cortex_m;

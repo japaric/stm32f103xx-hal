@@ -1,5 +1,7 @@
 //! Interfacing the MPU9250
 
+#![deny(unsafe_code)]
+#![deny(warnings)]
 #![no_std]
 
 extern crate cortex_m;
