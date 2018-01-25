@@ -20,6 +20,7 @@ version = "0.1.0"
 cortex-m-semihosting = "0.2.0"
 motor-driver = { git = "https://github.com/japaric/motor-driver" }
 mpu9250 = { git = "https://github.com/japaric/mpu9250" }
+cortex-m-rtfm = "0.3.1"
 
 [dev-dependencies.cortex-m-rt]
 features = ["abort-on-panic"]
