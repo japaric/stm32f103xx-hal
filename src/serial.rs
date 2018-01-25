@@ -2,7 +2,7 @@ use core::marker::{PhantomData, Unsize};
 use core::ptr;
 use core::sync::atomic::{self, Ordering};
 
-use cast::{u16, u32};
+use cast::u16;
 use hal;
 use nb;
 use stm32f103xx::{USART1, USART2, USART3};
@@ -194,13 +194,13 @@ macro_rules! hal {
                     {
                         let buffer: &[u8] = &buffer[0];
                         chan.cmar().write(|w| unsafe {
-                            w.ma().bits(u32(buffer.as_ptr() as usize))
+                            w.ma().bits(buffer.as_ptr() as usize as u32)
                         });
                         chan.cndtr().write(|w| unsafe{
                             w.ndt().bits(u16(buffer.len() * 2).unwrap())
                         });
                         chan.cpar().write(|w| unsafe {
-                            w.pa().bits(u32(&(*$USARTX::ptr()).dr as *const _ as usize))
+                            w.pa().bits(&(*$USARTX::ptr()).dr as *const _ as usize as u32)
                         });
 
                         // TODO can we weaken this compiler barrier?
@@ -244,13 +244,13 @@ macro_rules! hal {
                     {
                         let buffer: &[u8] = buffer;
                         chan.cmar().write(|w| unsafe {
-                            w.ma().bits(u32(buffer.as_ptr() as usize))
+                            w.ma().bits(buffer.as_ptr() as usize as u32)
                         });
                         chan.cndtr().write(|w| unsafe{
                             w.ndt().bits(u16(buffer.len()).unwrap())
                         });
                         chan.cpar().write(|w| unsafe {
-                            w.pa().bits(u32(&(*$USARTX::ptr()).dr as *const _ as usize))
+                            w.pa().bits(&(*$USARTX::ptr()).dr as *const _ as usize as u32)
                         });
 
                         // TODO can we weaken this compiler barrier?
@@ -297,13 +297,13 @@ macro_rules! hal {
                     {
                         let buffer: &[u8] = buffer.borrow();
                         chan.cmar().write(|w| unsafe {
-                            w.ma().bits(u32(buffer.as_ptr() as usize))
+                            w.ma().bits(buffer.as_ptr() as usize as u32)
                         });
                         chan.cndtr().write(|w| unsafe{
                             w.ndt().bits(u16(buffer.len()).unwrap())
                         });
                         chan.cpar().write(|w| unsafe {
-                            w.pa().bits(u32(&(*$USARTX::ptr()).dr as *const _ as usize))
+                            w.pa().bits(&(*$USARTX::ptr()).dr as *const _ as usize as u32)
                         });
 
                         // TODO can we weaken this compiler barrier?
