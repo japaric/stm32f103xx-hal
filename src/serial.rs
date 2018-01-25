@@ -1,11 +1,14 @@
-use core::marker::PhantomData;
+use core::marker::{PhantomData, Unsize};
 use core::ptr;
+use core::sync::atomic::{self, Ordering};
 
+use cast::{u16, u32};
 use hal;
 use nb;
 use stm32f103xx::{USART1, USART2, USART3};
 
 use afio::MAPR;
+use dma::{Static, Transfer, dma1, R};
 use gpio::gpioa::{PA10, PA2, PA3, PA9};
 use gpio::gpiob::{PB10, PB11, PB6, PB7};
 use gpio::{Alternate, Floating, Input, PushPull};
@@ -91,7 +94,9 @@ macro_rules! hal {
             $usartX_remap:ident,
             $bit:ident,
             $closure:expr,
-            $APB:ident
+            $APB:ident,
+            rx: $rx_chan:path,
+            tx: $tx_chan:path
         ),
     )+) => {
         $(
@@ -118,9 +123,8 @@ macro_rules! hal {
                             w.$usartX_remap().$bit(($closure)(PINS::REMAP))
                         });
 
-                    // disable hardware flow control
-                    // TODO enable DMA
-                    // usart.cr3.write(|w| w.rtse().clear_bit().ctse().clear_bit());
+                    // enable DMA transfers
+                    usart.cr3.write(|w| w.dmat().set_bit().dmar().set_bit());
 
                     let brr = clocks.pclk2().0 / baud_rate.0;
                     assert!(brr >= 16, "impossible baud rate");
@@ -178,6 +182,111 @@ macro_rules! hal {
                 }
             }
 
+            impl Rx<$USARTX> {
+                pub fn read_exact<B>(
+                    self,
+                    mut chan: $rx_chan,
+                    buffer: &'static mut B,
+                ) -> Transfer<R, &'static mut B, $rx_chan, Self>
+                where
+                    B: Unsize<[u8]>,
+                {
+                    {
+                        let buffer: &[u8] = buffer;
+                        chan.cmar().write(|w| unsafe {
+                            w.ma().bits(u32(buffer.as_ptr() as usize))
+                        });
+                        chan.cndtr().write(|w| unsafe{
+                            w.ndt().bits(u16(buffer.len()).unwrap())
+                        });
+                        chan.cpar().write(|w| unsafe {
+                            w.pa().bits(u32(&(*$USARTX::ptr()).dr as *const _ as usize))
+                        });
+
+                        // TODO can we weaken this compiler barrier?
+                        // NOTE(compiler_fence) operations on `buffer` should not be reordered after
+                        // the next statement, which starts the DMA transfer
+                        atomic::compiler_fence(Ordering::SeqCst);
+
+                        chan.ccr().modify(|_, w| {
+                            w.mem2mem()
+                                .clear_bit()
+                                .pl()
+                                .medium()
+                                .msize()
+                                .bit8()
+                                .psize()
+                                .bit8()
+                                .minc()
+                                .set_bit()
+                                .pinc()
+                                .clear_bit()
+                                .circ()
+                                .clear_bit()
+                                .dir()
+                                .clear_bit()
+                                .en()
+                                .set_bit()
+                        });
+                    }
+
+                    Transfer::r(buffer, chan, self)
+                }
+            }
+
+            impl Tx<$USARTX> {
+                pub fn write_all<A, B>(
+                    self,
+                    mut chan: $tx_chan,
+                    buffer: B,
+                ) -> Transfer<R, B, $tx_chan, Self>
+                where
+                    A: Unsize<[u8]>,
+                    B: Static<A>,
+                {
+                    {
+                        let buffer: &[u8] = buffer.borrow();
+                        chan.cmar().write(|w| unsafe {
+                            w.ma().bits(u32(buffer.as_ptr() as usize))
+                        });
+                        chan.cndtr().write(|w| unsafe{
+                            w.ndt().bits(u16(buffer.len()).unwrap())
+                        });
+                        chan.cpar().write(|w| unsafe {
+                            w.pa().bits(u32(&(*$USARTX::ptr()).dr as *const _ as usize))
+                        });
+
+                        // TODO can we weaken this compiler barrier?
+                        // NOTE(compiler_fence) operations on `buffer` should not be reordered after
+                        // the next statement, which starts the DMA transfer
+                        atomic::compiler_fence(Ordering::SeqCst);
+
+                        chan.ccr().modify(|_, w| {
+                            w.mem2mem()
+                                .clear_bit()
+                                .pl()
+                                .medium()
+                                .msize()
+                                .bit8()
+                                .psize()
+                                .bit8()
+                                .minc()
+                                .set_bit()
+                                .pinc()
+                                .clear_bit()
+                                .circ()
+                                .clear_bit()
+                                .dir()
+                                .set_bit()
+                                .en()
+                                .set_bit()
+                        });
+                    }
+
+                    Transfer::r(buffer, chan, self)
+                }
+            }
+
             impl hal::serial::Write<u8> for Tx<$USARTX> {
                 type Error = !;
 
@@ -213,7 +322,37 @@ macro_rules! hal {
 }
 
 hal! {
-    USART1: (usart1, usart1en, usart1rst, usart1_remap, bit, |remap| remap == 1, APB2),
-    USART2: (usart2, usart2en, usart2rst, usart2_remap, bit, |remap| remap == 1, APB1),
-    USART3: (usart3, usart3en, usart3rst, usart3_remap, bits, |remap| remap, APB1),
+    USART1: (
+        usart1,
+        usart1en,
+        usart1rst,
+        usart1_remap,
+        bit,
+        |remap| remap == 1,
+        APB2,
+        rx: dma1::C5,
+        tx: dma1::C4
+    ),
+    USART2: (
+        usart2,
+        usart2en,
+        usart2rst,
+        usart2_remap,
+        bit,
+        |remap| remap == 1,
+        APB1,
+        rx: dma1::C6,
+        tx: dma1::C7
+    ),
+    USART3: (
+        usart3,
+        usart3en,
+        usart3rst,
+        usart3_remap,
+        bits,
+        |remap| remap,
+        APB1,
+        rx: dma1::C3,
+        tx: dma1::C2
+    ),
 }

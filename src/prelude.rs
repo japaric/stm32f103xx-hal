@@ -1,4 +1,5 @@
 pub use afio::AfioExt as _stm32f103xx_hal_afio_AfioExt;
+pub use dma::DmaExt as _stm32f103xx_hal_dma_DmaExt;
 pub use flash::FlashExt as _stm32f103xx_hal_flash_FlashExt;
 pub use gpio::GpioExt as _stm32f103xx_hal_gpio_GpioExt;
 pub use hal::prelude::*;
