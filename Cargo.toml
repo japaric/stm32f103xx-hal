@@ -1,6 +1,11 @@
 [package]
 authors = ["Jorge Aparicio <jorge@japaric.io>"]
+categories = ["embedded", "hardware-support", "no-std"]
+description = "HAL for the STM32F100xx family of microcontrollers"
+keywords = ["arm", "cortex-m", "stm32", "hal"]
+license = "MIT OR Apache-2.0"
 name = "stm32f103xx-hal"
+repository = "https://github.com/japaric/stm32f103xx-hal"
 version = "0.1.0"
 
 [dependencies]
@@ -18,7 +23,9 @@ version = "0.1.0"
 
 [dev-dependencies]
 cortex-m-semihosting = "0.2.0"
+motor-driver = { git = "https://github.com/japaric/motor-driver" }
 mpu9250 = { git = "https://github.com/japaric/mpu9250" }
+cortex-m-rtfm = "0.3.1"
 
 [dev-dependencies.cortex-m-rt]
 features = ["abort-on-panic"]
