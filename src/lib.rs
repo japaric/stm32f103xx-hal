@@ -34,6 +34,7 @@
 //!
 //! [examples]: examples/index.html
 
+#![feature(unsize)]
 #![feature(never_type)]
 #![no_std]
 
@@ -46,6 +47,7 @@ pub extern crate stm32f103xx;
 pub mod afio;
 pub mod bb;
 pub mod delay;
+pub mod dma;
 #[cfg(feature = "doc")]
 pub mod examples;
 pub mod flash;

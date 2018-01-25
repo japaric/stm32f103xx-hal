@@ -45,8 +45,6 @@ pub struct AHB {
 }
 
 impl AHB {
-    // TODO remove `allow`
-    #[allow(dead_code)]
     pub(crate) fn enr(&mut self) -> &rcc::AHBENR {
         // NOTE(unsafe) this proxy grants exclusive access to this register
         unsafe { &(*RCC::ptr()).ahbenr }
@@ -59,15 +57,11 @@ pub struct APB1 {
 }
 
 impl APB1 {
-    // TODO remove `allow`
-    #[allow(dead_code)]
     pub(crate) fn enr(&mut self) -> &rcc::APB1ENR {
         // NOTE(unsafe) this proxy grants exclusive access to this register
         unsafe { &(*RCC::ptr()).apb1enr }
     }
 
-    // TODO remove `allow`
-    #[allow(dead_code)]
     pub(crate) fn rstr(&mut self) -> &rcc::APB1RSTR {
         // NOTE(unsafe) this proxy grants exclusive access to this register
         unsafe { &(*RCC::ptr()).apb1rstr }
@@ -267,8 +261,6 @@ pub struct Clocks {
     pclk1: Hertz,
     pclk2: Hertz,
     ppre1: u8,
-    // TODO remove `allow`
-    #[allow(dead_code)]
     ppre2: u8,
     sysclk: Hertz,
 }
@@ -289,8 +281,6 @@ impl Clocks {
         self.pclk2
     }
 
-    // TODO remove `allow`
-    #[allow(dead_code)]
     pub(crate) fn ppre1(&self) -> u8 {
         self.ppre1
     }
