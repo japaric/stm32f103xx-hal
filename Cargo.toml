@@ -1,6 +1,11 @@
 [package]
 authors = ["Jorge Aparicio <jorge@japaric.io>"]
+categories = ["embedded", "hardware-support", "no-std"]
+description = "HAL for the STM32F100xx family of microcontrollers"
+keywords = ["arm", "cortex-m", "stm32", "hal"]
+license = "MIT OR Apache-2.0"
 name = "stm32f103xx-hal"
+repository = "https://github.com/japaric/stm32f103xx-hal"
 version = "0.1.0"
 
 [dependencies]
