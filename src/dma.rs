@@ -5,6 +5,37 @@ use core::ops;
 
 use rcc::AHB;
 
+#[derive(Debug)]
+pub enum Error {
+    Overrun,
+    #[doc(hidden)] _Extensible,
+}
+
+#[derive(Clone, Copy, PartialEq)]
+pub enum Half {
+    First,
+    Second,
+}
+
+pub struct CircBuffer<BUFFER, CHANNEL>
+where
+    BUFFER: 'static,
+{
+    buffer: &'static mut [BUFFER; 2],
+    channel: CHANNEL,
+    readable_half: Half,
+}
+
+impl<BUFFER, CHANNEL> CircBuffer<BUFFER, CHANNEL> {
+    pub(crate) fn new(buf: &'static mut [BUFFER; 2], chan: CHANNEL) -> Self {
+        CircBuffer {
+            buffer: buf,
+            channel: chan,
+            readable_half: Half::Second,
+        }
+    }
+}
+
 pub trait Static<B> {
     fn borrow(&self) -> &B;
 }
@@ -81,7 +112,10 @@ macro_rules! dma {
             $CPARX:ident,
             $cmarX:ident,
             $CMARX:ident,
+            $htifX:ident,
             $tcifX:ident,
+            $chtifX:ident,
+            $ctcifX:ident,
             $cgifX:ident
         ),)+
     }),)+) => {
@@ -91,7 +125,7 @@ macro_rules! dma {
 
                 use stm32f103xx::{$DMAX, dma1};
 
-                use dma::{DmaExt, Transfer};
+                use dma::{DmaExt, CircBuffer, Error, Half, Transfer};
                 use rcc::AHB;
 
                 pub struct Channels((), $(pub $CX),+);
@@ -123,6 +157,72 @@ macro_rules! dma {
 
                         pub(crate) fn cmar(&mut self) -> &dma1::$CMARX {
                             unsafe { &(*$DMAX::ptr()).$cmarX }
+                        }
+                    }
+
+                    impl<B> CircBuffer<B, $CX> {
+                        /// Peeks into the readable half of the buffer
+                        pub fn peek<R, F>(&mut self, f: F) -> Result<R, Error>
+                            where
+                            F: FnOnce(&B, Half) -> R,
+                        {
+                            let half_being_read = self.readable_half()?;
+
+                            let buf = match half_being_read {
+                                Half::First => &self.buffer[0],
+                                Half::Second => &self.buffer[1],
+                            };
+
+                            // XXX does this need a compiler barrier?
+                            let ret = f(buf, half_being_read);
+
+
+                            let isr = self.channel.isr();
+                            let first_half_is_done = isr.$htifX().bit_is_set();
+                            let second_half_is_done = isr.$tcifX().bit_is_set();
+
+                            if (half_being_read == Half::First && second_half_is_done) ||
+                                (half_being_read == Half::Second && first_half_is_done) {
+                                Err(Error::Overrun)
+                            } else {
+                                Ok(ret)
+                            }
+                        }
+
+                        /// Returns the `Half` of the buffer that can be read
+                        pub fn readable_half(&mut self) -> Result<Half, Error> {
+                            let isr = self.channel.isr();
+                            let first_half_is_done = isr.$htifX().bit_is_set();
+                            let second_half_is_done = isr.$tcifX().bit_is_set();
+
+                            if first_half_is_done && second_half_is_done {
+                                return Err(Error::Overrun);
+                            }
+
+                            let last_read_half = self.readable_half;
+
+                            Ok(match last_read_half {
+                                Half::First => {
+                                    if second_half_is_done {
+                                        self.channel.ifcr().write(|w| w.$ctcifX().set_bit());
+
+                                        self.readable_half = Half::Second;
+                                        Half::Second
+                                    } else {
+                                        last_read_half
+                                    }
+                                }
+                                Half::Second => {
+                                    if first_half_is_done {
+                                        self.channel.ifcr().write(|w| w.$chtifX().set_bit());
+
+                                        self.readable_half = Half::First;
+                                        Half::First
+                                    } else {
+                                        last_read_half
+                                    }
+                                }
+                            })
                         }
                     }
 
@@ -168,20 +268,104 @@ macro_rules! dma {
 
 dma! {
     DMA1: (dma1, dma1en, dma1rst, {
-        C1: (ccr1, CCR1, cndtr1, CNDTR1, cpar1, CPAR1, cmar1, CMAR1, tcif1, cgif1),
-        C2: (ccr2, CCR2, cndtr2, CNDTR2, cpar2, CPAR2, cmar2, CMAR2, tcif2, cgif2),
-        C3: (ccr3, CCR3, cndtr3, CNDTR3, cpar3, CPAR3, cmar3, CMAR3, tcif3, cgif3),
-        C4: (ccr4, CCR4, cndtr4, CNDTR4, cpar4, CPAR4, cmar4, CMAR4, tcif4, cgif4),
-        C5: (ccr5, CCR5, cndtr5, CNDTR5, cpar5, CPAR5, cmar5, CMAR5, tcif5, cgif5),
-        C6: (ccr6, CCR6, cndtr6, CNDTR6, cpar6, CPAR6, cmar6, CMAR6, tcif6, cgif6),
-        C7: (ccr7, CCR7, cndtr7, CNDTR7, cpar7, CPAR7, cmar7, CMAR7, tcif7, cgif7),
+        C1: (
+            ccr1, CCR1,
+            cndtr1, CNDTR1,
+            cpar1, CPAR1,
+            cmar1, CMAR1,
+            htif1, tcif1,
+            chtif1, ctcif1, cgif1
+        ),
+        C2: (
+            ccr2, CCR2,
+            cndtr2, CNDTR2,
+            cpar2, CPAR2,
+            cmar2, CMAR2,
+            htif2, tcif2,
+            chtif2, ctcif2, cgif2
+        ),
+        C3: (
+            ccr3, CCR3,
+            cndtr3, CNDTR3,
+            cpar3, CPAR3,
+            cmar3, CMAR3,
+            htif3, tcif3,
+            chtif3, ctcif3, cgif3
+        ),
+        C4: (
+            ccr4, CCR4,
+            cndtr4, CNDTR4,
+            cpar4, CPAR4,
+            cmar4, CMAR4,
+            htif4, tcif4,
+            chtif4, ctcif4, cgif4
+        ),
+        C5: (
+            ccr5, CCR5,
+            cndtr5, CNDTR5,
+            cpar5, CPAR5,
+            cmar5, CMAR5,
+            htif5, tcif5,
+            chtif5, ctcif5, cgif5
+        ),
+        C6: (
+            ccr6, CCR6,
+            cndtr6, CNDTR6,
+            cpar6, CPAR6,
+            cmar6, CMAR6,
+            htif6, tcif6,
+            chtif6, ctcif6, cgif6
+        ),
+        C7: (
+            ccr7, CCR7,
+            cndtr7, CNDTR7,
+            cpar7, CPAR7,
+            cmar7, CMAR7,
+            htif7, tcif7,
+            chtif7, ctcif7, cgif7
+        ),
     }),
 
     DMA2: (dma2, dma2en, dma2rst, {
-        C1: (ccr1, CCR1, cndtr1, CNDTR1, cpar1, CPAR1, cmar1, CMAR1, tcif1, cgif1),
-        C2: (ccr2, CCR2, cndtr2, CNDTR2, cpar2, CPAR2, cmar2, CMAR2, tcif2, cgif2),
-        C3: (ccr3, CCR3, cndtr3, CNDTR3, cpar3, CPAR3, cmar3, CMAR3, tcif3, cgif3),
-        C4: (ccr4, CCR4, cndtr4, CNDTR4, cpar4, CPAR4, cmar4, CMAR4, tcif4, cgif4),
-        C5: (ccr5, CCR5, cndtr5, CNDTR5, cpar5, CPAR5, cmar5, CMAR5, tcif5, cgif5),
+        C1: (
+            ccr1, CCR1,
+            cndtr1, CNDTR1,
+            cpar1, CPAR1,
+            cmar1, CMAR1,
+            htif1, tcif1,
+            chtif1, ctcif1, cgif1
+        ),
+        C2: (
+            ccr2, CCR2,
+            cndtr2, CNDTR2,
+            cpar2, CPAR2,
+            cmar2, CMAR2,
+            htif2, tcif2,
+            chtif2, ctcif2, cgif2
+        ),
+        C3: (
+            ccr3, CCR3,
+            cndtr3, CNDTR3,
+            cpar3, CPAR3,
+            cmar3, CMAR3,
+            htif3, tcif3,
+            chtif3, ctcif3, cgif3
+        ),
+        C4: (
+            ccr4, CCR4,
+            cndtr4, CNDTR4,
+            cpar4, CPAR4,
+            cmar4, CMAR4,
+            htif4, tcif4,
+            chtif4, ctcif4, cgif4
+        ),
+        C5: (
+            ccr5, CCR5,
+            cndtr5, CNDTR5,
+            cpar5, CPAR5,
+            cmar5, CMAR5,
+            htif5, tcif5,
+            chtif5, ctcif5, cgif5
+        ),
     }),
 }

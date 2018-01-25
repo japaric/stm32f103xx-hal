@@ -8,7 +8,7 @@ use nb;
 use stm32f103xx::{USART1, USART2, USART3};
 
 use afio::MAPR;
-use dma::{Static, Transfer, dma1, R};
+use dma::{CircBuffer, Static, Transfer, dma1, R};
 use gpio::gpioa::{PA10, PA2, PA3, PA9};
 use gpio::gpiob::{PB10, PB11, PB6, PB7};
 use gpio::{Alternate, Floating, Input, PushPull};
@@ -183,6 +183,56 @@ macro_rules! hal {
             }
 
             impl Rx<$USARTX> {
+                pub fn circ_read<B>(
+                    self,
+                    mut chan: $rx_chan,
+                    buffer: &'static mut [B; 2],
+                ) -> CircBuffer<B, $rx_chan>
+                where
+                    B: Unsize<[u8]>,
+                {
+                    {
+                        let buffer: &[u8] = &buffer[0];
+                        chan.cmar().write(|w| unsafe {
+                            w.ma().bits(u32(buffer.as_ptr() as usize))
+                        });
+                        chan.cndtr().write(|w| unsafe{
+                            w.ndt().bits(u16(buffer.len() * 2).unwrap())
+                        });
+                        chan.cpar().write(|w| unsafe {
+                            w.pa().bits(u32(&(*$USARTX::ptr()).dr as *const _ as usize))
+                        });
+
+                        // TODO can we weaken this compiler barrier?
+                        // NOTE(compiler_fence) operations on `buffer` should not be reordered after
+                        // the next statement, which starts the DMA transfer
+                        atomic::compiler_fence(Ordering::SeqCst);
+
+                        chan.ccr().modify(|_, w| {
+                            w.mem2mem()
+                                .clear_bit()
+                                .pl()
+                                .medium()
+                                .msize()
+                                .bit8()
+                                .psize()
+                                .bit8()
+                                .minc()
+                                .set_bit()
+                                .pinc()
+                                .clear_bit()
+                                .circ()
+                                .set_bit()
+                                .dir()
+                                .clear_bit()
+                                .en()
+                                .set_bit()
+                        });
+                    }
+
+                    CircBuffer::new(buffer, chan)
+                }
+
                 pub fn read_exact<B>(
                     self,
                     mut chan: $rx_chan,
