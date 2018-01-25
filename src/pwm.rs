@@ -37,6 +37,15 @@ impl Pins<TIM2>
     type Channels = (Pwm<TIM2, C1>, Pwm<TIM2, C2>, Pwm<TIM2, C3>, Pwm<TIM2, C4>);
 }
 
+impl Pins<TIM2> for PA0<Alternate<PushPull>> {
+    const REMAP: u8 = 0b00;
+    const C1: bool = true;
+    const C2: bool = false;
+    const C3: bool = false;
+    const C4: bool = false;
+    type Channels = Pwm<TIM2, C1>;
+}
+
 impl Pins<TIM3>
     for (
         PA6<Alternate<PushPull>>,
