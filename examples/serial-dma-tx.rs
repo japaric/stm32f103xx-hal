@@ -4,8 +4,10 @@
 #![deny(warnings)]
 #![no_std]
 
+extern crate cortex_m;
 extern crate stm32f103xx_hal as hal;
 
+use cortex_m::asm;
 use hal::prelude::*;
 use hal::serial::Serial;
 use hal::stm32f103xx;
@@ -21,12 +23,12 @@ fn main() {
     let mut afio = p.AFIO.constrain(&mut rcc.apb2);
     let channels = p.DMA1.split(&mut rcc.ahb);
 
-    // let mut gpioa = p.GPIOA.split(&mut rcc.apb2);
-    let mut gpiob = p.GPIOB.split(&mut rcc.apb2);
+    let mut gpioa = p.GPIOA.split(&mut rcc.apb2);
+    // let mut gpiob = p.GPIOB.split(&mut rcc.apb2);
 
     // USART1
-    // let tx = gpioa.pa9.into_alternate_push_pull(&mut gpioa.crh);
-    // let rx = gpioa.pa10;
+    let tx = gpioa.pa9.into_alternate_push_pull(&mut gpioa.crh);
+    let rx = gpioa.pa10;
 
     // USART1
     // let tx = gpiob.pb6.into_alternate_push_pull(&mut gpiob.crl);
@@ -37,19 +39,29 @@ fn main() {
     // let rx = gpioa.pa3;
 
     // USART3
-    let tx = gpiob.pb10.into_alternate_push_pull(&mut gpiob.crh);
-    let rx = gpiob.pb11;
+    // let tx = gpiob.pb10.into_alternate_push_pull(&mut gpiob.crh);
+    // let rx = gpiob.pb11;
 
-    let serial = Serial::usart3(
-        p.USART3,
+    let serial = Serial::usart1(
+        p.USART1,
         (tx, rx),
         &mut afio.mapr,
         9_600.bps(),
         clocks,
-        &mut rcc.apb1,
+        &mut rcc.apb2,
     );
 
     let tx = serial.split().0;
 
-    tx.write_all(channels.2, b"Hello, world!");
+    let (_, c, tx) = tx.write_all(channels.4, b"The quick brown fox").wait();
+
+    asm::bkpt();
+
+    let (_, c, tx) = tx.write_all(c, b" jumps").wait();
+
+    asm::bkpt();
+
+    tx.write_all(c, b" over the lazy dog.").wait();
+
+    asm::bkpt();
 }
