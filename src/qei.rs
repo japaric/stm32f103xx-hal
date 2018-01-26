@@ -72,7 +72,7 @@ macro_rules! hal {
             impl<PINS> Qei<$TIMX, PINS> {
                 fn $timX(tim: $TIMX, pins: PINS, apb: &mut APB1) -> Self {
                     // enable and reset peripheral to a clean slate state
-                    apb.enr().write(|w| w.$timXen().set_bit());
+                    apb.enr().modify(|_, w| w.$timXen().set_bit());
                     apb.rstr().modify(|_, w| w.$timXrst().set_bit());
                     apb.rstr().modify(|_, w| w.$timXrst().clear_bit());
 

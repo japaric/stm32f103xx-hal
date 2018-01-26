@@ -81,7 +81,7 @@ macro_rules! hal {
                     T: Into<Hertz>,
                 {
                     // enable and reset peripheral to a clean slate state
-                    apb1.enr().write(|w| w.$timXen().set_bit());
+                    apb1.enr().modify(|_, w| w.$timXen().set_bit());
                     apb1.rstr().modify(|_, w| w.$timXrst().set_bit());
                     apb1.rstr().modify(|_, w| w.$timXrst().clear_bit());
 
