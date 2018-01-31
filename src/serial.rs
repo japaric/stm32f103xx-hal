@@ -8,7 +8,7 @@ use nb;
 use stm32f103xx::{USART1, USART2, USART3};
 
 use afio::MAPR;
-use dma::{CircBuffer, Static, Transfer, dma1, R};
+use dma::{CircBuffer, Static, Transfer, dma1, R, W};
 use gpio::gpioa::{PA10, PA2, PA3, PA9};
 use gpio::gpiob::{PB10, PB11, PB6, PB7};
 use gpio::{Alternate, Floating, Input, PushPull};
@@ -140,6 +140,20 @@ macro_rules! hal {
                     Serial { usart, pins }
                 }
 
+                pub fn listen(&mut self, event: Event) {
+                    match event {
+                        Event::Rxne => self.usart.cr1.modify(|_, w| w.rxneie().set_bit()),
+                        Event::Txe => self.usart.cr1.modify(|_, w| w.txeie().set_bit()),
+                    }
+                }
+
+                pub fn unlisten(&mut self, event: Event) {
+                    match event {
+                        Event::Rxne => self.usart.cr1.modify(|_, w| w.rxneie().clear_bit()),
+                        Event::Txe => self.usart.cr1.modify(|_, w| w.txeie().clear_bit()),
+                    }
+                }
+
                 pub fn release(self) -> ($USARTX, PINS) {
                     (self.usart, self.pins)
                 }
@@ -237,7 +251,7 @@ macro_rules! hal {
                     self,
                     mut chan: $rx_chan,
                     buffer: &'static mut B,
-                ) -> Transfer<R, &'static mut B, $rx_chan, Self>
+                ) -> Transfer<W, &'static mut B, $rx_chan, Self>
                 where
                     B: Unsize<[u8]>,
                 {
@@ -280,7 +294,7 @@ macro_rules! hal {
                         });
                     }
 
-                    Transfer::r(buffer, chan, self)
+                    Transfer::w(buffer, chan, self)
                 }
             }
 

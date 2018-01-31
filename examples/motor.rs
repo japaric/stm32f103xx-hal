@@ -62,7 +62,7 @@ fn main() {
     let mut duty = max_duty;
     let mut brake = true;
 
-    motor.speed(duty as u16);
+    motor.duty(duty as u16);
 
     let mut hstdout = hio::hstdout().unwrap();
     writeln!(hstdout, "{} {}", max_duty, brake).unwrap();
@@ -91,7 +91,7 @@ fn main() {
             motor.ccw();
         }
 
-        motor.speed(duty.abs() as u16);
+        motor.duty(duty.abs() as u16);
 
         writeln!(hstdout, "{} {}", duty, brake).unwrap();
     }

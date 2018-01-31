@@ -23,13 +23,37 @@ version = "0.1.0"
 
 [dev-dependencies]
 cortex-m-semihosting = "0.2.0"
-motor-driver = { git = "https://github.com/japaric/motor-driver" }
-mpu9250 = { git = "https://github.com/japaric/mpu9250" }
+
 cortex-m-rtfm = "0.3.1"
+m = "0.1.1"
+
+[dev-dependencies.byteorder]
+default-features = false
+version = "1.2.1"
+
+[dev-dependencies.cobs]
+default-features = false
+version = "0.1.3"
 
 [dev-dependencies.cortex-m-rt]
 features = ["abort-on-panic"]
 version = "0.3.12"
+
+[dev-dependencies.crc16]
+default-features = false
+version = "0.3.4"
+
+[dev-dependencies.either]
+default-features = false
+version = "1.4.0"
+
+[dev-dependencies.motor-driver]
+git = "https://github.com/japaric/motor-driver"
+rev = "b1837d45a1acc3ccb024f11a7f0d8b9a02771462"
+
+[dev-dependencies.mpu9250]
+git = "https://github.com/japaric/mpu9250"
+rev = "4cd19cc74d71de6f3edf532d53537ab67c70d514"
 
 [dev-dependencies.stm32f103xx]
 features = ["rt"]
