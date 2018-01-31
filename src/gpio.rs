@@ -159,8 +159,8 @@ macro_rules! gpio {
                         let offset = (4 * $i) % 32;
                         // Alternate function output push pull
                         let cnf = 0b10;
-                        // Output mode, max speed 2 MHz
-                        let mode = 0b10;
+                        // Output mode, max speed 50 MHz
+                        let mode = 0b11;
                         let bits = (cnf << 2) | mode;
 
                         // input mode
@@ -267,8 +267,8 @@ macro_rules! gpio {
                         let offset = (4 * $i) % 32;
                         // General purpose output push-pull
                         let cnf = 0b00;
-                        // Output mode, max speed 2 MHz
-                        let mode = 0b10;
+                        // Output mode, max speed 50 MHz
+                        let mode = 0b11;
                         let bits = (cnf << 2) | mode;
 
                         cr

@@ -1,0 +1,291 @@
+//! Use a Kalman filter to estimate the pitch
+
+#![deny(unsafe_code)]
+#![deny(warnings)]
+#![feature(proc_macro)]
+#![no_std]
+
+extern crate byteorder;
+extern crate cobs;
+extern crate cortex_m;
+extern crate cortex_m_rtfm as rtfm;
+extern crate crc16;
+extern crate either;
+extern crate m;
+extern crate mpu9250;
+extern crate stm32f103xx_hal as hal;
+
+use core::f32::consts::PI;
+
+use byteorder::{ByteOrder, LE};
+use crc16::{State, ARC};
+use either::Either;
+use hal::delay::Delay;
+use hal::dma::{Transfer, dma1, R};
+use hal::gpio::gpioa::{PA4, PA5, PA6, PA7};
+use hal::gpio::{Alternate, Floating, Input, Output, PushPull};
+use hal::prelude::*;
+use hal::serial::{Serial, Tx};
+use hal::spi::Spi;
+use hal::stm32f103xx;
+use hal::timer::{self, Timer};
+use m::Float;
+use mpu9250::{Imu, Mpu9250};
+use rtfm::{app, Threshold};
+use stm32f103xx::{SPI1, USART1};
+
+// CONNECTIONS
+type MPU9250 = Mpu9250<
+    Spi<
+        SPI1,
+        (
+            PA5<Alternate<PushPull>>,
+            PA6<Input<Floating>>,
+            PA7<Alternate<PushPull>>,
+        ),
+    >,
+    PA4<Output<PushPull>>,
+    Imu,
+>;
+
+type TX = Option<Either<(TX_BUF, dma1::C4, Tx<USART1>), Transfer<R, TX_BUF, dma1::C4, Tx<USART1>>>>;
+
+const TX_SZ: usize = 14;
+#[allow(non_camel_case_types)]
+type TX_BUF = &'static mut [u8; TX_SZ];
+
+const FREQ: u32 = 512;
+const DT: f32 = 1. / FREQ as f32;
+
+const K_A: f32 = 2. / (1 << 15) as f32;
+const K_G: f32 = 250. / (1 << 15) as f32;
+
+// Accelerometer angle (process) variance
+const Q_ANGLE: f32 = 1e-3;
+
+// Gyroscope bias (process) variance
+const Q_BIAS: f32 = 3e-3;
+
+// Observation (measurement) noise
+const R_OBS: f32 = 3e-2;
+
+const SAMPLES: u32 = FREQ * 2;
+
+// RESOURCES
+app! {
+    device: stm32f103xx,
+
+    resources: {
+        static KALMAN: Kalman;
+        static MPU9250: MPU9250;
+        static TX: TX;
+
+        static SAMPLES: u32 = 0;
+        static TX_BUF: [u8; TX_SZ] = [0; TX_SZ];
+    },
+
+    init: {
+        resources: [TX_BUF],
+    },
+
+    tasks: {
+        SYS_TICK: {
+            path: tick,
+            resources: [KALMAN, MPU9250, TX, SAMPLES],
+        },
+    },
+}
+
+fn init(p: init::Peripherals, r: init::Resources) -> init::LateResources {
+    let mut flash = p.device.FLASH.constrain();
+    let mut rcc = p.device.RCC.constrain();
+
+    // let clocks = rcc.cfgr.freeze(&mut flash.acr);
+    let clocks = rcc.cfgr
+        .sysclk(64.mhz())
+        .pclk1(32.mhz())
+        .freeze(&mut flash.acr);
+
+    let mut afio = p.device.AFIO.constrain(&mut rcc.apb2);
+
+    let mut gpioa = p.device.GPIOA.split(&mut rcc.apb2);
+    let mut gpioc = p.device.GPIOC.split(&mut rcc.apb2);
+
+    // SERIAL
+    let pa9 = gpioa.pa9.into_alternate_push_pull(&mut gpioa.crh);
+    let pa10 = gpioa.pa10;
+
+    let serial = Serial::usart1(
+        p.device.USART1,
+        (pa9, pa10),
+        &mut afio.mapr,
+        115_200.bps(),
+        clocks,
+        &mut rcc.apb2,
+    );
+
+    let mut tx = serial.split().0;
+
+    // start of COBS frame
+    tx.write(0x00).ok().unwrap();
+
+    // DMA
+    let channels = p.device.DMA1.split(&mut rcc.ahb);
+
+    // SPI
+    let nss = gpioa.pa4.into_push_pull_output(&mut gpioa.crl);
+    let sck = gpioa.pa5.into_alternate_push_pull(&mut gpioa.crl);
+    let miso = gpioa.pa6;
+    let mosi = gpioa.pa7.into_alternate_push_pull(&mut gpioa.crl);
+
+    let spi = Spi::spi1(
+        p.device.SPI1,
+        (sck, miso, mosi),
+        &mut afio.mapr,
+        mpu9250::MODE,
+        1.mhz(),
+        clocks,
+        &mut rcc.apb2,
+    );
+
+    // MPU9250
+    let mut delay = Delay::new(p.core.SYST, clocks);
+
+    let mut mpu9250 = Mpu9250::imu(spi, nss, &mut delay).ok().unwrap();
+
+    let mut pc13 = gpioc.pc13.into_push_pull_output(&mut gpioc.crh);
+
+    // CALIBRATION
+    pc13.set_low(); // LED on while calibrating
+    let (mut gx, mut ary, mut arz) = (0, 0, 0);
+    const NSAMPLES: i32 = 128;
+    for _ in 0..NSAMPLES {
+        let (ary_, arz_, _, gx_) = mpu9250.aryz_t_gx().ok().unwrap();
+        ary += ary_ as i32;
+        arz += arz_ as i32;
+        gx += gx_ as i32;
+        delay.delay_ms(1_u8);
+    }
+
+    // average
+    gx /= NSAMPLES;
+    ary /= NSAMPLES;
+    arz /= NSAMPLES;
+
+    let gyro_bias = gx as f32 * K_G;
+    let angle = (ary as f32 * K_A).atan2(arz as f32 * K_A) * 180. / PI;
+
+    let kalman = Kalman::new(angle, gyro_bias);
+
+    pc13.set_high(); // LED off
+
+    Timer::syst(delay.free(), FREQ.hz(), clocks).listen(timer::Event::Update);
+
+    init::LateResources {
+        KALMAN: kalman,
+        MPU9250: mpu9250,
+        TX: Some(Either::Left((r.TX_BUF, channels.4, tx))),
+    }
+}
+
+// TASKS
+fn idle() -> ! {
+    loop {
+        rtfm::wfi();
+    }
+}
+
+fn tick(_t: &mut Threshold, mut r: SYS_TICK::Resources) {
+    // ESTIMATE
+    let (ary, arz, _, gx) = r.MPU9250.aryz_t_gx().ok().unwrap();
+    let omega = (gx as f32) * K_G;
+
+    let angle = (ary as f32 * K_A).atan2(arz as f32 * K_A) * 180. / PI;
+
+    let estimate = r.KALMAN.update(angle, omega);
+
+    // LOG
+    let (buf, c, tx) = match r.TX.take().unwrap() {
+        Either::Left((buf, c, tx)) => (buf, c, tx),
+        Either::Right(trans) => trans.wait(),
+    };
+
+    let mut data = [0; TX_SZ - 2];
+
+    LE::write_i16(&mut data[0..2], ary);
+    LE::write_i16(&mut data[2..4], arz);
+    LE::write_i16(&mut data[4..6], gx);
+    LE::write_f32(&mut data[6..10], estimate);
+
+    let crc = State::<ARC>::calculate(&data[..TX_SZ - 4]);
+    LE::write_u16(&mut data[TX_SZ - 4..], crc);
+
+    cobs::encode(&data, buf);
+
+    *r.TX = Some(Either::Right(tx.write_all(c, buf)));
+
+    *r.SAMPLES += 1;
+
+    if *r.SAMPLES >= SAMPLES {
+        rtfm::bkpt();
+    }
+}
+
+pub struct Kalman {
+    // estimate covariance
+    p: [[f32; 2]; 2],
+    // estimated pitch angle
+    angle: f32,
+    // gyroscope bias
+    bias: f32,
+}
+
+impl Kalman {
+    fn new(angle: f32, bias: f32) -> Self {
+        Kalman {
+            p: [[0.; 2]; 2],
+            angle,
+            bias,
+        }
+    }
+
+    // - `angle` estimated using the accelerometer (rad)
+    // - `omega` measured angular rate (rad / s)
+    fn update(&mut self, angle: f32, omega: f32) -> f32 {
+        let p = &mut self.p;
+
+        // a priori estimate
+        self.angle += (omega - self.bias) * DT;
+        // no estimate for the bias
+
+        // a priori P
+        p[0][0] += DT * (DT * p[1][1] - p[0][1] - p[1][0] + Q_ANGLE);
+        p[0][1] -= DT * p[1][1];
+        p[1][0] -= DT * p[1][1];
+        p[1][1] += DT * Q_BIAS;
+
+        // innovation
+        let y = angle - self.angle;
+
+        // innovation covariance
+        let s = p[0][0] + R_OBS;
+
+        // Kalman gain
+        let k = [p[0][0] / s, p[1][0] / s];
+
+        // a posteriori estimate
+        self.angle += k[0] * y;
+        self.bias += k[1] * y;
+
+        // a posteriori P
+        let p00 = p[0][0];
+        let p01 = p[0][1];
+
+        p[0][0] -= k[0] * p00;
+        p[0][1] -= k[0] * p01;
+        p[1][0] -= k[1] * p00;
+        p[1][1] -= k[1] * p01;
+
+        self.angle
+    }
+}

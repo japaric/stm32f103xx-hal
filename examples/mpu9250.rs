@@ -53,7 +53,7 @@ fn main() {
 
     let mut delay = Delay::new(cp.SYST, clocks);
 
-    let mut mpu9250 = Mpu9250::new(spi, nss, &mut delay).unwrap();
+    let mut mpu9250 = Mpu9250::marg(spi, nss, &mut delay).unwrap();
 
     // sanity checks
     assert_eq!(mpu9250.who_am_i().unwrap(), 0x71);
