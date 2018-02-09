@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `peripheral` mod in crate `cortex_m`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, peripheral">
+
+    <title>cortex_m::peripheral - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css" id="themeStyle">
+    <script src="../../storage.js"></script>
+    
+
+    
+    
+</head>
+<body class="rustdoc mod">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
+        
+        <p class='location'>Module peripheral</p><div class="sidebar-elems"><div class="block items"><ul><li><a href="#structs">Structs</a></li><li><a href="#enums">Enums</a></li><li><a href="#constants">Constants</a></li></ul></div><p class='location'><a href='../index.html'>cortex_m</a></p><script>window.sidebarCurrent = {name: 'peripheral', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script></div>
+    </nav>
+
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../theme.js"></script>
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Module <a href='../index.html'>cortex_m</a>::<wbr><a class="mod" href=''>peripheral</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../src/cortex_m/peripheral/mod.rs.html#1-1088' title='goto source code'>[src]</a></span></h1>
+<div class='docblock'><p>Core peripherals</p>
+<h1 id="references" class="section-header"><a href="#references">References</a></h1>
+<ul>
+<li>ARMv7-M Architecture Reference Manual (Issue E.b) - Chapter B3</li>
+</ul>
+</div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.CBP.html"
+                                  title='struct cortex_m::peripheral::CBP'>CBP</a></td>
+                           <td class='docblock-short'>
+                                <p>Cache and branch predictor maintenance operations register block</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.CPUID.html"
+                                  title='struct cortex_m::peripheral::CPUID'>CPUID</a></td>
+                           <td class='docblock-short'>
+                                <p>CPUID register block</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.Comparator.html"
+                                  title='struct cortex_m::peripheral::Comparator'>Comparator</a></td>
+                           <td class='docblock-short'>
+                                <p>Comparator</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.DCB.html"
+                                  title='struct cortex_m::peripheral::DCB'>DCB</a></td>
+                           <td class='docblock-short'>
+                                <p>DCB register block</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.DWT.html"
+                                  title='struct cortex_m::peripheral::DWT'>DWT</a></td>
+                           <td class='docblock-short'>
+                                <p>DWT register block</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.FPB.html"
+                                  title='struct cortex_m::peripheral::FPB'>FPB</a></td>
+                           <td class='docblock-short'>
+                                <p>FPB register block</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.FPU.html"
+                                  title='struct cortex_m::peripheral::FPU'>FPU</a></td>
+                           <td class='docblock-short'>
+                                <p>FPU register block</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.ITM.html"
+                                  title='struct cortex_m::peripheral::ITM'>ITM</a></td>
+                           <td class='docblock-short'>
+                                <p>ITM register block</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.MPU.html"
+                                  title='struct cortex_m::peripheral::MPU'>MPU</a></td>
+                           <td class='docblock-short'>
+                                <p>MPU register block</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.NVIC.html"
+                                  title='struct cortex_m::peripheral::NVIC'>NVIC</a></td>
+                           <td class='docblock-short'>
+                                <p>NVIC register block</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.Peripheral.html"
+                                  title='struct cortex_m::peripheral::Peripheral'>Peripheral</a></td>
+                           <td class='docblock-short'>
+                                <p>A peripheral</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.SCB.html"
+                                  title='struct cortex_m::peripheral::SCB'>SCB</a></td>
+                           <td class='docblock-short'>
+                                <p>SCB register block</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.SYST.html"
+                                  title='struct cortex_m::peripheral::SYST'>SYST</a></td>
+                           <td class='docblock-short'>
+                                <p>SysTick register block</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.Stim.html"
+                                  title='struct cortex_m::peripheral::Stim'>Stim</a></td>
+                           <td class='docblock-short'>
+                                <p>Stimulus Port</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.TPIU.html"
+                                  title='struct cortex_m::peripheral::TPIU'>TPIU</a></td>
+                           <td class='docblock-short'>
+                                <p>TPIU register block</p>
+
+                           </td>
+                       </tr></table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class="enum" href="enum.CsselrCacheType.html"
+                                  title='enum cortex_m::peripheral::CsselrCacheType'>CsselrCacheType</a></td>
+                           <td class='docblock-short'>
+                                <p>Type of cache to select on CSSELR writes.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="enum" href="enum.SystClkSource.html"
+                                  title='enum cortex_m::peripheral::SystClkSource'>SystClkSource</a></td>
+                           <td class='docblock-short'>
+                                <p>SysTick clock source</p>
+
+                           </td>
+                       </tr></table><h2 id='constants' class='section-header'><a href="#constants">Constants</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.CBP.html"
+                                  title='constant cortex_m::peripheral::CBP'>CBP</a></td>
+                           <td class='docblock-short'>
+                                <p>Cache and branch predictor maintenance operations</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.CPUID.html"
+                                  title='constant cortex_m::peripheral::CPUID'>CPUID</a></td>
+                           <td class='docblock-short'>
+                                <p>CPUID</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.DCB.html"
+                                  title='constant cortex_m::peripheral::DCB'>DCB</a></td>
+                           <td class='docblock-short'>
+                                <p>Debug Control Block</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.DWT.html"
+                                  title='constant cortex_m::peripheral::DWT'>DWT</a></td>
+                           <td class='docblock-short'>
+                                <p>Data Watchpoint and Trace unit</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.FPB.html"
+                                  title='constant cortex_m::peripheral::FPB'>FPB</a></td>
+                           <td class='docblock-short'>
+                                <p>Flash Patch and Breakpoint unit</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.FPU.html"
+                                  title='constant cortex_m::peripheral::FPU'>FPU</a></td>
+                           <td class='docblock-short'>
+                                <p>Floating Point Unit</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.ITM.html"
+                                  title='constant cortex_m::peripheral::ITM'>ITM</a></td>
+                           <td class='docblock-short'>
+                                <p>Instrumentation Trace Macrocell</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.MPU.html"
+                                  title='constant cortex_m::peripheral::MPU'>MPU</a></td>
+                           <td class='docblock-short'>
+                                <p>Memory Protection Unit</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.NVIC.html"
+                                  title='constant cortex_m::peripheral::NVIC'>NVIC</a></td>
+                           <td class='docblock-short'>
+                                <p>Nested Vector Interrupt Controller</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.SCB.html"
+                                  title='constant cortex_m::peripheral::SCB'>SCB</a></td>
+                           <td class='docblock-short'>
+                                <p>System Control Block</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.SYST.html"
+                                  title='constant cortex_m::peripheral::SYST'>SYST</a></td>
+                           <td class='docblock-short'>
+                                <p>SysTick: System Timer</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.TPIU.html"
+                                  title='constant cortex_m::peripheral::TPIU'>TPIU</a></td>
+                           <td class='docblock-short'>
+                                <p>Trace Port Interface Unit;</p>
+
+                           </td>
+                       </tr></table></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt><kbd>?</kbd></dt>
+                    <dd>Show this help dialog</dd>
+                    <dt><kbd>S</kbd></dt>
+                    <dd>Focus the search field</dd>
+                    <dt><kbd>↑</kbd></dt>
+                    <dd>Move up in search results</dd>
+                    <dt><kbd>↓</kbd></dt>
+                    <dd>Move down in search results</dd>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
+                    <dd>Go to active search result</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../";
+        window.currentCrate = "cortex_m";
+    </script>
+    <script src="../../main.js"></script>
+    <script defer src="../../search-index.js"></script>
+</body>
+</html>

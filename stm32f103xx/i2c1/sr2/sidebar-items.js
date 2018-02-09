@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["MSLR","Possible values of the field `MSL`"]],"struct":[["BUSYR","Value of the field"],["DUALFR","Value of the field"],["GENCALLR","Value of the field"],["PECR","Value of the field"],["R","Value read from the register"],["SMBDEFAULTR","Value of the field"],["SMBHOSTR","Value of the field"],["TRAR","Value of the field"]]});

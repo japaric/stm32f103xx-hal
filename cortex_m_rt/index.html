@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `cortex_m_rt` crate.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, cortex_m_rt">
+
+    <title>cortex_m_rt - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../dark.css">
+    <link rel="stylesheet" type="text/css" href="../main.css" id="themeStyle">
+    <script src="../storage.js"></script>
+    
+
+    
+    
+</head>
+<body class="rustdoc mod">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
+        
+        <p class='location'>Crate cortex_m_rt</p><div class="sidebar-elems"><div class="block items"><ul><li><a href="#macros">Macros</a></li></ul></div><p class='location'></p><script>window.sidebarCurrent = {name: 'cortex_m_rt', ty: 'mod', relpath: '../'};</script></div>
+    </nav>
+
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../theme.js"></script>
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Crate <a class="mod" href=''>cortex_m_rt</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../src/cortex_m_rt/lib.rs.html#1-616' title='goto source code'>[src]</a></span></h1>
+<div class='docblock'><p>Minimal startup / runtime for Cortex-M microcontrollers</p>
+<h1 id="features" class="section-header"><a href="#features">Features</a></h1>
+<p>This crate provides</p>
+<ul>
+<li>
+<p>Before main initialization of the <code>.bss</code> and <code>.data</code> sections.</p>
+</li>
+<li>
+<p>Before main initialization of the FPU (for targets that have a FPU).</p>
+</li>
+<li>
+<p>A <code>panic_fmt</code> implementation that just calls abort that you can opt into
+through the &quot;abort-on-panic&quot; Cargo feature. If you don't use this feature
+you'll have to provide the <code>panic_fmt</code> lang item yourself. Documentation
+<a href="https://doc.rust-lang.org/unstable-book/language-features/lang-items.html">here</a></p>
+</li>
+<li>
+<p>A minimal <code>start</code> lang item to support the standard <code>fn main()</code>
+interface. (The processor goes to sleep (<code>loop { asm!(&quot;wfi&quot;) }</code>) after
+returning from <code>main</code>)</p>
+</li>
+<li>
+<p>A linker script that encodes the memory layout of a generic Cortex-M
+microcontroller. This linker script is missing some information that must
+be supplied through a <code>memory.x</code> file (see example below).</p>
+</li>
+<li>
+<p>A default exception handler tailored for debugging that lets you inspect
+what was the state of the processor at the time of the exception. By
+default, all exceptions are serviced by this handler but each exception
+can be individually overridden using the
+<a href="macro.exception.html"><code>exception!</code></a> macro. The default exception handler
+itself can also be overridden using the
+<a href="macro.default_handler.html"><code>default_handler!</code></a> macro.</p>
+</li>
+<li>
+<p>A <code>_sheap</code> symbol at whose address you can locate a heap.</p>
+</li>
+</ul>
+<h1 id="example" class="section-header"><a href="#example">Example</a></h1>
+<p>Creating a new bare metal project. (I recommend you use the
+<a href="https://docs.rs/cortex-m-quickstart/0.2.0/cortex_m_quickstart/"><code>cortex-m-quickstart</code></a> template
+as it takes of all the boilerplate shown here)</p>
+<pre><code class="language-text">$ cargo new --bin app &amp;&amp; cd $_
+
+$ # add this crate as a dependency
+$ edit Cargo.toml &amp;&amp; cat $_
+[dependencies.cortex-m-rt]
+features = [&quot;abort-on-panic&quot;]
+version = &quot;0.3.0&quot;
+
+$ # tell Xargo which standard crates to build
+$ edit Xargo.toml &amp;&amp; cat $_
+[dependencies.core]
+stage = 0
+
+[dependencies.compiler_builtins]
+features = [&quot;mem&quot;]
+stage = 1
+
+$ # memory layout of the device
+$ edit memory.x &amp;&amp; cat $_
+MEMORY
+{
+  /* NOTE K = KiBi = 1024 bytes */
+  FLASH : ORIGIN = 0x08000000, LENGTH = 128K
+  RAM : ORIGIN = 0x20000000, LENGTH = 8K
+}
+
+$ edit src/main.rs &amp;&amp; cat $_
+</code></pre>
+
+<div class='information'><div class='tooltip ignore'>ⓘ<span class='tooltiptext'>This example is not tested</span></div></div><pre class="rust rust-example-rendered ignore">
+<span class="attribute">#![<span class="ident">feature</span>(<span class="ident">used</span>)]</span>
+<span class="attribute">#![<span class="ident">no_std</span>]</span>
+
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">cortex_m_rt</span>;
+
+<span class="kw">fn</span> <span class="ident">main</span>() {
+    <span class="comment">// do something here</span>
+}
+
+<span class="comment">// As we are not using interrupts, we just register a dummy catch all</span>
+<span class="comment">// handler</span>
+<span class="attribute">#[<span class="ident">link_section</span> <span class="op">=</span> <span class="string">&quot;.vector_table.interrupts&quot;</span>]</span>
+<span class="attribute">#[<span class="ident">used</span>]</span>
+<span class="kw">static</span> <span class="ident">INTERRUPTS</span>: [<span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span>(); <span class="number">240</span>] <span class="op">=</span> [<span class="ident">default_handler</span>; <span class="number">240</span>];
+
+<span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">default_handler</span>() {
+    <span class="kw">loop</span> {}
+}</pre>
+<pre><code class="language-text">$ cargo install xargo
+
+$ xargo rustc --target thumbv7m-none-eabi -- \
+      -C link-arg=-Tlink.x -C linker=arm-none-eabi-ld -Z linker-flavor=ld
+
+$ arm-none-eabi-objdump -Cd $(find target -name app) | head
+
+Disassembly of section .text:
+
+08000400 &lt;cortex_m_rt::reset_handler&gt;:
+ 8000400:       b580            push    {r7, lr}
+ 8000402:       466f            mov     r7, sp
+ 8000404:       b084            sub     sp, #8
+</code></pre>
+<h1 id="symbol-interfaces" class="section-header"><a href="#symbol-interfaces">Symbol interfaces</a></h1>
+<p>This crate makes heavy use of symbols, linker sections and linker scripts to
+provide most of its functionality. Below are described the main symbol
+interfaces.</p>
+<h2 id="default_handler" class="section-header"><a href="#default_handler"><code>DEFAULT_HANDLER</code></a></h2>
+<p>This weak symbol can be overridden to override the default exception handler
+that this crate provides. It's recommended that you use the
+<code>default_handler!</code> to do the override, but below is shown how to manually
+override the symbol:</p>
+
+<div class='information'><div class='tooltip ignore'>ⓘ<span class='tooltiptext'>This example is not tested</span></div></div><pre class="rust rust-example-rendered ignore">
+<span class="attribute">#[<span class="ident">no_mangle</span>]</span>
+<span class="kw">pub</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">DEFAULT_HANDLER</span>() {
+    <span class="comment">// do something here</span>
+}</pre>
+<h2 id="vector_tableinterrupts" class="section-header"><a href="#vector_tableinterrupts"><code>.vector_table.interrupts</code></a></h2>
+<p>This linker section is used to register interrupt handlers in the vector
+table. The recommended way to use this section is to populate it, once, with
+an array of <em>weak</em> functions that just call the <code>DEFAULT_HANDLER</code> symbol.
+Then the user can override them by name.</p>
+<h3 id="example-1" class="section-header"><a href="#example-1">Example</a></h3>
+<p>Populating the vector table</p>
+
+<div class='information'><div class='tooltip ignore'>ⓘ<span class='tooltiptext'>This example is not tested</span></div></div><pre class="rust rust-example-rendered ignore">
+<span class="comment">// Number of interrupts the device has</span>
+<span class="kw">const</span> <span class="ident">N</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">60</span>;
+
+<span class="comment">// Default interrupt handler that just calls the `DEFAULT_HANDLER`</span>
+<span class="attribute">#[<span class="ident">linkage</span> <span class="op">=</span> <span class="string">&quot;weak&quot;</span>]</span>
+<span class="attribute">#[<span class="ident">naked</span>]</span>
+<span class="attribute">#[<span class="ident">no_mangle</span>]</span>
+<span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">WWDG</span>() {
+    <span class="kw">unsafe</span> {
+        <span class="macro">asm</span><span class="macro">!</span>(<span class="string">&quot;b DEFAULT_HANDLER&quot;</span> :::: <span class="string">&quot;volatile&quot;</span>);
+        <span class="ident">core</span>::<span class="ident">intrinsics</span>::<span class="ident">unreachable</span>();
+    }
+}
+
+<span class="comment">// You need one function per interrupt handler</span>
+<span class="attribute">#[<span class="ident">linkage</span> <span class="op">=</span> <span class="string">&quot;weak&quot;</span>]</span>
+<span class="attribute">#[<span class="ident">naked</span>]</span>
+<span class="attribute">#[<span class="ident">no_mangle</span>]</span>
+<span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">WWDG</span>() {
+    <span class="kw">unsafe</span> {
+        <span class="macro">asm</span><span class="macro">!</span>(<span class="string">&quot;b DEFAULT_HANDLER&quot;</span> :::: <span class="string">&quot;volatile&quot;</span>);
+        <span class="ident">core</span>::<span class="ident">intrinsics</span>::<span class="ident">unreachable</span>();
+    }
+}
+
+<span class="comment">// ..</span>
+
+<span class="comment">// Use `None` for reserved spots in the vector table</span>
+<span class="attribute">#[<span class="ident">link_section</span> <span class="op">=</span> <span class="string">&quot;.vector_table.interrupts&quot;</span>]</span>
+<span class="attribute">#[<span class="ident">no_mangle</span>]</span>
+<span class="attribute">#[<span class="ident">used</span>]</span>
+<span class="kw">static</span> <span class="ident">INTERRUPTS</span>: [<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span>()<span class="op">&gt;</span>; <span class="ident">N</span>] <span class="op">=</span> [
+    <span class="prelude-val">Some</span>(<span class="ident">WWDG</span>),
+    <span class="prelude-val">Some</span>(<span class="ident">PVD</span>),
+    <span class="comment">// ..</span>
+];</pre>
+<p>Overriding an interrupt (this can be in a different crate)</p>
+
+<div class='information'><div class='tooltip ignore'>ⓘ<span class='tooltiptext'>This example is not tested</span></div></div><pre class="rust rust-example-rendered ignore">
+<span class="comment">// the name must match the name of one of the weak functions used to</span>
+<span class="comment">// populate the vector table.</span>
+<span class="attribute">#[<span class="ident">no_mangle</span>]</span>
+<span class="kw">pub</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">WWDG</span>() {
+    <span class="comment">// do something here</span>
+}</pre>
+<h2 id="memoryx" class="section-header"><a href="#memoryx"><code>memory.x</code></a></h2>
+<p>This file supplies the information about the device to the linker.</p>
+<h3 id="memory" class="section-header"><a href="#memory"><code>MEMORY</code></a></h3>
+<p>The main information that this file must provide is the memory layout of
+the device in the form of the <code>MEMORY</code> command. The command is documented
+<a href="https://sourceware.org/binutils/docs/ld/MEMORY.html">here</a>, but at a minimum you'll want to
+create two memory regions: one for Flash memory and another for RAM.</p>
+<p>The program instructions (the <code>.text</code> section) will be stored in the memory
+region named FLASH, and the program <code>static</code> variables (the sections <code>.bss</code>
+and <code>.data</code>) will be allocated in the memory region named RAM.</p>
+<h3 id="_stack_start" class="section-header"><a href="#_stack_start"><code>_stack_start</code></a></h3>
+<p>This symbol provides the address at which the call stack will be allocated.
+The call stack grows downwards so this address is usually set to the highest
+valid RAM address plus one (this <em>is</em> an invalid address but the processor
+will decrement the stack pointer <em>before</em> using its value as an address).</p>
+<p>If omitted this symbol value will default to <code>ORIGIN(RAM) + LENGTH(RAM)</code>.</p>
+<h4 id="example-2" class="section-header"><a href="#example-2">Example</a></h4>
+<p>Allocating the call stack on a different RAM region.</p>
+
+<div class='information'><div class='tooltip ignore'>ⓘ<span class='tooltiptext'>This example is not tested</span></div></div><pre class="rust rust-example-rendered ignore">
+<span class="ident">MEMORY</span>
+{
+  <span class="comment">/* call stack will go here */</span>
+  <span class="ident">CCRAM</span> : <span class="ident">ORIGIN</span> <span class="op">=</span> <span class="number">0x10000000</span>, <span class="ident">LENGTH</span> <span class="op">=</span> <span class="number">8K</span>
+  <span class="ident">FLASH</span> : <span class="ident">ORIGIN</span> <span class="op">=</span> <span class="number">0x08000000</span>, <span class="ident">LENGTH</span> <span class="op">=</span> <span class="number">256K</span>
+  <span class="comment">/* static variables will go here */</span>
+  <span class="ident">RAM</span> : <span class="ident">ORIGIN</span> <span class="op">=</span> <span class="number">0x20000000</span>, <span class="ident">LENGTH</span> <span class="op">=</span> <span class="number">40K</span>
+}
+
+<span class="ident">_stack_start</span> <span class="op">=</span> <span class="ident">ORIGIN</span>(<span class="ident">CCRAM</span>) <span class="op">+</span> <span class="ident">LENGTH</span>(<span class="ident">CCRAM</span>);</pre>
+<h3 id="_stext" class="section-header"><a href="#_stext"><code>_stext</code></a></h3>
+<p>This symbol indicates where the <code>.text</code> section will be located. If not
+specified in the <code>memory.x</code> file it will default to right after the vector
+table -- the vector table is always located at the start of the FLASH
+region.</p>
+<p>The main use of this symbol is leaving some space between the vector table
+and the <code>.text</code> section unused. This is required on some microcontrollers
+that store some configuration information right after the vector table.</p>
+<h4 id="example-3" class="section-header"><a href="#example-3">Example</a></h4>
+<p>Locate the <code>.text</code> section 1024 bytes after the start of the FLASH region.</p>
+
+<div class='information'><div class='tooltip ignore'>ⓘ<span class='tooltiptext'>This example is not tested</span></div></div><pre class="rust rust-example-rendered ignore">
+<span class="ident">_stext</span> <span class="op">=</span> <span class="ident">ORIGIN</span>(<span class="ident">FLASH</span>) <span class="op">+</span> <span class="number">0x400</span>;</pre>
+<h3 id="_sheap" class="section-header"><a href="#_sheap"><code>_sheap</code></a></h3>
+<p>This symbol is located in RAM right after the <code>.bss</code> and <code>.data</code> sections.
+You can use the address of this symbol as the start address of a heap
+region. This symbol is 4 byte aligned so that address will be a multiple of 4.</p>
+<h4 id="example-4" class="section-header"><a href="#example-4">Example</a></h4>
+<div class='information'><div class='tooltip ignore'>ⓘ<span class='tooltiptext'>This example is not tested</span></div></div><pre class="rust rust-example-rendered ignore">
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">some_allocator</span>;
+
+<span class="comment">// Size of the heap in bytes</span>
+<span class="kw">const</span> <span class="ident">SIZE</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">1024</span>;
+
+<span class="kw">extern</span> <span class="string">&quot;C&quot;</span> {
+    <span class="kw">static</span> <span class="kw-2">mut</span> <span class="ident">_sheap</span>: <span class="ident">u8</span>;
+}
+
+<span class="kw">fn</span> <span class="ident">main</span>() {
+    <span class="kw">unsafe</span> {
+        <span class="kw">let</span> <span class="ident">start_address</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">_sheap</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">u8</span>;
+        <span class="ident">some_allocator</span>::<span class="ident">initialize</span>(<span class="ident">start_address</span>, <span class="ident">SIZE</span>);
+    }
+}</pre>
+</div><h2 id='macros' class='section-header'><a href="#macros">Macros</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class="macro" href="macro.default_handler.html"
+                                  title='macro cortex_m_rt::default_handler'>default_handler</a></td>
+                           <td class='docblock-short'>
+                                <p>This macro lets you override the default exception handler</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="macro" href="macro.exception.html"
+                                  title='macro cortex_m_rt::exception'>exception</a></td>
+                           <td class='docblock-short'>
+                                <p>Assigns a handler to an exception</p>
+
+                           </td>
+                       </tr></table></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt><kbd>?</kbd></dt>
+                    <dd>Show this help dialog</dd>
+                    <dt><kbd>S</kbd></dt>
+                    <dd>Focus the search field</dd>
+                    <dt><kbd>↑</kbd></dt>
+                    <dd>Move up in search results</dd>
+                    <dt><kbd>↓</kbd></dt>
+                    <dd>Move down in search results</dd>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
+                    <dd>Go to active search result</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "cortex_m_rt";
+    </script>
+    <script src="../main.js"></script>
+    <script defer src="../search-index.js"></script>
+</body>
+</html>

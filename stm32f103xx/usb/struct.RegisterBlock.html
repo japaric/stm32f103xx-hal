@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `RegisterBlock` struct in crate `stm32f103xx`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, RegisterBlock">
+
+    <title>stm32f103xx::usb::RegisterBlock - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css" id="themeStyle">
+    <script src="../../storage.js"></script>
+    
+
+    
+    
+</head>
+<body class="rustdoc struct">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
+        
+        <p class='location'>Struct RegisterBlock</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#fields">Fields</a><div class="sidebar-links"><a href="#structfield.ep0r">ep0r</a><a href="#structfield.ep1r">ep1r</a><a href="#structfield.ep2r">ep2r</a><a href="#structfield.ep3r">ep3r</a><a href="#structfield.ep4r">ep4r</a><a href="#structfield.ep5r">ep5r</a><a href="#structfield.ep6r">ep6r</a><a href="#structfield.ep7r">ep7r</a><a href="#structfield.cntr">cntr</a><a href="#structfield.istr">istr</a><a href="#structfield.fnr">fnr</a><a href="#structfield.daddr">daddr</a><a href="#structfield.btable">btable</a></div></div><p class='location'><a href='../index.html'>stm32f103xx</a>::<wbr><a href='index.html'>usb</a></p><script>window.sidebarCurrent = {name: 'RegisterBlock', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
+    </nav>
+
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../theme.js"></script>
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>stm32f103xx</a>::<wbr><a href='index.html'>usb</a>::<wbr><a class="struct" href=''>RegisterBlock</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../src/stm32f103xx/lib.rs.html#180367-180395' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'><div class="docblock attributes">#[repr(C)]
+</div>pub struct RegisterBlock {
+    pub ep0r: <a class="struct" href="../../stm32f103xx/usb/struct.EP0R.html" title="struct stm32f103xx::usb::EP0R">EP0R</a>,
+    pub ep1r: <a class="struct" href="../../stm32f103xx/usb/struct.EP1R.html" title="struct stm32f103xx::usb::EP1R">EP1R</a>,
+    pub ep2r: <a class="struct" href="../../stm32f103xx/usb/struct.EP2R.html" title="struct stm32f103xx::usb::EP2R">EP2R</a>,
+    pub ep3r: <a class="struct" href="../../stm32f103xx/usb/struct.EP3R.html" title="struct stm32f103xx::usb::EP3R">EP3R</a>,
+    pub ep4r: <a class="struct" href="../../stm32f103xx/usb/struct.EP4R.html" title="struct stm32f103xx::usb::EP4R">EP4R</a>,
+    pub ep5r: <a class="struct" href="../../stm32f103xx/usb/struct.EP5R.html" title="struct stm32f103xx::usb::EP5R">EP5R</a>,
+    pub ep6r: <a class="struct" href="../../stm32f103xx/usb/struct.EP6R.html" title="struct stm32f103xx::usb::EP6R">EP6R</a>,
+    pub ep7r: <a class="struct" href="../../stm32f103xx/usb/struct.EP7R.html" title="struct stm32f103xx::usb::EP7R">EP7R</a>,
+    pub cntr: <a class="struct" href="../../stm32f103xx/usb/struct.CNTR.html" title="struct stm32f103xx::usb::CNTR">CNTR</a>,
+    pub istr: <a class="struct" href="../../stm32f103xx/usb/struct.ISTR.html" title="struct stm32f103xx::usb::ISTR">ISTR</a>,
+    pub fnr: <a class="struct" href="../../stm32f103xx/usb/struct.FNR.html" title="struct stm32f103xx::usb::FNR">FNR</a>,
+    pub daddr: <a class="struct" href="../../stm32f103xx/usb/struct.DADDR.html" title="struct stm32f103xx::usb::DADDR">DADDR</a>,
+    pub btable: <a class="struct" href="../../stm32f103xx/usb/struct.BTABLE.html" title="struct stm32f103xx::usb::BTABLE">BTABLE</a>,
+    // some fields omitted
+}</pre><div class='docblock'><p>Register block</p>
+</div><h2 id='fields' class='fields small-section-header'>
+                       Fields<a href='#fields' class='anchor'></a></h2><span id="structfield.ep0r" class="structfield small-section-header">
+                           <a href="#structfield.ep0r" class="anchor field"></a>
+                           <span id="ep0r.v" class='invisible'>
+                           <code>ep0r: <a class="struct" href="../../stm32f103xx/usb/struct.EP0R.html" title="struct stm32f103xx::usb::EP0R">EP0R</a></code>
+                           </span></span><div class='docblock'><p>0x00 - endpoint 0 register</p>
+</div><span id="structfield.ep1r" class="structfield small-section-header">
+                           <a href="#structfield.ep1r" class="anchor field"></a>
+                           <span id="ep1r.v" class='invisible'>
+                           <code>ep1r: <a class="struct" href="../../stm32f103xx/usb/struct.EP1R.html" title="struct stm32f103xx::usb::EP1R">EP1R</a></code>
+                           </span></span><div class='docblock'><p>0x04 - endpoint 1 register</p>
+</div><span id="structfield.ep2r" class="structfield small-section-header">
+                           <a href="#structfield.ep2r" class="anchor field"></a>
+                           <span id="ep2r.v" class='invisible'>
+                           <code>ep2r: <a class="struct" href="../../stm32f103xx/usb/struct.EP2R.html" title="struct stm32f103xx::usb::EP2R">EP2R</a></code>
+                           </span></span><div class='docblock'><p>0x08 - endpoint 2 register</p>
+</div><span id="structfield.ep3r" class="structfield small-section-header">
+                           <a href="#structfield.ep3r" class="anchor field"></a>
+                           <span id="ep3r.v" class='invisible'>
+                           <code>ep3r: <a class="struct" href="../../stm32f103xx/usb/struct.EP3R.html" title="struct stm32f103xx::usb::EP3R">EP3R</a></code>
+                           </span></span><div class='docblock'><p>0x0c - endpoint 3 register</p>
+</div><span id="structfield.ep4r" class="structfield small-section-header">
+                           <a href="#structfield.ep4r" class="anchor field"></a>
+                           <span id="ep4r.v" class='invisible'>
+                           <code>ep4r: <a class="struct" href="../../stm32f103xx/usb/struct.EP4R.html" title="struct stm32f103xx::usb::EP4R">EP4R</a></code>
+                           </span></span><div class='docblock'><p>0x10 - endpoint 4 register</p>
+</div><span id="structfield.ep5r" class="structfield small-section-header">
+                           <a href="#structfield.ep5r" class="anchor field"></a>
+                           <span id="ep5r.v" class='invisible'>
+                           <code>ep5r: <a class="struct" href="../../stm32f103xx/usb/struct.EP5R.html" title="struct stm32f103xx::usb::EP5R">EP5R</a></code>
+                           </span></span><div class='docblock'><p>0x14 - endpoint 5 register</p>
+</div><span id="structfield.ep6r" class="structfield small-section-header">
+                           <a href="#structfield.ep6r" class="anchor field"></a>
+                           <span id="ep6r.v" class='invisible'>
+                           <code>ep6r: <a class="struct" href="../../stm32f103xx/usb/struct.EP6R.html" title="struct stm32f103xx::usb::EP6R">EP6R</a></code>
+                           </span></span><div class='docblock'><p>0x18 - endpoint 6 register</p>
+</div><span id="structfield.ep7r" class="structfield small-section-header">
+                           <a href="#structfield.ep7r" class="anchor field"></a>
+                           <span id="ep7r.v" class='invisible'>
+                           <code>ep7r: <a class="struct" href="../../stm32f103xx/usb/struct.EP7R.html" title="struct stm32f103xx::usb::EP7R">EP7R</a></code>
+                           </span></span><div class='docblock'><p>0x1c - endpoint 7 register</p>
+</div><span id="structfield.cntr" class="structfield small-section-header">
+                           <a href="#structfield.cntr" class="anchor field"></a>
+                           <span id="cntr.v" class='invisible'>
+                           <code>cntr: <a class="struct" href="../../stm32f103xx/usb/struct.CNTR.html" title="struct stm32f103xx::usb::CNTR">CNTR</a></code>
+                           </span></span><div class='docblock'><p>0x40 - control register</p>
+</div><span id="structfield.istr" class="structfield small-section-header">
+                           <a href="#structfield.istr" class="anchor field"></a>
+                           <span id="istr.v" class='invisible'>
+                           <code>istr: <a class="struct" href="../../stm32f103xx/usb/struct.ISTR.html" title="struct stm32f103xx::usb::ISTR">ISTR</a></code>
+                           </span></span><div class='docblock'><p>0x44 - interrupt status register</p>
+</div><span id="structfield.fnr" class="structfield small-section-header">
+                           <a href="#structfield.fnr" class="anchor field"></a>
+                           <span id="fnr.v" class='invisible'>
+                           <code>fnr: <a class="struct" href="../../stm32f103xx/usb/struct.FNR.html" title="struct stm32f103xx::usb::FNR">FNR</a></code>
+                           </span></span><div class='docblock'><p>0x48 - frame number register</p>
+</div><span id="structfield.daddr" class="structfield small-section-header">
+                           <a href="#structfield.daddr" class="anchor field"></a>
+                           <span id="daddr.v" class='invisible'>
+                           <code>daddr: <a class="struct" href="../../stm32f103xx/usb/struct.DADDR.html" title="struct stm32f103xx::usb::DADDR">DADDR</a></code>
+                           </span></span><div class='docblock'><p>0x4c - device address</p>
+</div><span id="structfield.btable" class="structfield small-section-header">
+                           <a href="#structfield.btable" class="anchor field"></a>
+                           <span id="btable.v" class='invisible'>
+                           <code>btable: <a class="struct" href="../../stm32f103xx/usb/struct.BTABLE.html" title="struct stm32f103xx::usb::BTABLE">BTABLE</a></code>
+                           </span></span><div class='docblock'><p>0x50 - Buffer table address</p>
+</div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt><kbd>?</kbd></dt>
+                    <dd>Show this help dialog</dd>
+                    <dt><kbd>S</kbd></dt>
+                    <dd>Focus the search field</dd>
+                    <dt><kbd>↑</kbd></dt>
+                    <dd>Move up in search results</dd>
+                    <dt><kbd>↓</kbd></dt>
+                    <dd>Move down in search results</dd>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
+                    <dd>Go to active search result</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../";
+        window.currentCrate = "stm32f103xx";
+    </script>
+    <script src="../../main.js"></script>
+    <script defer src="../../search-index.js"></script>
+</body>
+</html>

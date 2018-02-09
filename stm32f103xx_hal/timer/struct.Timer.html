@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `Timer` struct in crate `stm32f103xx_hal`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, Timer">
+
+    <title>stm32f103xx_hal::timer::Timer - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css" id="themeStyle">
+    <script src="../../storage.js"></script>
+    
+
+    
+    
+</head>
+<body class="rustdoc struct">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
+        
+        <p class='location'>Struct Timer</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.syst">syst</a><a href="#method.listen">listen</a><a href="#method.unlisten">unlisten</a><a href="#method.tim2">tim2</a><a href="#method.listen">listen</a><a href="#method.unlisten">unlisten</a><a href="#method.tim3">tim3</a><a href="#method.listen">listen</a><a href="#method.unlisten">unlisten</a><a href="#method.tim4">tim4</a><a href="#method.listen">listen</a><a href="#method.unlisten">unlisten</a></div><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-CountDown">CountDown</a><a href="#impl-Periodic">Periodic</a></div></div><p class='location'><a href='../index.html'>stm32f103xx_hal</a>::<wbr><a href='index.html'>timer</a></p><script>window.sidebarCurrent = {name: 'Timer', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
+    </nav>
+
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../theme.js"></script>
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>stm32f103xx_hal</a>::<wbr><a href='index.html'>timer</a>::<wbr><a class="struct" href=''>Timer</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../src/stm32f103xx_hal/timer.rs.html#17-20' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct Timer&lt;TIM&gt; { /* fields omitted */ }</pre>
+                    <h2 id='methods' class='small-section-header'>
+                      Methods<a href='#methods' class='anchor'></a>
+                    </h2>
+                <h3 id='impl' class='impl'><span class='in-band'><code>impl <a class="struct" href="../../stm32f103xx_hal/timer/struct.Timer.html" title="struct stm32f103xx_hal::timer::Timer">Timer</a>&lt;<a class="struct" href="../../cortex_m/peripheral/struct.SYST.html" title="struct cortex_m::peripheral::SYST">SYST</a>&gt;</code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/stm32f103xx_hal/timer.rs.html#22-46' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.syst' class="method"><span id='syst.v' class='invisible'><code>pub fn <a href='#method.syst' class='fnname'>syst</a>&lt;T&gt;(syst: <a class="struct" href="../../cortex_m/peripheral/struct.SYST.html" title="struct cortex_m::peripheral::SYST">SYST</a>, timeout: T, clocks: <a class="struct" href="../../stm32f103xx_hal/rcc/struct.Clocks.html" title="struct stm32f103xx_hal::rcc::Clocks">Clocks</a>) -&gt; Self <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;T: <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="struct" href="../../stm32f103xx_hal/time/struct.Hertz.html" title="struct stm32f103xx_hal::time::Hertz">Hertz</a>&gt;,&nbsp;</span></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/stm32f103xx_hal/timer.rs.html#23-31' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.listen' class="method"><span id='listen.v' class='invisible'><code>pub fn <a href='#method.listen' class='fnname'>listen</a>(&amp;mut self, event: <a class="enum" href="../../stm32f103xx_hal/timer/enum.Event.html" title="enum stm32f103xx_hal::timer::Event">Event</a>)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/stm32f103xx_hal/timer.rs.html#34-38' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Starts listening for an <code>event</code></p>
+</div><h4 id='method.unlisten' class="method"><span id='unlisten.v' class='invisible'><code>pub fn <a href='#method.unlisten' class='fnname'>unlisten</a>(&amp;mut self, event: <a class="enum" href="../../stm32f103xx_hal/timer/enum.Event.html" title="enum stm32f103xx_hal::timer::Event">Event</a>)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/stm32f103xx_hal/timer.rs.html#41-45' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Stops listening for an <code>event</code></p>
+</div></div><h3 id='impl-1' class='impl'><span class='in-band'><code>impl <a class="struct" href="../../stm32f103xx_hal/timer/struct.Timer.html" title="struct stm32f103xx_hal::timer::Timer">Timer</a>&lt;<a class="struct" href="../../stm32f103xx/struct.TIM2.html" title="struct stm32f103xx::TIM2">TIM2</a>&gt;</code><a href='#impl-1' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/stm32f103xx_hal/timer.rs.html#78-107' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.tim2' class="method"><span id='tim2.v' class='invisible'><code>pub fn <a href='#method.tim2' class='fnname'>tim2</a>&lt;T&gt;(tim: <a class="struct" href="../../stm32f103xx/struct.TIM2.html" title="struct stm32f103xx::TIM2">TIM2</a>, timeout: T, clocks: <a class="struct" href="../../stm32f103xx_hal/rcc/struct.Clocks.html" title="struct stm32f103xx_hal::rcc::Clocks">Clocks</a>, apb1: &amp;mut <a class="struct" href="../../stm32f103xx_hal/rcc/struct.APB1.html" title="struct stm32f103xx_hal::rcc::APB1">APB1</a>) -&gt; Self <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;T: <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="struct" href="../../stm32f103xx_hal/time/struct.Hertz.html" title="struct stm32f103xx_hal::time::Hertz">Hertz</a>&gt;,&nbsp;</span></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/stm32f103xx_hal/timer.rs.html#79-92' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.listen-1' class="method"><span id='listen.v-1' class='invisible'><code>pub fn <a href='#method.listen-1' class='fnname'>listen</a>(&amp;mut self, event: <a class="enum" href="../../stm32f103xx_hal/timer/enum.Event.html" title="enum stm32f103xx_hal::timer::Event">Event</a>)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/stm32f103xx_hal/timer.rs.html#95-99' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Starts listening for an <code>event</code></p>
+</div><h4 id='method.unlisten-1' class="method"><span id='unlisten.v-1' class='invisible'><code>pub fn <a href='#method.unlisten-1' class='fnname'>unlisten</a>(&amp;mut self, event: <a class="enum" href="../../stm32f103xx_hal/timer/enum.Event.html" title="enum stm32f103xx_hal::timer::Event">Event</a>)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/stm32f103xx_hal/timer.rs.html#102-106' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Stops listening for an <code>event</code></p>
+</div></div><h3 id='impl-2' class='impl'><span class='in-band'><code>impl <a class="struct" href="../../stm32f103xx_hal/timer/struct.Timer.html" title="struct stm32f103xx_hal::timer::Timer">Timer</a>&lt;<a class="struct" href="../../stm32f103xx/struct.TIM3.html" title="struct stm32f103xx::TIM3">TIM3</a>&gt;</code><a href='#impl-2' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/stm32f103xx_hal/timer.rs.html#78-107' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.tim3' class="method"><span id='tim3.v' class='invisible'><code>pub fn <a href='#method.tim3' class='fnname'>tim3</a>&lt;T&gt;(tim: <a class="struct" href="../../stm32f103xx/struct.TIM3.html" title="struct stm32f103xx::TIM3">TIM3</a>, timeout: T, clocks: <a class="struct" href="../../stm32f103xx_hal/rcc/struct.Clocks.html" title="struct stm32f103xx_hal::rcc::Clocks">Clocks</a>, apb1: &amp;mut <a class="struct" href="../../stm32f103xx_hal/rcc/struct.APB1.html" title="struct stm32f103xx_hal::rcc::APB1">APB1</a>) -&gt; Self <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;T: <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="struct" href="../../stm32f103xx_hal/time/struct.Hertz.html" title="struct stm32f103xx_hal::time::Hertz">Hertz</a>&gt;,&nbsp;</span></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/stm32f103xx_hal/timer.rs.html#79-92' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.listen-2' class="method"><span id='listen.v-2' class='invisible'><code>pub fn <a href='#method.listen-2' class='fnname'>listen</a>(&amp;mut self, event: <a class="enum" href="../../stm32f103xx_hal/timer/enum.Event.html" title="enum stm32f103xx_hal::timer::Event">Event</a>)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/stm32f103xx_hal/timer.rs.html#95-99' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Starts listening for an <code>event</code></p>
+</div><h4 id='method.unlisten-2' class="method"><span id='unlisten.v-2' class='invisible'><code>pub fn <a href='#method.unlisten-2' class='fnname'>unlisten</a>(&amp;mut self, event: <a class="enum" href="../../stm32f103xx_hal/timer/enum.Event.html" title="enum stm32f103xx_hal::timer::Event">Event</a>)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/stm32f103xx_hal/timer.rs.html#102-106' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Stops listening for an <code>event</code></p>
+</div></div><h3 id='impl-3' class='impl'><span class='in-band'><code>impl <a class="struct" href="../../stm32f103xx_hal/timer/struct.Timer.html" title="struct stm32f103xx_hal::timer::Timer">Timer</a>&lt;<a class="struct" href="../../stm32f103xx/struct.TIM4.html" title="struct stm32f103xx::TIM4">TIM4</a>&gt;</code><a href='#impl-3' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/stm32f103xx_hal/timer.rs.html#78-107' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.tim4' class="method"><span id='tim4.v' class='invisible'><code>pub fn <a href='#method.tim4' class='fnname'>tim4</a>&lt;T&gt;(tim: <a class="struct" href="../../stm32f103xx/struct.TIM4.html" title="struct stm32f103xx::TIM4">TIM4</a>, timeout: T, clocks: <a class="struct" href="../../stm32f103xx_hal/rcc/struct.Clocks.html" title="struct stm32f103xx_hal::rcc::Clocks">Clocks</a>, apb1: &amp;mut <a class="struct" href="../../stm32f103xx_hal/rcc/struct.APB1.html" title="struct stm32f103xx_hal::rcc::APB1">APB1</a>) -&gt; Self <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;T: <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="struct" href="../../stm32f103xx_hal/time/struct.Hertz.html" title="struct stm32f103xx_hal::time::Hertz">Hertz</a>&gt;,&nbsp;</span></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/stm32f103xx_hal/timer.rs.html#79-92' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.listen-3' class="method"><span id='listen.v-3' class='invisible'><code>pub fn <a href='#method.listen-3' class='fnname'>listen</a>(&amp;mut self, event: <a class="enum" href="../../stm32f103xx_hal/timer/enum.Event.html" title="enum stm32f103xx_hal::timer::Event">Event</a>)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/stm32f103xx_hal/timer.rs.html#95-99' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Starts listening for an <code>event</code></p>
+</div><h4 id='method.unlisten-3' class="method"><span id='unlisten.v-3' class='invisible'><code>pub fn <a href='#method.unlisten-3' class='fnname'>unlisten</a>(&amp;mut self, event: <a class="enum" href="../../stm32f103xx_hal/timer/enum.Event.html" title="enum stm32f103xx_hal::timer::Event">Event</a>)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/stm32f103xx_hal/timer.rs.html#102-106' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Stops listening for an <code>event</code></p>
+</div></div>
+            <h2 id='implementations' class='small-section-header'>
+              Trait Implementations<a href='#implementations' class='anchor'></a>
+            </h2>
+        <h3 id='impl-CountDown' class='impl'><span class='in-band'><code>impl <a class="trait" href="../../embedded_hal/timer/trait.CountDown.html" title="trait embedded_hal::timer::CountDown">CountDown</a> for <a class="struct" href="../../stm32f103xx_hal/timer/struct.Timer.html" title="struct stm32f103xx_hal::timer::Timer">Timer</a>&lt;<a class="struct" href="../../cortex_m/peripheral/struct.SYST.html" title="struct cortex_m::peripheral::SYST">SYST</a>&gt;</code><a href='#impl-CountDown' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/stm32f103xx_hal/timer.rs.html#48-71' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='associatedtype.Time' class="type"><span id='Time.t' class='invisible'><code>type <a href='../../embedded_hal/timer/trait.CountDown.html#associatedtype.Time' class="type">Time</a> = <a class="struct" href="../../stm32f103xx_hal/time/struct.Hertz.html" title="struct stm32f103xx_hal::time::Hertz">Hertz</a></code></span></h4>
+<div class='docblock'><p>The unit of time used by this timer</p>
+</div><h4 id='method.start' class="method"><span id='start.v' class='invisible'><code>fn <a href='../../embedded_hal/timer/trait.CountDown.html#tymethod.start' class='fnname'>start</a>&lt;T&gt;(&amp;mut self, timeout: T) <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;T: <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="struct" href="../../stm32f103xx_hal/time/struct.Hertz.html" title="struct stm32f103xx_hal::time::Hertz">Hertz</a>&gt;,&nbsp;</span></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/stm32f103xx_hal/timer.rs.html#51-62' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Starts a new count down</p>
+</div><h4 id='method.wait' class="method"><span id='wait.v' class='invisible'><code>fn <a href='../../embedded_hal/timer/trait.CountDown.html#tymethod.wait' class='fnname'>wait</a>(&amp;mut self) -&gt; <a class="type" href="../../nb/type.Result.html" title="type nb::Result">Result</a>&lt;(), !&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/stm32f103xx_hal/timer.rs.html#64-70' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Non-blockingly &quot;waits&quot; until the count down finishes <a href="../../embedded_hal/timer/trait.CountDown.html#tymethod.wait">Read more</a></p>
+</div></div><h3 id='impl-Periodic' class='impl'><span class='in-band'><code>impl <a class="trait" href="../../embedded_hal/timer/trait.Periodic.html" title="trait embedded_hal::timer::Periodic">Periodic</a> for <a class="struct" href="../../stm32f103xx_hal/timer/struct.Timer.html" title="struct stm32f103xx_hal::timer::Timer">Timer</a>&lt;<a class="struct" href="../../cortex_m/peripheral/struct.SYST.html" title="struct cortex_m::peripheral::SYST">SYST</a>&gt;</code><a href='#impl-Periodic' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/stm32f103xx_hal/timer.rs.html#73' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div><h3 id='impl-CountDown-1' class='impl'><span class='in-band'><code>impl <a class="trait" href="../../embedded_hal/timer/trait.CountDown.html" title="trait embedded_hal::timer::CountDown">CountDown</a> for <a class="struct" href="../../stm32f103xx_hal/timer/struct.Timer.html" title="struct stm32f103xx_hal::timer::Timer">Timer</a>&lt;<a class="struct" href="../../stm32f103xx/struct.TIM2.html" title="struct stm32f103xx::TIM2">TIM2</a>&gt;</code><a href='#impl-CountDown-1' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/stm32f103xx_hal/timer.rs.html#109-144' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='associatedtype.Time-1' class="type"><span id='Time.t-1' class='invisible'><code>type <a href='../../embedded_hal/timer/trait.CountDown.html#associatedtype.Time' class="type">Time</a> = <a class="struct" href="../../stm32f103xx_hal/time/struct.Hertz.html" title="struct stm32f103xx_hal::time::Hertz">Hertz</a></code></span></h4>
+<div class='docblock'><p>The unit of time used by this timer</p>
+</div><h4 id='method.start-1' class="method"><span id='start.v-1' class='invisible'><code>fn <a href='../../embedded_hal/timer/trait.CountDown.html#tymethod.start' class='fnname'>start</a>&lt;T&gt;(&amp;mut self, timeout: T) <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;T: <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="struct" href="../../stm32f103xx_hal/time/struct.Hertz.html" title="struct stm32f103xx_hal::time::Hertz">Hertz</a>&gt;,&nbsp;</span></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/stm32f103xx_hal/timer.rs.html#112-134' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Starts a new count down</p>
+</div><h4 id='method.wait-1' class="method"><span id='wait.v-1' class='invisible'><code>fn <a href='../../embedded_hal/timer/trait.CountDown.html#tymethod.wait' class='fnname'>wait</a>(&amp;mut self) -&gt; <a class="type" href="../../nb/type.Result.html" title="type nb::Result">Result</a>&lt;(), !&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/stm32f103xx_hal/timer.rs.html#136-143' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Non-blockingly &quot;waits&quot; until the count down finishes <a href="../../embedded_hal/timer/trait.CountDown.html#tymethod.wait">Read more</a></p>
+</div></div><h3 id='impl-Periodic-1' class='impl'><span class='in-band'><code>impl <a class="trait" href="../../embedded_hal/timer/trait.Periodic.html" title="trait embedded_hal::timer::Periodic">Periodic</a> for <a class="struct" href="../../stm32f103xx_hal/timer/struct.Timer.html" title="struct stm32f103xx_hal::timer::Timer">Timer</a>&lt;<a class="struct" href="../../stm32f103xx/struct.TIM2.html" title="struct stm32f103xx::TIM2">TIM2</a>&gt;</code><a href='#impl-Periodic-1' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/stm32f103xx_hal/timer.rs.html#146' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div><h3 id='impl-CountDown-2' class='impl'><span class='in-band'><code>impl <a class="trait" href="../../embedded_hal/timer/trait.CountDown.html" title="trait embedded_hal::timer::CountDown">CountDown</a> for <a class="struct" href="../../stm32f103xx_hal/timer/struct.Timer.html" title="struct stm32f103xx_hal::timer::Timer">Timer</a>&lt;<a class="struct" href="../../stm32f103xx/struct.TIM3.html" title="struct stm32f103xx::TIM3">TIM3</a>&gt;</code><a href='#impl-CountDown-2' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/stm32f103xx_hal/timer.rs.html#109-144' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='associatedtype.Time-2' class="type"><span id='Time.t-2' class='invisible'><code>type <a href='../../embedded_hal/timer/trait.CountDown.html#associatedtype.Time' class="type">Time</a> = <a class="struct" href="../../stm32f103xx_hal/time/struct.Hertz.html" title="struct stm32f103xx_hal::time::Hertz">Hertz</a></code></span></h4>
+<div class='docblock'><p>The unit of time used by this timer</p>
+</div><h4 id='method.start-2' class="method"><span id='start.v-2' class='invisible'><code>fn <a href='../../embedded_hal/timer/trait.CountDown.html#tymethod.start' class='fnname'>start</a>&lt;T&gt;(&amp;mut self, timeout: T) <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;T: <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="struct" href="../../stm32f103xx_hal/time/struct.Hertz.html" title="struct stm32f103xx_hal::time::Hertz">Hertz</a>&gt;,&nbsp;</span></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/stm32f103xx_hal/timer.rs.html#112-134' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Starts a new count down</p>
+</div><h4 id='method.wait-2' class="method"><span id='wait.v-2' class='invisible'><code>fn <a href='../../embedded_hal/timer/trait.CountDown.html#tymethod.wait' class='fnname'>wait</a>(&amp;mut self) -&gt; <a class="type" href="../../nb/type.Result.html" title="type nb::Result">Result</a>&lt;(), !&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/stm32f103xx_hal/timer.rs.html#136-143' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Non-blockingly &quot;waits&quot; until the count down finishes <a href="../../embedded_hal/timer/trait.CountDown.html#tymethod.wait">Read more</a></p>
+</div></div><h3 id='impl-Periodic-2' class='impl'><span class='in-band'><code>impl <a class="trait" href="../../embedded_hal/timer/trait.Periodic.html" title="trait embedded_hal::timer::Periodic">Periodic</a> for <a class="struct" href="../../stm32f103xx_hal/timer/struct.Timer.html" title="struct stm32f103xx_hal::timer::Timer">Timer</a>&lt;<a class="struct" href="../../stm32f103xx/struct.TIM3.html" title="struct stm32f103xx::TIM3">TIM3</a>&gt;</code><a href='#impl-Periodic-2' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/stm32f103xx_hal/timer.rs.html#146' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div><h3 id='impl-CountDown-3' class='impl'><span class='in-band'><code>impl <a class="trait" href="../../embedded_hal/timer/trait.CountDown.html" title="trait embedded_hal::timer::CountDown">CountDown</a> for <a class="struct" href="../../stm32f103xx_hal/timer/struct.Timer.html" title="struct stm32f103xx_hal::timer::Timer">Timer</a>&lt;<a class="struct" href="../../stm32f103xx/struct.TIM4.html" title="struct stm32f103xx::TIM4">TIM4</a>&gt;</code><a href='#impl-CountDown-3' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/stm32f103xx_hal/timer.rs.html#109-144' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='associatedtype.Time-3' class="type"><span id='Time.t-3' class='invisible'><code>type <a href='../../embedded_hal/timer/trait.CountDown.html#associatedtype.Time' class="type">Time</a> = <a class="struct" href="../../stm32f103xx_hal/time/struct.Hertz.html" title="struct stm32f103xx_hal::time::Hertz">Hertz</a></code></span></h4>
+<div class='docblock'><p>The unit of time used by this timer</p>
+</div><h4 id='method.start-3' class="method"><span id='start.v-3' class='invisible'><code>fn <a href='../../embedded_hal/timer/trait.CountDown.html#tymethod.start' class='fnname'>start</a>&lt;T&gt;(&amp;mut self, timeout: T) <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;T: <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="struct" href="../../stm32f103xx_hal/time/struct.Hertz.html" title="struct stm32f103xx_hal::time::Hertz">Hertz</a>&gt;,&nbsp;</span></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/stm32f103xx_hal/timer.rs.html#112-134' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Starts a new count down</p>
+</div><h4 id='method.wait-3' class="method"><span id='wait.v-3' class='invisible'><code>fn <a href='../../embedded_hal/timer/trait.CountDown.html#tymethod.wait' class='fnname'>wait</a>(&amp;mut self) -&gt; <a class="type" href="../../nb/type.Result.html" title="type nb::Result">Result</a>&lt;(), !&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/stm32f103xx_hal/timer.rs.html#136-143' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Non-blockingly &quot;waits&quot; until the count down finishes <a href="../../embedded_hal/timer/trait.CountDown.html#tymethod.wait">Read more</a></p>
+</div></div><h3 id='impl-Periodic-3' class='impl'><span class='in-band'><code>impl <a class="trait" href="../../embedded_hal/timer/trait.Periodic.html" title="trait embedded_hal::timer::Periodic">Periodic</a> for <a class="struct" href="../../stm32f103xx_hal/timer/struct.Timer.html" title="struct stm32f103xx_hal::timer::Timer">Timer</a>&lt;<a class="struct" href="../../stm32f103xx/struct.TIM4.html" title="struct stm32f103xx::TIM4">TIM4</a>&gt;</code><a href='#impl-Periodic-3' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/stm32f103xx_hal/timer.rs.html#146' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt><kbd>?</kbd></dt>
+                    <dd>Show this help dialog</dd>
+                    <dt><kbd>S</kbd></dt>
+                    <dd>Focus the search field</dd>
+                    <dt><kbd>↑</kbd></dt>
+                    <dd>Move up in search results</dd>
+                    <dt><kbd>↓</kbd></dt>
+                    <dd>Move down in search results</dd>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
+                    <dd>Go to active search result</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../";
+        window.currentCrate = "stm32f103xx_hal";
+    </script>
+    <script src="../../main.js"></script>
+    <script defer src="../../search-index.js"></script>
+</body>
+</html>

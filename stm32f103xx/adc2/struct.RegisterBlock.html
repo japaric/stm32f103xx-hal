@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `RegisterBlock` struct in crate `stm32f103xx`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, RegisterBlock">
+
+    <title>stm32f103xx::adc2::RegisterBlock - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css" id="themeStyle">
+    <script src="../../storage.js"></script>
+    
+
+    
+    
+</head>
+<body class="rustdoc struct">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
+        
+        <p class='location'>Struct RegisterBlock</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#fields">Fields</a><div class="sidebar-links"><a href="#structfield.sr">sr</a><a href="#structfield.cr1">cr1</a><a href="#structfield.cr2">cr2</a><a href="#structfield.smpr1">smpr1</a><a href="#structfield.smpr2">smpr2</a><a href="#structfield.jofr1">jofr1</a><a href="#structfield.jofr2">jofr2</a><a href="#structfield.jofr3">jofr3</a><a href="#structfield.jofr4">jofr4</a><a href="#structfield.htr">htr</a><a href="#structfield.ltr">ltr</a><a href="#structfield.sqr1">sqr1</a><a href="#structfield.sqr2">sqr2</a><a href="#structfield.sqr3">sqr3</a><a href="#structfield.jsqr">jsqr</a><a href="#structfield.jdr1">jdr1</a><a href="#structfield.jdr2">jdr2</a><a href="#structfield.jdr3">jdr3</a><a href="#structfield.jdr4">jdr4</a><a href="#structfield.dr">dr</a></div></div><p class='location'><a href='../index.html'>stm32f103xx</a>::<wbr><a href='index.html'>adc2</a></p><script>window.sidebarCurrent = {name: 'RegisterBlock', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
+    </nav>
+
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../theme.js"></script>
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>stm32f103xx</a>::<wbr><a href='index.html'>adc2</a>::<wbr><a class="struct" href=''>RegisterBlock</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../src/stm32f103xx/lib.rs.html#98207-98248' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'><div class="docblock attributes">#[repr(C)]
+</div>pub struct RegisterBlock {
+    pub sr: <a class="struct" href="../../stm32f103xx/adc2/struct.SR.html" title="struct stm32f103xx::adc2::SR">SR</a>,
+    pub cr1: <a class="struct" href="../../stm32f103xx/adc2/struct.CR1.html" title="struct stm32f103xx::adc2::CR1">CR1</a>,
+    pub cr2: <a class="struct" href="../../stm32f103xx/adc2/struct.CR2.html" title="struct stm32f103xx::adc2::CR2">CR2</a>,
+    pub smpr1: <a class="struct" href="../../stm32f103xx/adc2/struct.SMPR1.html" title="struct stm32f103xx::adc2::SMPR1">SMPR1</a>,
+    pub smpr2: <a class="struct" href="../../stm32f103xx/adc2/struct.SMPR2.html" title="struct stm32f103xx::adc2::SMPR2">SMPR2</a>,
+    pub jofr1: <a class="struct" href="../../stm32f103xx/adc2/struct.JOFR1.html" title="struct stm32f103xx::adc2::JOFR1">JOFR1</a>,
+    pub jofr2: <a class="struct" href="../../stm32f103xx/adc2/struct.JOFR2.html" title="struct stm32f103xx::adc2::JOFR2">JOFR2</a>,
+    pub jofr3: <a class="struct" href="../../stm32f103xx/adc2/struct.JOFR3.html" title="struct stm32f103xx::adc2::JOFR3">JOFR3</a>,
+    pub jofr4: <a class="struct" href="../../stm32f103xx/adc2/struct.JOFR4.html" title="struct stm32f103xx::adc2::JOFR4">JOFR4</a>,
+    pub htr: <a class="struct" href="../../stm32f103xx/adc2/struct.HTR.html" title="struct stm32f103xx::adc2::HTR">HTR</a>,
+    pub ltr: <a class="struct" href="../../stm32f103xx/adc2/struct.LTR.html" title="struct stm32f103xx::adc2::LTR">LTR</a>,
+    pub sqr1: <a class="struct" href="../../stm32f103xx/adc2/struct.SQR1.html" title="struct stm32f103xx::adc2::SQR1">SQR1</a>,
+    pub sqr2: <a class="struct" href="../../stm32f103xx/adc2/struct.SQR2.html" title="struct stm32f103xx::adc2::SQR2">SQR2</a>,
+    pub sqr3: <a class="struct" href="../../stm32f103xx/adc2/struct.SQR3.html" title="struct stm32f103xx::adc2::SQR3">SQR3</a>,
+    pub jsqr: <a class="struct" href="../../stm32f103xx/adc2/struct.JSQR.html" title="struct stm32f103xx::adc2::JSQR">JSQR</a>,
+    pub jdr1: <a class="struct" href="../../stm32f103xx/adc2/struct.JDR1.html" title="struct stm32f103xx::adc2::JDR1">JDR1</a>,
+    pub jdr2: <a class="struct" href="../../stm32f103xx/adc2/struct.JDR2.html" title="struct stm32f103xx::adc2::JDR2">JDR2</a>,
+    pub jdr3: <a class="struct" href="../../stm32f103xx/adc2/struct.JDR3.html" title="struct stm32f103xx::adc2::JDR3">JDR3</a>,
+    pub jdr4: <a class="struct" href="../../stm32f103xx/adc2/struct.JDR4.html" title="struct stm32f103xx::adc2::JDR4">JDR4</a>,
+    pub dr: <a class="struct" href="../../stm32f103xx/adc2/struct.DR.html" title="struct stm32f103xx::adc2::DR">DR</a>,
+}</pre><div class='docblock'><p>Register block</p>
+</div><h2 id='fields' class='fields small-section-header'>
+                       Fields<a href='#fields' class='anchor'></a></h2><span id="structfield.sr" class="structfield small-section-header">
+                           <a href="#structfield.sr" class="anchor field"></a>
+                           <span id="sr.v" class='invisible'>
+                           <code>sr: <a class="struct" href="../../stm32f103xx/adc2/struct.SR.html" title="struct stm32f103xx::adc2::SR">SR</a></code>
+                           </span></span><div class='docblock'><p>0x00 - status register</p>
+</div><span id="structfield.cr1" class="structfield small-section-header">
+                           <a href="#structfield.cr1" class="anchor field"></a>
+                           <span id="cr1.v" class='invisible'>
+                           <code>cr1: <a class="struct" href="../../stm32f103xx/adc2/struct.CR1.html" title="struct stm32f103xx::adc2::CR1">CR1</a></code>
+                           </span></span><div class='docblock'><p>0x04 - control register 1</p>
+</div><span id="structfield.cr2" class="structfield small-section-header">
+                           <a href="#structfield.cr2" class="anchor field"></a>
+                           <span id="cr2.v" class='invisible'>
+                           <code>cr2: <a class="struct" href="../../stm32f103xx/adc2/struct.CR2.html" title="struct stm32f103xx::adc2::CR2">CR2</a></code>
+                           </span></span><div class='docblock'><p>0x08 - control register 2</p>
+</div><span id="structfield.smpr1" class="structfield small-section-header">
+                           <a href="#structfield.smpr1" class="anchor field"></a>
+                           <span id="smpr1.v" class='invisible'>
+                           <code>smpr1: <a class="struct" href="../../stm32f103xx/adc2/struct.SMPR1.html" title="struct stm32f103xx::adc2::SMPR1">SMPR1</a></code>
+                           </span></span><div class='docblock'><p>0x0c - sample time register 1</p>
+</div><span id="structfield.smpr2" class="structfield small-section-header">
+                           <a href="#structfield.smpr2" class="anchor field"></a>
+                           <span id="smpr2.v" class='invisible'>
+                           <code>smpr2: <a class="struct" href="../../stm32f103xx/adc2/struct.SMPR2.html" title="struct stm32f103xx::adc2::SMPR2">SMPR2</a></code>
+                           </span></span><div class='docblock'><p>0x10 - sample time register 2</p>
+</div><span id="structfield.jofr1" class="structfield small-section-header">
+                           <a href="#structfield.jofr1" class="anchor field"></a>
+                           <span id="jofr1.v" class='invisible'>
+                           <code>jofr1: <a class="struct" href="../../stm32f103xx/adc2/struct.JOFR1.html" title="struct stm32f103xx::adc2::JOFR1">JOFR1</a></code>
+                           </span></span><div class='docblock'><p>0x14 - injected channel data offset register x</p>
+</div><span id="structfield.jofr2" class="structfield small-section-header">
+                           <a href="#structfield.jofr2" class="anchor field"></a>
+                           <span id="jofr2.v" class='invisible'>
+                           <code>jofr2: <a class="struct" href="../../stm32f103xx/adc2/struct.JOFR2.html" title="struct stm32f103xx::adc2::JOFR2">JOFR2</a></code>
+                           </span></span><div class='docblock'><p>0x18 - injected channel data offset register x</p>
+</div><span id="structfield.jofr3" class="structfield small-section-header">
+                           <a href="#structfield.jofr3" class="anchor field"></a>
+                           <span id="jofr3.v" class='invisible'>
+                           <code>jofr3: <a class="struct" href="../../stm32f103xx/adc2/struct.JOFR3.html" title="struct stm32f103xx::adc2::JOFR3">JOFR3</a></code>
+                           </span></span><div class='docblock'><p>0x1c - injected channel data offset register x</p>
+</div><span id="structfield.jofr4" class="structfield small-section-header">
+                           <a href="#structfield.jofr4" class="anchor field"></a>
+                           <span id="jofr4.v" class='invisible'>
+                           <code>jofr4: <a class="struct" href="../../stm32f103xx/adc2/struct.JOFR4.html" title="struct stm32f103xx::adc2::JOFR4">JOFR4</a></code>
+                           </span></span><div class='docblock'><p>0x20 - injected channel data offset register x</p>
+</div><span id="structfield.htr" class="structfield small-section-header">
+                           <a href="#structfield.htr" class="anchor field"></a>
+                           <span id="htr.v" class='invisible'>
+                           <code>htr: <a class="struct" href="../../stm32f103xx/adc2/struct.HTR.html" title="struct stm32f103xx::adc2::HTR">HTR</a></code>
+                           </span></span><div class='docblock'><p>0x24 - watchdog higher threshold register</p>
+</div><span id="structfield.ltr" class="structfield small-section-header">
+                           <a href="#structfield.ltr" class="anchor field"></a>
+                           <span id="ltr.v" class='invisible'>
+                           <code>ltr: <a class="struct" href="../../stm32f103xx/adc2/struct.LTR.html" title="struct stm32f103xx::adc2::LTR">LTR</a></code>
+                           </span></span><div class='docblock'><p>0x28 - watchdog lower threshold register</p>
+</div><span id="structfield.sqr1" class="structfield small-section-header">
+                           <a href="#structfield.sqr1" class="anchor field"></a>
+                           <span id="sqr1.v" class='invisible'>
+                           <code>sqr1: <a class="struct" href="../../stm32f103xx/adc2/struct.SQR1.html" title="struct stm32f103xx::adc2::SQR1">SQR1</a></code>
+                           </span></span><div class='docblock'><p>0x2c - regular sequence register 1</p>
+</div><span id="structfield.sqr2" class="structfield small-section-header">
+                           <a href="#structfield.sqr2" class="anchor field"></a>
+                           <span id="sqr2.v" class='invisible'>
+                           <code>sqr2: <a class="struct" href="../../stm32f103xx/adc2/struct.SQR2.html" title="struct stm32f103xx::adc2::SQR2">SQR2</a></code>
+                           </span></span><div class='docblock'><p>0x30 - regular sequence register 2</p>
+</div><span id="structfield.sqr3" class="structfield small-section-header">
+                           <a href="#structfield.sqr3" class="anchor field"></a>
+                           <span id="sqr3.v" class='invisible'>
+                           <code>sqr3: <a class="struct" href="../../stm32f103xx/adc2/struct.SQR3.html" title="struct stm32f103xx::adc2::SQR3">SQR3</a></code>
+                           </span></span><div class='docblock'><p>0x34 - regular sequence register 3</p>
+</div><span id="structfield.jsqr" class="structfield small-section-header">
+                           <a href="#structfield.jsqr" class="anchor field"></a>
+                           <span id="jsqr.v" class='invisible'>
+                           <code>jsqr: <a class="struct" href="../../stm32f103xx/adc2/struct.JSQR.html" title="struct stm32f103xx::adc2::JSQR">JSQR</a></code>
+                           </span></span><div class='docblock'><p>0x38 - injected sequence register</p>
+</div><span id="structfield.jdr1" class="structfield small-section-header">
+                           <a href="#structfield.jdr1" class="anchor field"></a>
+                           <span id="jdr1.v" class='invisible'>
+                           <code>jdr1: <a class="struct" href="../../stm32f103xx/adc2/struct.JDR1.html" title="struct stm32f103xx::adc2::JDR1">JDR1</a></code>
+                           </span></span><div class='docblock'><p>0x3c - injected data register x</p>
+</div><span id="structfield.jdr2" class="structfield small-section-header">
+                           <a href="#structfield.jdr2" class="anchor field"></a>
+                           <span id="jdr2.v" class='invisible'>
+                           <code>jdr2: <a class="struct" href="../../stm32f103xx/adc2/struct.JDR2.html" title="struct stm32f103xx::adc2::JDR2">JDR2</a></code>
+                           </span></span><div class='docblock'><p>0x40 - injected data register x</p>
+</div><span id="structfield.jdr3" class="structfield small-section-header">
+                           <a href="#structfield.jdr3" class="anchor field"></a>
+                           <span id="jdr3.v" class='invisible'>
+                           <code>jdr3: <a class="struct" href="../../stm32f103xx/adc2/struct.JDR3.html" title="struct stm32f103xx::adc2::JDR3">JDR3</a></code>
+                           </span></span><div class='docblock'><p>0x44 - injected data register x</p>
+</div><span id="structfield.jdr4" class="structfield small-section-header">
+                           <a href="#structfield.jdr4" class="anchor field"></a>
+                           <span id="jdr4.v" class='invisible'>
+                           <code>jdr4: <a class="struct" href="../../stm32f103xx/adc2/struct.JDR4.html" title="struct stm32f103xx::adc2::JDR4">JDR4</a></code>
+                           </span></span><div class='docblock'><p>0x48 - injected data register x</p>
+</div><span id="structfield.dr" class="structfield small-section-header">
+                           <a href="#structfield.dr" class="anchor field"></a>
+                           <span id="dr.v" class='invisible'>
+                           <code>dr: <a class="struct" href="../../stm32f103xx/adc2/struct.DR.html" title="struct stm32f103xx::adc2::DR">DR</a></code>
+                           </span></span><div class='docblock'><p>0x4c - regular data register</p>
+</div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt><kbd>?</kbd></dt>
+                    <dd>Show this help dialog</dd>
+                    <dt><kbd>S</kbd></dt>
+                    <dd>Focus the search field</dd>
+                    <dt><kbd>↑</kbd></dt>
+                    <dd>Move up in search results</dd>
+                    <dt><kbd>↓</kbd></dt>
+                    <dd>Move down in search results</dd>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
+                    <dd>Go to active search result</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../";
+        window.currentCrate = "stm32f103xx";
+    </script>
+    <script src="../../main.js"></script>
+    <script defer src="../../search-index.js"></script>
+</body>
+</html>

@@ -1,0 +1,1 @@
+initSidebarItems({"trait":[["InputPin","Single digital input pin"],["OutputPin","Single digital output pin"]]});

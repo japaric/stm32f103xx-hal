@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["Exception","Enumeration of all the exception types"]],"struct":[["ExceptionFrame","Registers stacked (pushed into the stack) during an exception"]]});

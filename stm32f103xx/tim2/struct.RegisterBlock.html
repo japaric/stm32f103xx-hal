@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `RegisterBlock` struct in crate `stm32f103xx`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, RegisterBlock">
+
+    <title>stm32f103xx::tim2::RegisterBlock - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css" id="themeStyle">
+    <script src="../../storage.js"></script>
+    
+
+    
+    
+</head>
+<body class="rustdoc struct">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
+        
+        <p class='location'>Struct RegisterBlock</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#fields">Fields</a><div class="sidebar-links"><a href="#structfield.cr1">cr1</a><a href="#structfield.cr2">cr2</a><a href="#structfield.smcr">smcr</a><a href="#structfield.dier">dier</a><a href="#structfield.sr">sr</a><a href="#structfield.egr">egr</a><a href="#structfield.ccmr1_output">ccmr1_output</a><a href="#structfield.ccmr2_output">ccmr2_output</a><a href="#structfield.ccer">ccer</a><a href="#structfield.cnt">cnt</a><a href="#structfield.psc">psc</a><a href="#structfield.arr">arr</a><a href="#structfield.ccr1">ccr1</a><a href="#structfield.ccr2">ccr2</a><a href="#structfield.ccr3">ccr3</a><a href="#structfield.ccr4">ccr4</a><a href="#structfield.dcr">dcr</a><a href="#structfield.dmar">dmar</a></div></div><p class='location'><a href='../index.html'>stm32f103xx</a>::<wbr><a href='index.html'>tim2</a></p><script>window.sidebarCurrent = {name: 'RegisterBlock', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
+    </nav>
+
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../theme.js"></script>
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>stm32f103xx</a>::<wbr><a href='index.html'>tim2</a>::<wbr><a class="struct" href=''>RegisterBlock</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../src/stm32f103xx/lib.rs.html#69980-70019' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'><div class="docblock attributes">#[repr(C)]
+</div>pub struct RegisterBlock {
+    pub cr1: <a class="struct" href="../../stm32f103xx/tim2/struct.CR1.html" title="struct stm32f103xx::tim2::CR1">CR1</a>,
+    pub cr2: <a class="struct" href="../../stm32f103xx/tim2/struct.CR2.html" title="struct stm32f103xx::tim2::CR2">CR2</a>,
+    pub smcr: <a class="struct" href="../../stm32f103xx/tim2/struct.SMCR.html" title="struct stm32f103xx::tim2::SMCR">SMCR</a>,
+    pub dier: <a class="struct" href="../../stm32f103xx/tim2/struct.DIER.html" title="struct stm32f103xx::tim2::DIER">DIER</a>,
+    pub sr: <a class="struct" href="../../stm32f103xx/tim2/struct.SR.html" title="struct stm32f103xx::tim2::SR">SR</a>,
+    pub egr: <a class="struct" href="../../stm32f103xx/tim2/struct.EGR.html" title="struct stm32f103xx::tim2::EGR">EGR</a>,
+    pub ccmr1_output: <a class="struct" href="../../stm32f103xx/tim2/struct.CCMR1_OUTPUT.html" title="struct stm32f103xx::tim2::CCMR1_OUTPUT">CCMR1_OUTPUT</a>,
+    pub ccmr2_output: <a class="struct" href="../../stm32f103xx/tim2/struct.CCMR2_OUTPUT.html" title="struct stm32f103xx::tim2::CCMR2_OUTPUT">CCMR2_OUTPUT</a>,
+    pub ccer: <a class="struct" href="../../stm32f103xx/tim2/struct.CCER.html" title="struct stm32f103xx::tim2::CCER">CCER</a>,
+    pub cnt: <a class="struct" href="../../stm32f103xx/tim2/struct.CNT.html" title="struct stm32f103xx::tim2::CNT">CNT</a>,
+    pub psc: <a class="struct" href="../../stm32f103xx/tim2/struct.PSC.html" title="struct stm32f103xx::tim2::PSC">PSC</a>,
+    pub arr: <a class="struct" href="../../stm32f103xx/tim2/struct.ARR.html" title="struct stm32f103xx::tim2::ARR">ARR</a>,
+    pub ccr1: <a class="struct" href="../../stm32f103xx/tim2/struct.CCR1.html" title="struct stm32f103xx::tim2::CCR1">CCR1</a>,
+    pub ccr2: <a class="struct" href="../../stm32f103xx/tim2/struct.CCR2.html" title="struct stm32f103xx::tim2::CCR2">CCR2</a>,
+    pub ccr3: <a class="struct" href="../../stm32f103xx/tim2/struct.CCR3.html" title="struct stm32f103xx::tim2::CCR3">CCR3</a>,
+    pub ccr4: <a class="struct" href="../../stm32f103xx/tim2/struct.CCR4.html" title="struct stm32f103xx::tim2::CCR4">CCR4</a>,
+    pub dcr: <a class="struct" href="../../stm32f103xx/tim2/struct.DCR.html" title="struct stm32f103xx::tim2::DCR">DCR</a>,
+    pub dmar: <a class="struct" href="../../stm32f103xx/tim2/struct.DMAR.html" title="struct stm32f103xx::tim2::DMAR">DMAR</a>,
+    // some fields omitted
+}</pre><div class='docblock'><p>Register block</p>
+</div><h2 id='fields' class='fields small-section-header'>
+                       Fields<a href='#fields' class='anchor'></a></h2><span id="structfield.cr1" class="structfield small-section-header">
+                           <a href="#structfield.cr1" class="anchor field"></a>
+                           <span id="cr1.v" class='invisible'>
+                           <code>cr1: <a class="struct" href="../../stm32f103xx/tim2/struct.CR1.html" title="struct stm32f103xx::tim2::CR1">CR1</a></code>
+                           </span></span><div class='docblock'><p>0x00 - control register 1</p>
+</div><span id="structfield.cr2" class="structfield small-section-header">
+                           <a href="#structfield.cr2" class="anchor field"></a>
+                           <span id="cr2.v" class='invisible'>
+                           <code>cr2: <a class="struct" href="../../stm32f103xx/tim2/struct.CR2.html" title="struct stm32f103xx::tim2::CR2">CR2</a></code>
+                           </span></span><div class='docblock'><p>0x04 - control register 2</p>
+</div><span id="structfield.smcr" class="structfield small-section-header">
+                           <a href="#structfield.smcr" class="anchor field"></a>
+                           <span id="smcr.v" class='invisible'>
+                           <code>smcr: <a class="struct" href="../../stm32f103xx/tim2/struct.SMCR.html" title="struct stm32f103xx::tim2::SMCR">SMCR</a></code>
+                           </span></span><div class='docblock'><p>0x08 - slave mode control register</p>
+</div><span id="structfield.dier" class="structfield small-section-header">
+                           <a href="#structfield.dier" class="anchor field"></a>
+                           <span id="dier.v" class='invisible'>
+                           <code>dier: <a class="struct" href="../../stm32f103xx/tim2/struct.DIER.html" title="struct stm32f103xx::tim2::DIER">DIER</a></code>
+                           </span></span><div class='docblock'><p>0x0c - DMA/Interrupt enable register</p>
+</div><span id="structfield.sr" class="structfield small-section-header">
+                           <a href="#structfield.sr" class="anchor field"></a>
+                           <span id="sr.v" class='invisible'>
+                           <code>sr: <a class="struct" href="../../stm32f103xx/tim2/struct.SR.html" title="struct stm32f103xx::tim2::SR">SR</a></code>
+                           </span></span><div class='docblock'><p>0x10 - status register</p>
+</div><span id="structfield.egr" class="structfield small-section-header">
+                           <a href="#structfield.egr" class="anchor field"></a>
+                           <span id="egr.v" class='invisible'>
+                           <code>egr: <a class="struct" href="../../stm32f103xx/tim2/struct.EGR.html" title="struct stm32f103xx::tim2::EGR">EGR</a></code>
+                           </span></span><div class='docblock'><p>0x14 - event generation register</p>
+</div><span id="structfield.ccmr1_output" class="structfield small-section-header">
+                           <a href="#structfield.ccmr1_output" class="anchor field"></a>
+                           <span id="ccmr1_output.v" class='invisible'>
+                           <code>ccmr1_output: <a class="struct" href="../../stm32f103xx/tim2/struct.CCMR1_OUTPUT.html" title="struct stm32f103xx::tim2::CCMR1_OUTPUT">CCMR1_OUTPUT</a></code>
+                           </span></span><div class='docblock'><p>0x18 - capture/compare mode register 1 (output mode)</p>
+</div><span id="structfield.ccmr2_output" class="structfield small-section-header">
+                           <a href="#structfield.ccmr2_output" class="anchor field"></a>
+                           <span id="ccmr2_output.v" class='invisible'>
+                           <code>ccmr2_output: <a class="struct" href="../../stm32f103xx/tim2/struct.CCMR2_OUTPUT.html" title="struct stm32f103xx::tim2::CCMR2_OUTPUT">CCMR2_OUTPUT</a></code>
+                           </span></span><div class='docblock'><p>0x1c - capture/compare mode register 2 (output mode)</p>
+</div><span id="structfield.ccer" class="structfield small-section-header">
+                           <a href="#structfield.ccer" class="anchor field"></a>
+                           <span id="ccer.v" class='invisible'>
+                           <code>ccer: <a class="struct" href="../../stm32f103xx/tim2/struct.CCER.html" title="struct stm32f103xx::tim2::CCER">CCER</a></code>
+                           </span></span><div class='docblock'><p>0x20 - capture/compare enable register</p>
+</div><span id="structfield.cnt" class="structfield small-section-header">
+                           <a href="#structfield.cnt" class="anchor field"></a>
+                           <span id="cnt.v" class='invisible'>
+                           <code>cnt: <a class="struct" href="../../stm32f103xx/tim2/struct.CNT.html" title="struct stm32f103xx::tim2::CNT">CNT</a></code>
+                           </span></span><div class='docblock'><p>0x24 - counter</p>
+</div><span id="structfield.psc" class="structfield small-section-header">
+                           <a href="#structfield.psc" class="anchor field"></a>
+                           <span id="psc.v" class='invisible'>
+                           <code>psc: <a class="struct" href="../../stm32f103xx/tim2/struct.PSC.html" title="struct stm32f103xx::tim2::PSC">PSC</a></code>
+                           </span></span><div class='docblock'><p>0x28 - prescaler</p>
+</div><span id="structfield.arr" class="structfield small-section-header">
+                           <a href="#structfield.arr" class="anchor field"></a>
+                           <span id="arr.v" class='invisible'>
+                           <code>arr: <a class="struct" href="../../stm32f103xx/tim2/struct.ARR.html" title="struct stm32f103xx::tim2::ARR">ARR</a></code>
+                           </span></span><div class='docblock'><p>0x2c - auto-reload register</p>
+</div><span id="structfield.ccr1" class="structfield small-section-header">
+                           <a href="#structfield.ccr1" class="anchor field"></a>
+                           <span id="ccr1.v" class='invisible'>
+                           <code>ccr1: <a class="struct" href="../../stm32f103xx/tim2/struct.CCR1.html" title="struct stm32f103xx::tim2::CCR1">CCR1</a></code>
+                           </span></span><div class='docblock'><p>0x34 - capture/compare register 1</p>
+</div><span id="structfield.ccr2" class="structfield small-section-header">
+                           <a href="#structfield.ccr2" class="anchor field"></a>
+                           <span id="ccr2.v" class='invisible'>
+                           <code>ccr2: <a class="struct" href="../../stm32f103xx/tim2/struct.CCR2.html" title="struct stm32f103xx::tim2::CCR2">CCR2</a></code>
+                           </span></span><div class='docblock'><p>0x38 - capture/compare register 2</p>
+</div><span id="structfield.ccr3" class="structfield small-section-header">
+                           <a href="#structfield.ccr3" class="anchor field"></a>
+                           <span id="ccr3.v" class='invisible'>
+                           <code>ccr3: <a class="struct" href="../../stm32f103xx/tim2/struct.CCR3.html" title="struct stm32f103xx::tim2::CCR3">CCR3</a></code>
+                           </span></span><div class='docblock'><p>0x3c - capture/compare register 3</p>
+</div><span id="structfield.ccr4" class="structfield small-section-header">
+                           <a href="#structfield.ccr4" class="anchor field"></a>
+                           <span id="ccr4.v" class='invisible'>
+                           <code>ccr4: <a class="struct" href="../../stm32f103xx/tim2/struct.CCR4.html" title="struct stm32f103xx::tim2::CCR4">CCR4</a></code>
+                           </span></span><div class='docblock'><p>0x40 - capture/compare register 4</p>
+</div><span id="structfield.dcr" class="structfield small-section-header">
+                           <a href="#structfield.dcr" class="anchor field"></a>
+                           <span id="dcr.v" class='invisible'>
+                           <code>dcr: <a class="struct" href="../../stm32f103xx/tim2/struct.DCR.html" title="struct stm32f103xx::tim2::DCR">DCR</a></code>
+                           </span></span><div class='docblock'><p>0x48 - DMA control register</p>
+</div><span id="structfield.dmar" class="structfield small-section-header">
+                           <a href="#structfield.dmar" class="anchor field"></a>
+                           <span id="dmar.v" class='invisible'>
+                           <code>dmar: <a class="struct" href="../../stm32f103xx/tim2/struct.DMAR.html" title="struct stm32f103xx::tim2::DMAR">DMAR</a></code>
+                           </span></span><div class='docblock'><p>0x4c - DMA address for full transfer</p>
+</div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt><kbd>?</kbd></dt>
+                    <dd>Show this help dialog</dd>
+                    <dt><kbd>S</kbd></dt>
+                    <dd>Focus the search field</dd>
+                    <dt><kbd>↑</kbd></dt>
+                    <dd>Move up in search results</dd>
+                    <dt><kbd>↓</kbd></dt>
+                    <dd>Move down in search results</dd>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
+                    <dd>Go to active search result</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../";
+        window.currentCrate = "stm32f103xx";
+    </script>
+    <script src="../../main.js"></script>
+    <script defer src="../../search-index.js"></script>
+</body>
+</html>

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `RegisterBlock` struct in crate `stm32f103xx`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, RegisterBlock">
+
+    <title>stm32f103xx::sdio::RegisterBlock - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css" id="themeStyle">
+    <script src="../../storage.js"></script>
+    
+
+    
+    
+</head>
+<body class="rustdoc struct">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
+        
+        <p class='location'>Struct RegisterBlock</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#fields">Fields</a><div class="sidebar-links"><a href="#structfield.power">power</a><a href="#structfield.clkcr">clkcr</a><a href="#structfield.arg">arg</a><a href="#structfield.cmd">cmd</a><a href="#structfield.respcmd">respcmd</a><a href="#structfield.respi1">respi1</a><a href="#structfield.resp2">resp2</a><a href="#structfield.resp3">resp3</a><a href="#structfield.resp4">resp4</a><a href="#structfield.dtimer">dtimer</a><a href="#structfield.dlen">dlen</a><a href="#structfield.dctrl">dctrl</a><a href="#structfield.dcount">dcount</a><a href="#structfield.sta">sta</a><a href="#structfield.icr">icr</a><a href="#structfield.mask">mask</a><a href="#structfield.fifocnt">fifocnt</a><a href="#structfield.fifo">fifo</a></div></div><p class='location'><a href='../index.html'>stm32f103xx</a>::<wbr><a href='index.html'>sdio</a></p><script>window.sidebarCurrent = {name: 'RegisterBlock', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
+    </nav>
+
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../theme.js"></script>
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>stm32f103xx</a>::<wbr><a href='index.html'>sdio</a>::<wbr><a class="struct" href=''>RegisterBlock</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../src/stm32f103xx/lib.rs.html#47695' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'><div class="docblock attributes">#[repr(C)]
+</div>pub struct RegisterBlock {
+    pub power: <a class="struct" href="../../stm32f103xx/sdio/struct.POWER.html" title="struct stm32f103xx::sdio::POWER">POWER</a>,
+    pub clkcr: <a class="struct" href="../../stm32f103xx/sdio/struct.CLKCR.html" title="struct stm32f103xx::sdio::CLKCR">CLKCR</a>,
+    pub arg: <a class="struct" href="../../stm32f103xx/sdio/struct.ARG.html" title="struct stm32f103xx::sdio::ARG">ARG</a>,
+    pub cmd: <a class="struct" href="../../stm32f103xx/sdio/struct.CMD.html" title="struct stm32f103xx::sdio::CMD">CMD</a>,
+    pub respcmd: <a class="struct" href="../../stm32f103xx/sdio/struct.RESPCMD.html" title="struct stm32f103xx::sdio::RESPCMD">RESPCMD</a>,
+    pub respi1: <a class="struct" href="../../stm32f103xx/sdio/struct.RESPI1.html" title="struct stm32f103xx::sdio::RESPI1">RESPI1</a>,
+    pub resp2: <a class="struct" href="../../stm32f103xx/sdio/struct.RESP2.html" title="struct stm32f103xx::sdio::RESP2">RESP2</a>,
+    pub resp3: <a class="struct" href="../../stm32f103xx/sdio/struct.RESP3.html" title="struct stm32f103xx::sdio::RESP3">RESP3</a>,
+    pub resp4: <a class="struct" href="../../stm32f103xx/sdio/struct.RESP4.html" title="struct stm32f103xx::sdio::RESP4">RESP4</a>,
+    pub dtimer: <a class="struct" href="../../stm32f103xx/sdio/struct.DTIMER.html" title="struct stm32f103xx::sdio::DTIMER">DTIMER</a>,
+    pub dlen: <a class="struct" href="../../stm32f103xx/sdio/struct.DLEN.html" title="struct stm32f103xx::sdio::DLEN">DLEN</a>,
+    pub dctrl: <a class="struct" href="../../stm32f103xx/sdio/struct.DCTRL.html" title="struct stm32f103xx::sdio::DCTRL">DCTRL</a>,
+    pub dcount: <a class="struct" href="../../stm32f103xx/sdio/struct.DCOUNT.html" title="struct stm32f103xx::sdio::DCOUNT">DCOUNT</a>,
+    pub sta: <a class="struct" href="../../stm32f103xx/sdio/struct.STA.html" title="struct stm32f103xx::sdio::STA">STA</a>,
+    pub icr: <a class="struct" href="../../stm32f103xx/sdio/struct.ICR.html" title="struct stm32f103xx::sdio::ICR">ICR</a>,
+    pub mask: <a class="struct" href="../../stm32f103xx/sdio/struct.MASK.html" title="struct stm32f103xx::sdio::MASK">MASK</a>,
+    pub fifocnt: <a class="struct" href="../../stm32f103xx/sdio/struct.FIFOCNT.html" title="struct stm32f103xx::sdio::FIFOCNT">FIFOCNT</a>,
+    pub fifo: <a class="struct" href="../../stm32f103xx/sdio/struct.FIFO.html" title="struct stm32f103xx::sdio::FIFO">FIFO</a>,
+    // some fields omitted
+}</pre><div class='docblock'><p>Register block</p>
+</div><h2 id='fields' class='fields small-section-header'>
+                       Fields<a href='#fields' class='anchor'></a></h2><span id="structfield.power" class="structfield small-section-header">
+                           <a href="#structfield.power" class="anchor field"></a>
+                           <span id="power.v" class='invisible'>
+                           <code>power: <a class="struct" href="../../stm32f103xx/sdio/struct.POWER.html" title="struct stm32f103xx::sdio::POWER">POWER</a></code>
+                           </span></span><div class='docblock'><p>0x00 - Bits 1:0 = PWRCTRL: Power supply control bits</p>
+</div><span id="structfield.clkcr" class="structfield small-section-header">
+                           <a href="#structfield.clkcr" class="anchor field"></a>
+                           <span id="clkcr.v" class='invisible'>
+                           <code>clkcr: <a class="struct" href="../../stm32f103xx/sdio/struct.CLKCR.html" title="struct stm32f103xx::sdio::CLKCR">CLKCR</a></code>
+                           </span></span><div class='docblock'><p>0x04 - SDI clock control register (SDIO_CLKCR)</p>
+</div><span id="structfield.arg" class="structfield small-section-header">
+                           <a href="#structfield.arg" class="anchor field"></a>
+                           <span id="arg.v" class='invisible'>
+                           <code>arg: <a class="struct" href="../../stm32f103xx/sdio/struct.ARG.html" title="struct stm32f103xx::sdio::ARG">ARG</a></code>
+                           </span></span><div class='docblock'><p>0x08 - Bits 31:0 = : Command argument</p>
+</div><span id="structfield.cmd" class="structfield small-section-header">
+                           <a href="#structfield.cmd" class="anchor field"></a>
+                           <span id="cmd.v" class='invisible'>
+                           <code>cmd: <a class="struct" href="../../stm32f103xx/sdio/struct.CMD.html" title="struct stm32f103xx::sdio::CMD">CMD</a></code>
+                           </span></span><div class='docblock'><p>0x0c - SDIO command register (SDIO_CMD)</p>
+</div><span id="structfield.respcmd" class="structfield small-section-header">
+                           <a href="#structfield.respcmd" class="anchor field"></a>
+                           <span id="respcmd.v" class='invisible'>
+                           <code>respcmd: <a class="struct" href="../../stm32f103xx/sdio/struct.RESPCMD.html" title="struct stm32f103xx::sdio::RESPCMD">RESPCMD</a></code>
+                           </span></span><div class='docblock'><p>0x10 - SDIO command register</p>
+</div><span id="structfield.respi1" class="structfield small-section-header">
+                           <a href="#structfield.respi1" class="anchor field"></a>
+                           <span id="respi1.v" class='invisible'>
+                           <code>respi1: <a class="struct" href="../../stm32f103xx/sdio/struct.RESPI1.html" title="struct stm32f103xx::sdio::RESPI1">RESPI1</a></code>
+                           </span></span><div class='docblock'><p>0x14 - Bits 31:0 = CARDSTATUS1</p>
+</div><span id="structfield.resp2" class="structfield small-section-header">
+                           <a href="#structfield.resp2" class="anchor field"></a>
+                           <span id="resp2.v" class='invisible'>
+                           <code>resp2: <a class="struct" href="../../stm32f103xx/sdio/struct.RESP2.html" title="struct stm32f103xx::sdio::RESP2">RESP2</a></code>
+                           </span></span><div class='docblock'><p>0x18 - Bits 31:0 = CARDSTATUS2</p>
+</div><span id="structfield.resp3" class="structfield small-section-header">
+                           <a href="#structfield.resp3" class="anchor field"></a>
+                           <span id="resp3.v" class='invisible'>
+                           <code>resp3: <a class="struct" href="../../stm32f103xx/sdio/struct.RESP3.html" title="struct stm32f103xx::sdio::RESP3">RESP3</a></code>
+                           </span></span><div class='docblock'><p>0x1c - Bits 31:0 = CARDSTATUS3</p>
+</div><span id="structfield.resp4" class="structfield small-section-header">
+                           <a href="#structfield.resp4" class="anchor field"></a>
+                           <span id="resp4.v" class='invisible'>
+                           <code>resp4: <a class="struct" href="../../stm32f103xx/sdio/struct.RESP4.html" title="struct stm32f103xx::sdio::RESP4">RESP4</a></code>
+                           </span></span><div class='docblock'><p>0x20 - Bits 31:0 = CARDSTATUS4</p>
+</div><span id="structfield.dtimer" class="structfield small-section-header">
+                           <a href="#structfield.dtimer" class="anchor field"></a>
+                           <span id="dtimer.v" class='invisible'>
+                           <code>dtimer: <a class="struct" href="../../stm32f103xx/sdio/struct.DTIMER.html" title="struct stm32f103xx::sdio::DTIMER">DTIMER</a></code>
+                           </span></span><div class='docblock'><p>0x24 - Bits 31:0 = DATATIME: Data timeout period</p>
+</div><span id="structfield.dlen" class="structfield small-section-header">
+                           <a href="#structfield.dlen" class="anchor field"></a>
+                           <span id="dlen.v" class='invisible'>
+                           <code>dlen: <a class="struct" href="../../stm32f103xx/sdio/struct.DLEN.html" title="struct stm32f103xx::sdio::DLEN">DLEN</a></code>
+                           </span></span><div class='docblock'><p>0x28 - Bits 24:0 = DATALENGTH: Data length value</p>
+</div><span id="structfield.dctrl" class="structfield small-section-header">
+                           <a href="#structfield.dctrl" class="anchor field"></a>
+                           <span id="dctrl.v" class='invisible'>
+                           <code>dctrl: <a class="struct" href="../../stm32f103xx/sdio/struct.DCTRL.html" title="struct stm32f103xx::sdio::DCTRL">DCTRL</a></code>
+                           </span></span><div class='docblock'><p>0x2c - SDIO data control register (SDIO_DCTRL)</p>
+</div><span id="structfield.dcount" class="structfield small-section-header">
+                           <a href="#structfield.dcount" class="anchor field"></a>
+                           <span id="dcount.v" class='invisible'>
+                           <code>dcount: <a class="struct" href="../../stm32f103xx/sdio/struct.DCOUNT.html" title="struct stm32f103xx::sdio::DCOUNT">DCOUNT</a></code>
+                           </span></span><div class='docblock'><p>0x30 - Bits 24:0 = DATACOUNT: Data count value</p>
+</div><span id="structfield.sta" class="structfield small-section-header">
+                           <a href="#structfield.sta" class="anchor field"></a>
+                           <span id="sta.v" class='invisible'>
+                           <code>sta: <a class="struct" href="../../stm32f103xx/sdio/struct.STA.html" title="struct stm32f103xx::sdio::STA">STA</a></code>
+                           </span></span><div class='docblock'><p>0x34 - SDIO status register (SDIO_STA)</p>
+</div><span id="structfield.icr" class="structfield small-section-header">
+                           <a href="#structfield.icr" class="anchor field"></a>
+                           <span id="icr.v" class='invisible'>
+                           <code>icr: <a class="struct" href="../../stm32f103xx/sdio/struct.ICR.html" title="struct stm32f103xx::sdio::ICR">ICR</a></code>
+                           </span></span><div class='docblock'><p>0x38 - SDIO interrupt clear register (SDIO_ICR)</p>
+</div><span id="structfield.mask" class="structfield small-section-header">
+                           <a href="#structfield.mask" class="anchor field"></a>
+                           <span id="mask.v" class='invisible'>
+                           <code>mask: <a class="struct" href="../../stm32f103xx/sdio/struct.MASK.html" title="struct stm32f103xx::sdio::MASK">MASK</a></code>
+                           </span></span><div class='docblock'><p>0x3c - SDIO mask register (SDIO_MASK)</p>
+</div><span id="structfield.fifocnt" class="structfield small-section-header">
+                           <a href="#structfield.fifocnt" class="anchor field"></a>
+                           <span id="fifocnt.v" class='invisible'>
+                           <code>fifocnt: <a class="struct" href="../../stm32f103xx/sdio/struct.FIFOCNT.html" title="struct stm32f103xx::sdio::FIFOCNT">FIFOCNT</a></code>
+                           </span></span><div class='docblock'><p>0x48 - Bits 23:0 = FIFOCOUNT: Remaining number of words to be written to or read from the FIFO</p>
+</div><span id="structfield.fifo" class="structfield small-section-header">
+                           <a href="#structfield.fifo" class="anchor field"></a>
+                           <span id="fifo.v" class='invisible'>
+                           <code>fifo: <a class="struct" href="../../stm32f103xx/sdio/struct.FIFO.html" title="struct stm32f103xx::sdio::FIFO">FIFO</a></code>
+                           </span></span><div class='docblock'><p>0x80 - bits 31:0 = FIFOData: Receive and transmit FIFO data</p>
+</div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt><kbd>?</kbd></dt>
+                    <dd>Show this help dialog</dd>
+                    <dt><kbd>S</kbd></dt>
+                    <dd>Focus the search field</dd>
+                    <dt><kbd>↑</kbd></dt>
+                    <dd>Move up in search results</dd>
+                    <dt><kbd>↓</kbd></dt>
+                    <dd>Move down in search results</dd>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
+                    <dd>Go to active search result</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../";
+        window.currentCrate = "stm32f103xx";
+    </script>
+    <script src="../../main.js"></script>
+    <script defer src="../../search-index.js"></script>
+</body>
+</html>

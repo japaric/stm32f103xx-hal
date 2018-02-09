@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `can` mod in crate `stm32f103xx`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, can">
+
+    <title>stm32f103xx::can - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css" id="themeStyle">
+    <script src="../../storage.js"></script>
+    
+
+    
+    
+</head>
+<body class="rustdoc mod">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
+        
+        <p class='location'>Module can</p><div class="sidebar-elems"><div class="block items"><ul><li><a href="#modules">Modules</a></li><li><a href="#structs">Structs</a></li></ul></div><p class='location'><a href='../index.html'>stm32f103xx</a></p><script>window.sidebarCurrent = {name: 'can', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script></div>
+    </nav>
+
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../theme.js"></script>
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Module <a href='../index.html'>stm32f103xx</a>::<wbr><a class="mod" href=''>can</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../src/stm32f103xx/lib.rs.html#103174-170093' title='goto source code'>[src]</a></span></h1>
+<div class='docblock'><p>Controller area network</p>
+</div><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="can_btr/index.html"
+                                  title='mod stm32f103xx::can::can_btr'>can_btr</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_BTR</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="can_esr/index.html"
+                                  title='mod stm32f103xx::can::can_esr'>can_esr</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_ESR</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="can_fa1r/index.html"
+                                  title='mod stm32f103xx::can::can_fa1r'>can_fa1r</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_FA1R</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="can_ffa1r/index.html"
+                                  title='mod stm32f103xx::can::can_ffa1r'>can_ffa1r</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_FFA1R</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="can_fm1r/index.html"
+                                  title='mod stm32f103xx::can::can_fm1r'>can_fm1r</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_FM1R</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="can_fmr/index.html"
+                                  title='mod stm32f103xx::can::can_fmr'>can_fmr</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_FMR</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="can_fs1r/index.html"
+                                  title='mod stm32f103xx::can::can_fs1r'>can_fs1r</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_FS1R</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="can_ier/index.html"
+                                  title='mod stm32f103xx::can::can_ier'>can_ier</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_IER</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="can_mcr/index.html"
+                                  title='mod stm32f103xx::can::can_mcr'>can_mcr</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_MCR</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="can_msr/index.html"
+                                  title='mod stm32f103xx::can::can_msr'>can_msr</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_MSR</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="can_rdh0r/index.html"
+                                  title='mod stm32f103xx::can::can_rdh0r'>can_rdh0r</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_RDH0R</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="can_rdh1r/index.html"
+                                  title='mod stm32f103xx::can::can_rdh1r'>can_rdh1r</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_RDH1R</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="can_rdl0r/index.html"
+                                  title='mod stm32f103xx::can::can_rdl0r'>can_rdl0r</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_RDL0R</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="can_rdl1r/index.html"
+                                  title='mod stm32f103xx::can::can_rdl1r'>can_rdl1r</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_RDL1R</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="can_rdt0r/index.html"
+                                  title='mod stm32f103xx::can::can_rdt0r'>can_rdt0r</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_RDT0R</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="can_rdt1r/index.html"
+                                  title='mod stm32f103xx::can::can_rdt1r'>can_rdt1r</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_RDT1R</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="can_rf0r/index.html"
+                                  title='mod stm32f103xx::can::can_rf0r'>can_rf0r</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_RF0R</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="can_rf1r/index.html"
+                                  title='mod stm32f103xx::can::can_rf1r'>can_rf1r</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_RF1R</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="can_ri0r/index.html"
+                                  title='mod stm32f103xx::can::can_ri0r'>can_ri0r</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_RI0R</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="can_ri1r/index.html"
+                                  title='mod stm32f103xx::can::can_ri1r'>can_ri1r</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_RI1R</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="can_tdh0r/index.html"
+                                  title='mod stm32f103xx::can::can_tdh0r'>can_tdh0r</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_TDH0R</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="can_tdh1r/index.html"
+                                  title='mod stm32f103xx::can::can_tdh1r'>can_tdh1r</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_TDH1R</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="can_tdh2r/index.html"
+                                  title='mod stm32f103xx::can::can_tdh2r'>can_tdh2r</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_TDH2R</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="can_tdl0r/index.html"
+                                  title='mod stm32f103xx::can::can_tdl0r'>can_tdl0r</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_TDL0R</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="can_tdl1r/index.html"
+                                  title='mod stm32f103xx::can::can_tdl1r'>can_tdl1r</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_TDL1R</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="can_tdl2r/index.html"
+                                  title='mod stm32f103xx::can::can_tdl2r'>can_tdl2r</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_TDL2R</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="can_tdt0r/index.html"
+                                  title='mod stm32f103xx::can::can_tdt0r'>can_tdt0r</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_TDT0R</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="can_tdt1r/index.html"
+                                  title='mod stm32f103xx::can::can_tdt1r'>can_tdt1r</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_TDT1R</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="can_tdt2r/index.html"
+                                  title='mod stm32f103xx::can::can_tdt2r'>can_tdt2r</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_TDT2R</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="can_ti0r/index.html"
+                                  title='mod stm32f103xx::can::can_ti0r'>can_ti0r</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_TI0R</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="can_ti1r/index.html"
+                                  title='mod stm32f103xx::can::can_ti1r'>can_ti1r</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_TI1R</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="can_ti2r/index.html"
+                                  title='mod stm32f103xx::can::can_ti2r'>can_ti2r</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_TI2R</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="can_tsr/index.html"
+                                  title='mod stm32f103xx::can::can_tsr'>can_tsr</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_TSR</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="f0r1/index.html"
+                                  title='mod stm32f103xx::can::f0r1'>f0r1</a></td>
+                           <td class='docblock-short'>
+                                <p>Filter bank 0 register 1</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="f0r2/index.html"
+                                  title='mod stm32f103xx::can::f0r2'>f0r2</a></td>
+                           <td class='docblock-short'>
+                                <p>Filter bank 0 register 2</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="f10r1/index.html"
+                                  title='mod stm32f103xx::can::f10r1'>f10r1</a></td>
+                           <td class='docblock-short'>
+                                <p>Filter bank 10 register 1</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="f10r2/index.html"
+                                  title='mod stm32f103xx::can::f10r2'>f10r2</a></td>
+                           <td class='docblock-short'>
+                                <p>Filter bank 10 register 2</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="f11r1/index.html"
+                                  title='mod stm32f103xx::can::f11r1'>f11r1</a></td>
+                           <td class='docblock-short'>
+                                <p>Filter bank 11 register 1</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="f11r2/index.html"
+                                  title='mod stm32f103xx::can::f11r2'>f11r2</a></td>
+                           <td class='docblock-short'>
+                                <p>Filter bank 11 register 2</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="f12r1/index.html"
+                                  title='mod stm32f103xx::can::f12r1'>f12r1</a></td>
+                           <td class='docblock-short'>
+                                <p>Filter bank 4 register 1</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="f12r2/index.html"
+                                  title='mod stm32f103xx::can::f12r2'>f12r2</a></td>
+                           <td class='docblock-short'>
+                                <p>Filter bank 12 register 2</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="f13r1/index.html"
+                                  title='mod stm32f103xx::can::f13r1'>f13r1</a></td>
+                           <td class='docblock-short'>
+                                <p>Filter bank 13 register 1</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="f13r2/index.html"
+                                  title='mod stm32f103xx::can::f13r2'>f13r2</a></td>
+                           <td class='docblock-short'>
+                                <p>Filter bank 13 register 2</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="f1r1/index.html"
+                                  title='mod stm32f103xx::can::f1r1'>f1r1</a></td>
+                           <td class='docblock-short'>
+                                <p>Filter bank 1 register 1</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="f1r2/index.html"
+                                  title='mod stm32f103xx::can::f1r2'>f1r2</a></td>
+                           <td class='docblock-short'>
+                                <p>Filter bank 1 register 2</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="f2r1/index.html"
+                                  title='mod stm32f103xx::can::f2r1'>f2r1</a></td>
+                           <td class='docblock-short'>
+                                <p>Filter bank 2 register 1</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="f2r2/index.html"
+                                  title='mod stm32f103xx::can::f2r2'>f2r2</a></td>
+                           <td class='docblock-short'>
+                                <p>Filter bank 2 register 2</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="f3r1/index.html"
+                                  title='mod stm32f103xx::can::f3r1'>f3r1</a></td>
+                           <td class='docblock-short'>
+                                <p>Filter bank 3 register 1</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="f3r2/index.html"
+                                  title='mod stm32f103xx::can::f3r2'>f3r2</a></td>
+                           <td class='docblock-short'>
+                                <p>Filter bank 3 register 2</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="f4r1/index.html"
+                                  title='mod stm32f103xx::can::f4r1'>f4r1</a></td>
+                           <td class='docblock-short'>
+                                <p>Filter bank 4 register 1</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="f4r2/index.html"
+                                  title='mod stm32f103xx::can::f4r2'>f4r2</a></td>
+                           <td class='docblock-short'>
+                                <p>Filter bank 4 register 2</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="f5r1/index.html"
+                                  title='mod stm32f103xx::can::f5r1'>f5r1</a></td>
+                           <td class='docblock-short'>
+                                <p>Filter bank 5 register 1</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="f5r2/index.html"
+                                  title='mod stm32f103xx::can::f5r2'>f5r2</a></td>
+                           <td class='docblock-short'>
+                                <p>Filter bank 5 register 2</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="f6r1/index.html"
+                                  title='mod stm32f103xx::can::f6r1'>f6r1</a></td>
+                           <td class='docblock-short'>
+                                <p>Filter bank 6 register 1</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="f6r2/index.html"
+                                  title='mod stm32f103xx::can::f6r2'>f6r2</a></td>
+                           <td class='docblock-short'>
+                                <p>Filter bank 6 register 2</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="f7r1/index.html"
+                                  title='mod stm32f103xx::can::f7r1'>f7r1</a></td>
+                           <td class='docblock-short'>
+                                <p>Filter bank 7 register 1</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="f7r2/index.html"
+                                  title='mod stm32f103xx::can::f7r2'>f7r2</a></td>
+                           <td class='docblock-short'>
+                                <p>Filter bank 7 register 2</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="f8r1/index.html"
+                                  title='mod stm32f103xx::can::f8r1'>f8r1</a></td>
+                           <td class='docblock-short'>
+                                <p>Filter bank 8 register 1</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="f8r2/index.html"
+                                  title='mod stm32f103xx::can::f8r2'>f8r2</a></td>
+                           <td class='docblock-short'>
+                                <p>Filter bank 8 register 2</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="f9r1/index.html"
+                                  title='mod stm32f103xx::can::f9r1'>f9r1</a></td>
+                           <td class='docblock-short'>
+                                <p>Filter bank 9 register 1</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="f9r2/index.html"
+                                  title='mod stm32f103xx::can::f9r2'>f9r2</a></td>
+                           <td class='docblock-short'>
+                                <p>Filter bank 9 register 2</p>
+
+                           </td>
+                       </tr></table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.CAN_BTR.html"
+                                  title='struct stm32f103xx::can::CAN_BTR'>CAN_BTR</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_BTR</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.CAN_ESR.html"
+                                  title='struct stm32f103xx::can::CAN_ESR'>CAN_ESR</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_ESR</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.CAN_FA1R.html"
+                                  title='struct stm32f103xx::can::CAN_FA1R'>CAN_FA1R</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_FA1R</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.CAN_FFA1R.html"
+                                  title='struct stm32f103xx::can::CAN_FFA1R'>CAN_FFA1R</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_FFA1R</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.CAN_FM1R.html"
+                                  title='struct stm32f103xx::can::CAN_FM1R'>CAN_FM1R</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_FM1R</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.CAN_FMR.html"
+                                  title='struct stm32f103xx::can::CAN_FMR'>CAN_FMR</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_FMR</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.CAN_FS1R.html"
+                                  title='struct stm32f103xx::can::CAN_FS1R'>CAN_FS1R</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_FS1R</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.CAN_IER.html"
+                                  title='struct stm32f103xx::can::CAN_IER'>CAN_IER</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_IER</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.CAN_MCR.html"
+                                  title='struct stm32f103xx::can::CAN_MCR'>CAN_MCR</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_MCR</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.CAN_MSR.html"
+                                  title='struct stm32f103xx::can::CAN_MSR'>CAN_MSR</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_MSR</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.CAN_RDH0R.html"
+                                  title='struct stm32f103xx::can::CAN_RDH0R'>CAN_RDH0R</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_RDH0R</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.CAN_RDH1R.html"
+                                  title='struct stm32f103xx::can::CAN_RDH1R'>CAN_RDH1R</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_RDH1R</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.CAN_RDL0R.html"
+                                  title='struct stm32f103xx::can::CAN_RDL0R'>CAN_RDL0R</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_RDL0R</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.CAN_RDL1R.html"
+                                  title='struct stm32f103xx::can::CAN_RDL1R'>CAN_RDL1R</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_RDL1R</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.CAN_RDT0R.html"
+                                  title='struct stm32f103xx::can::CAN_RDT0R'>CAN_RDT0R</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_RDT0R</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.CAN_RDT1R.html"
+                                  title='struct stm32f103xx::can::CAN_RDT1R'>CAN_RDT1R</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_RDT1R</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.CAN_RF0R.html"
+                                  title='struct stm32f103xx::can::CAN_RF0R'>CAN_RF0R</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_RF0R</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.CAN_RF1R.html"
+                                  title='struct stm32f103xx::can::CAN_RF1R'>CAN_RF1R</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_RF1R</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.CAN_RI0R.html"
+                                  title='struct stm32f103xx::can::CAN_RI0R'>CAN_RI0R</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_RI0R</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.CAN_RI1R.html"
+                                  title='struct stm32f103xx::can::CAN_RI1R'>CAN_RI1R</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_RI1R</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.CAN_TDH0R.html"
+                                  title='struct stm32f103xx::can::CAN_TDH0R'>CAN_TDH0R</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_TDH0R</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.CAN_TDH1R.html"
+                                  title='struct stm32f103xx::can::CAN_TDH1R'>CAN_TDH1R</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_TDH1R</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.CAN_TDH2R.html"
+                                  title='struct stm32f103xx::can::CAN_TDH2R'>CAN_TDH2R</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_TDH2R</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.CAN_TDL0R.html"
+                                  title='struct stm32f103xx::can::CAN_TDL0R'>CAN_TDL0R</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_TDL0R</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.CAN_TDL1R.html"
+                                  title='struct stm32f103xx::can::CAN_TDL1R'>CAN_TDL1R</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_TDL1R</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.CAN_TDL2R.html"
+                                  title='struct stm32f103xx::can::CAN_TDL2R'>CAN_TDL2R</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_TDL2R</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.CAN_TDT0R.html"
+                                  title='struct stm32f103xx::can::CAN_TDT0R'>CAN_TDT0R</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_TDT0R</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.CAN_TDT1R.html"
+                                  title='struct stm32f103xx::can::CAN_TDT1R'>CAN_TDT1R</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_TDT1R</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.CAN_TDT2R.html"
+                                  title='struct stm32f103xx::can::CAN_TDT2R'>CAN_TDT2R</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_TDT2R</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.CAN_TI0R.html"
+                                  title='struct stm32f103xx::can::CAN_TI0R'>CAN_TI0R</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_TI0R</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.CAN_TI1R.html"
+                                  title='struct stm32f103xx::can::CAN_TI1R'>CAN_TI1R</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_TI1R</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.CAN_TI2R.html"
+                                  title='struct stm32f103xx::can::CAN_TI2R'>CAN_TI2R</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_TI2R</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.CAN_TSR.html"
+                                  title='struct stm32f103xx::can::CAN_TSR'>CAN_TSR</a></td>
+                           <td class='docblock-short'>
+                                <p>CAN_TSR</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.F0R1.html"
+                                  title='struct stm32f103xx::can::F0R1'>F0R1</a></td>
+                           <td class='docblock-short'>
+                                <p>Filter bank 0 register 1</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.F0R2.html"
+                                  title='struct stm32f103xx::can::F0R2'>F0R2</a></td>
+                           <td class='docblock-short'>
+                                <p>Filter bank 0 register 2</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.F10R1.html"
+                                  title='struct stm32f103xx::can::F10R1'>F10R1</a></td>
+                           <td class='docblock-short'>
+                                <p>Filter bank 10 register 1</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.F10R2.html"
+                                  title='struct stm32f103xx::can::F10R2'>F10R2</a></td>
+                           <td class='docblock-short'>
+                                <p>Filter bank 10 register 2</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.F11R1.html"
+                                  title='struct stm32f103xx::can::F11R1'>F11R1</a></td>
+                           <td class='docblock-short'>
+                                <p>Filter bank 11 register 1</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.F11R2.html"
+                                  title='struct stm32f103xx::can::F11R2'>F11R2</a></td>
+                           <td class='docblock-short'>
+                                <p>Filter bank 11 register 2</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.F12R1.html"
+                                  title='struct stm32f103xx::can::F12R1'>F12R1</a></td>
+                           <td class='docblock-short'>
+                                <p>Filter bank 4 register 1</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.F12R2.html"
+                                  title='struct stm32f103xx::can::F12R2'>F12R2</a></td>
+                           <td class='docblock-short'>
+                                <p>Filter bank 12 register 2</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.F13R1.html"
+                                  title='struct stm32f103xx::can::F13R1'>F13R1</a></td>
+                           <td class='docblock-short'>
+                                <p>Filter bank 13 register 1</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.F13R2.html"
+                                  title='struct stm32f103xx::can::F13R2'>F13R2</a></td>
+                           <td class='docblock-short'>
+                                <p>Filter bank 13 register 2</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.F1R1.html"
+                                  title='struct stm32f103xx::can::F1R1'>F1R1</a></td>
+                           <td class='docblock-short'>
+                                <p>Filter bank 1 register 1</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.F1R2.html"
+                                  title='struct stm32f103xx::can::F1R2'>F1R2</a></td>
+                           <td class='docblock-short'>
+                                <p>Filter bank 1 register 2</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.F2R1.html"
+                                  title='struct stm32f103xx::can::F2R1'>F2R1</a></td>
+                           <td class='docblock-short'>
+                                <p>Filter bank 2 register 1</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.F2R2.html"
+                                  title='struct stm32f103xx::can::F2R2'>F2R2</a></td>
+                           <td class='docblock-short'>
+                                <p>Filter bank 2 register 2</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.F3R1.html"
+                                  title='struct stm32f103xx::can::F3R1'>F3R1</a></td>
+                           <td class='docblock-short'>
+                                <p>Filter bank 3 register 1</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.F3R2.html"
+                                  title='struct stm32f103xx::can::F3R2'>F3R2</a></td>
+                           <td class='docblock-short'>
+                                <p>Filter bank 3 register 2</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.F4R1.html"
+                                  title='struct stm32f103xx::can::F4R1'>F4R1</a></td>
+                           <td class='docblock-short'>
+                                <p>Filter bank 4 register 1</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.F4R2.html"
+                                  title='struct stm32f103xx::can::F4R2'>F4R2</a></td>
+                           <td class='docblock-short'>
+                                <p>Filter bank 4 register 2</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.F5R1.html"
+                                  title='struct stm32f103xx::can::F5R1'>F5R1</a></td>
+                           <td class='docblock-short'>
+                                <p>Filter bank 5 register 1</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.F5R2.html"
+                                  title='struct stm32f103xx::can::F5R2'>F5R2</a></td>
+                           <td class='docblock-short'>
+                                <p>Filter bank 5 register 2</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.F6R1.html"
+                                  title='struct stm32f103xx::can::F6R1'>F6R1</a></td>
+                           <td class='docblock-short'>
+                                <p>Filter bank 6 register 1</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.F6R2.html"
+                                  title='struct stm32f103xx::can::F6R2'>F6R2</a></td>
+                           <td class='docblock-short'>
+                                <p>Filter bank 6 register 2</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.F7R1.html"
+                                  title='struct stm32f103xx::can::F7R1'>F7R1</a></td>
+                           <td class='docblock-short'>
+                                <p>Filter bank 7 register 1</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.F7R2.html"
+                                  title='struct stm32f103xx::can::F7R2'>F7R2</a></td>
+                           <td class='docblock-short'>
+                                <p>Filter bank 7 register 2</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.F8R1.html"
+                                  title='struct stm32f103xx::can::F8R1'>F8R1</a></td>
+                           <td class='docblock-short'>
+                                <p>Filter bank 8 register 1</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.F8R2.html"
+                                  title='struct stm32f103xx::can::F8R2'>F8R2</a></td>
+                           <td class='docblock-short'>
+                                <p>Filter bank 8 register 2</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.F9R1.html"
+                                  title='struct stm32f103xx::can::F9R1'>F9R1</a></td>
+                           <td class='docblock-short'>
+                                <p>Filter bank 9 register 1</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.F9R2.html"
+                                  title='struct stm32f103xx::can::F9R2'>F9R2</a></td>
+                           <td class='docblock-short'>
+                                <p>Filter bank 9 register 2</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.RegisterBlock.html"
+                                  title='struct stm32f103xx::can::RegisterBlock'>RegisterBlock</a></td>
+                           <td class='docblock-short'>
+                                <p>Register block</p>
+
+                           </td>
+                       </tr></table></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt><kbd>?</kbd></dt>
+                    <dd>Show this help dialog</dd>
+                    <dt><kbd>S</kbd></dt>
+                    <dd>Focus the search field</dd>
+                    <dt><kbd>↑</kbd></dt>
+                    <dd>Move up in search results</dd>
+                    <dt><kbd>↓</kbd></dt>
+                    <dd>Move down in search results</dd>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
+                    <dd>Go to active search result</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../";
+        window.currentCrate = "stm32f103xx";
+    </script>
+    <script src="../../main.js"></script>
+    <script defer src="../../search-index.js"></script>
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `W` struct in crate `stm32f103xx`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, W">
+
+    <title>stm32f103xx::rcc::cfgr::W - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../../main.css" id="themeStyle">
+    <script src="../../../storage.js"></script>
+    
+
+    
+    
+</head>
+<body class="rustdoc struct">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
+        
+        <p class='location'>Struct W</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.reset_value">reset_value</a><a href="#method.bits">bits</a><a href="#method.sw">sw</a><a href="#method.hpre">hpre</a><a href="#method.ppre1">ppre1</a><a href="#method.ppre2">ppre2</a><a href="#method.adcpre">adcpre</a><a href="#method.pllsrc">pllsrc</a><a href="#method.pllxtpre">pllxtpre</a><a href="#method.pllmul">pllmul</a><a href="#method.usbpre">usbpre</a><a href="#method.mco">mco</a></div></div><p class='location'><a href='../../index.html'>stm32f103xx</a>::<wbr><a href='../index.html'>rcc</a>::<wbr><a href='index.html'>cfgr</a></p><script>window.sidebarCurrent = {name: 'W', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
+    </nav>
+
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../../theme.js"></script>
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../../index.html'>stm32f103xx</a>::<wbr><a href='../index.html'>rcc</a>::<wbr><a href='index.html'>cfgr</a>::<wbr><a class="struct" href=''>W</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#12512-12514' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct W { /* fields omitted */ }</pre><div class='docblock'><p>Value to write to the register</p>
+</div>
+                    <h2 id='methods' class='small-section-header'>
+                      Methods<a href='#methods' class='anchor'></a>
+                    </h2>
+                <h3 id='impl' class='impl'><span class='in-band'><code>impl <a class="struct" href="../../../stm32f103xx/rcc/cfgr/struct.W.html" title="struct stm32f103xx::rcc::cfgr::W">W</a></code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#13972-14034' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.reset_value' class="method"><span id='reset_value.v' class='invisible'><code>pub fn <a href='#method.reset_value' class='fnname'>reset_value</a>() -&gt; <a class="struct" href="../../../stm32f103xx/rcc/cfgr/struct.W.html" title="struct stm32f103xx::rcc::cfgr::W">W</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#13975-13977' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Reset value of the register</p>
+</div><h4 id='method.bits' class="method"><span id='bits.v' class='invisible'><code>pub unsafe fn <a href='#method.bits' class='fnname'>bits</a>(&amp;mut self, bits: u32) -&gt; &amp;mut Self</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#13980-13983' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Writes raw bits to the register</p>
+</div><h4 id='method.sw' class="method"><span id='sw.v' class='invisible'><code>pub fn <a href='#method.sw' class='fnname'>sw</a>(&amp;mut self) -&gt; <a class="struct" href="../../../stm32f103xx/rcc/cfgr/struct._SWW.html" title="struct stm32f103xx::rcc::cfgr::_SWW">_SWW</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#13986-13988' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bits 0:1 - System clock Switch</p>
+</div><h4 id='method.hpre' class="method"><span id='hpre.v' class='invisible'><code>pub fn <a href='#method.hpre' class='fnname'>hpre</a>(&amp;mut self) -&gt; <a class="struct" href="../../../stm32f103xx/rcc/cfgr/struct._HPREW.html" title="struct stm32f103xx::rcc::cfgr::_HPREW">_HPREW</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#13991-13993' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bits 4:7 - AHB prescaler</p>
+</div><h4 id='method.ppre1' class="method"><span id='ppre1.v' class='invisible'><code>pub fn <a href='#method.ppre1' class='fnname'>ppre1</a>(&amp;mut self) -&gt; <a class="struct" href="../../../stm32f103xx/rcc/cfgr/struct._PPRE1W.html" title="struct stm32f103xx::rcc::cfgr::_PPRE1W">_PPRE1W</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#13996-13998' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bits 8:10 - APB Low speed prescaler (APB1)</p>
+</div><h4 id='method.ppre2' class="method"><span id='ppre2.v' class='invisible'><code>pub fn <a href='#method.ppre2' class='fnname'>ppre2</a>(&amp;mut self) -&gt; <a class="struct" href="../../../stm32f103xx/rcc/cfgr/struct._PPRE2W.html" title="struct stm32f103xx::rcc::cfgr::_PPRE2W">_PPRE2W</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#14001-14003' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bits 11:13 - APB High speed prescaler (APB2)</p>
+</div><h4 id='method.adcpre' class="method"><span id='adcpre.v' class='invisible'><code>pub fn <a href='#method.adcpre' class='fnname'>adcpre</a>(&amp;mut self) -&gt; <a class="struct" href="../../../stm32f103xx/rcc/cfgr/struct._ADCPREW.html" title="struct stm32f103xx::rcc::cfgr::_ADCPREW">_ADCPREW</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#14006-14008' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bits 14:15 - ADC prescaler</p>
+</div><h4 id='method.pllsrc' class="method"><span id='pllsrc.v' class='invisible'><code>pub fn <a href='#method.pllsrc' class='fnname'>pllsrc</a>(&amp;mut self) -&gt; <a class="struct" href="../../../stm32f103xx/rcc/cfgr/struct._PLLSRCW.html" title="struct stm32f103xx::rcc::cfgr::_PLLSRCW">_PLLSRCW</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#14011-14013' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 16 - PLL entry clock source</p>
+</div><h4 id='method.pllxtpre' class="method"><span id='pllxtpre.v' class='invisible'><code>pub fn <a href='#method.pllxtpre' class='fnname'>pllxtpre</a>(&amp;mut self) -&gt; <a class="struct" href="../../../stm32f103xx/rcc/cfgr/struct._PLLXTPREW.html" title="struct stm32f103xx::rcc::cfgr::_PLLXTPREW">_PLLXTPREW</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#14016-14018' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 17 - HSE divider for PLL entry</p>
+</div><h4 id='method.pllmul' class="method"><span id='pllmul.v' class='invisible'><code>pub fn <a href='#method.pllmul' class='fnname'>pllmul</a>(&amp;mut self) -&gt; <a class="struct" href="../../../stm32f103xx/rcc/cfgr/struct._PLLMULW.html" title="struct stm32f103xx::rcc::cfgr::_PLLMULW">_PLLMULW</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#14021-14023' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bits 18:21 - PLL Multiplication Factor</p>
+</div><h4 id='method.usbpre' class="method"><span id='usbpre.v' class='invisible'><code>pub fn <a href='#method.usbpre' class='fnname'>usbpre</a>(&amp;mut self) -&gt; <a class="struct" href="../../../stm32f103xx/rcc/cfgr/struct._USBPREW.html" title="struct stm32f103xx::rcc::cfgr::_USBPREW">_USBPREW</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#14026-14028' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 22 - USB prescaler</p>
+</div><h4 id='method.mco' class="method"><span id='mco.v' class='invisible'><code>pub fn <a href='#method.mco' class='fnname'>mco</a>(&amp;mut self) -&gt; <a class="struct" href="../../../stm32f103xx/rcc/cfgr/struct._MCOW.html" title="struct stm32f103xx::rcc::cfgr::_MCOW">_MCOW</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#14031-14033' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bits 24:26 - Microcontroller clock output</p>
+</div></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt><kbd>?</kbd></dt>
+                    <dd>Show this help dialog</dd>
+                    <dt><kbd>S</kbd></dt>
+                    <dd>Focus the search field</dd>
+                    <dt><kbd>↑</kbd></dt>
+                    <dd>Move up in search results</dd>
+                    <dt><kbd>↓</kbd></dt>
+                    <dd>Move down in search results</dd>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
+                    <dd>Go to active search result</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../../";
+        window.currentCrate = "stm32f103xx";
+    </script>
+    <script src="../../../main.js"></script>
+    <script defer src="../../../search-index.js"></script>
+</body>
+</html>

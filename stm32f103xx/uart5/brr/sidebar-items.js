@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["DIV_FRACTIONR","Value of the field"],["DIV_MANTISSAR","Value of the field"],["R","Value read from the register"],["W","Value to write to the register"],["_DIV_FRACTIONW","Proxy"],["_DIV_MANTISSAW","Proxy"]]});

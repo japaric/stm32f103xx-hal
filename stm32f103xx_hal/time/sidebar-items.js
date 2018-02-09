@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Bps","Bits per second"],["Hertz","Hertz"],["Instant","A measurement of a monotonically nondecreasing clock"],["KiloHertz","KiloHertz"],["MegaHertz","MegaHertz"],["MonoTimer","A monotonic nondecreasing timer"]],"trait":[["U32Ext","Extension trait that adds convenience methods to the `u32` type"]]});

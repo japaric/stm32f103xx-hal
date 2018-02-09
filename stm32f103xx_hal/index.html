@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `stm32f103xx_hal` crate.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, stm32f103xx_hal">
+
+    <title>stm32f103xx_hal - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../dark.css">
+    <link rel="stylesheet" type="text/css" href="../main.css" id="themeStyle">
+    <script src="../storage.js"></script>
+    
+
+    
+    
+</head>
+<body class="rustdoc mod">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
+        
+        <p class='location'>Crate stm32f103xx_hal</p><div class="sidebar-elems"><div class="block items"><ul><li><a href="#reexports">Re-exports</a></li><li><a href="#modules">Modules</a></li></ul></div><p class='location'></p><script>window.sidebarCurrent = {name: 'stm32f103xx_hal', ty: 'mod', relpath: '../'};</script></div>
+    </nav>
+
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../theme.js"></script>
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Crate <a class="mod" href=''>stm32f103xx_hal</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../src/stm32f103xx_hal/lib.rs.html#1-62' title='goto source code'>[src]</a></span></h1>
+<div class='docblock'><p>HAL for the STM32F103xx family of microcontrollers</p>
+<p>This is an implementation of the <a href="https://crates.io/crates/embedded-hal"><code>embedded-hal</code></a> traits for the STM32F103xx family of
+microcontrollers.</p>
+<h1 id="usage" class="section-header"><a href="#usage">Usage</a></h1>
+<ul>
+<li>Trying out the examples</li>
+</ul>
+<pre><code class="language-text">$ git clone https://github.com/japaric/stm32f103xx-hal
+
+# on another terminal
+$ openocd -f interface/$INTERFACE.cfg -f target/stm32f1x.cfg
+
+# flash and debug the &quot;Hello, world&quot; example
+# NOTE examples assume 64KB of Flash and 20KB of RAM; you can tweak layout in memory.x
+$ cd stm32f103xx-hal
+$ xargo run --example hello
+</code></pre>
+<ul>
+<li>Building an application (binary crate)</li>
+</ul>
+<p>Follow the <a href="https://docs.rs/cortex-m-quickstart/%7E0.2.3">cortex-m-quickstart</a> instructions and add this crate as a dependency in step number
+5 and make sure you enable the &quot;rt&quot; Cargo feature of this crate.</p>
+<h1 id="examples" class="section-header"><a href="#examples">Examples</a></h1>
+<p>See the <a href="examples/index.html">examples</a> module.</p>
+</div><h2 id='reexports' class='section-header'><a href="#reexports">Re-exports</a></h2>
+<table><tr><td><code>pub extern crate <a class="mod" href="../stm32f103xx/index.html" title="mod stm32f103xx">stm32f103xx</a>;</code></td></tr></table><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="afio/index.html"
+                                  title='mod stm32f103xx_hal::afio'>afio</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="bb/index.html"
+                                  title='mod stm32f103xx_hal::bb'>bb</a></td>
+                           <td class='docblock-short'>
+                                <p>Bit banding</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="delay/index.html"
+                                  title='mod stm32f103xx_hal::delay'>delay</a></td>
+                           <td class='docblock-short'>
+                                <p>Delays</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="dma/index.html"
+                                  title='mod stm32f103xx_hal::dma'>dma</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="examples/index.html"
+                                  title='mod stm32f103xx_hal::examples'>examples</a></td>
+                           <td class='docblock-short'>
+                                <p>Examples</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="flash/index.html"
+                                  title='mod stm32f103xx_hal::flash'>flash</a></td>
+                           <td class='docblock-short'>
+                                <p>Flash memory</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="gpio/index.html"
+                                  title='mod stm32f103xx_hal::gpio'>gpio</a></td>
+                           <td class='docblock-short'>
+                                <p>General Purpose Input / Output</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="prelude/index.html"
+                                  title='mod stm32f103xx_hal::prelude'>prelude</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="pwm/index.html"
+                                  title='mod stm32f103xx_hal::pwm'>pwm</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="qei/index.html"
+                                  title='mod stm32f103xx_hal::qei'>qei</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="rcc/index.html"
+                                  title='mod stm32f103xx_hal::rcc'>rcc</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="serial/index.html"
+                                  title='mod stm32f103xx_hal::serial'>serial</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="spi/index.html"
+                                  title='mod stm32f103xx_hal::spi'>spi</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="time/index.html"
+                                  title='mod stm32f103xx_hal::time'>time</a></td>
+                           <td class='docblock-short'>
+                                <p>Time units</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="timer/index.html"
+                                  title='mod stm32f103xx_hal::timer'>timer</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr></table></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt><kbd>?</kbd></dt>
+                    <dd>Show this help dialog</dd>
+                    <dt><kbd>S</kbd></dt>
+                    <dd>Focus the search field</dd>
+                    <dt><kbd>↑</kbd></dt>
+                    <dd>Move up in search results</dd>
+                    <dt><kbd>↓</kbd></dt>
+                    <dd>Move down in search results</dd>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
+                    <dd>Go to active search result</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "stm32f103xx_hal";
+    </script>
+    <script src="../main.js"></script>
+    <script defer src="../search-index.js"></script>
+</body>
+</html>

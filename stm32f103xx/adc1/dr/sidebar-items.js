@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["ADC2DATAR","Value of the field"],["DATAR","Value of the field"],["R","Value read from the register"]]});

@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `fsmc` mod in crate `stm32f103xx`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, fsmc">
+
+    <title>stm32f103xx::fsmc - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css" id="themeStyle">
+    <script src="../../storage.js"></script>
+    
+
+    
+    
+</head>
+<body class="rustdoc mod">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
+        
+        <p class='location'>Module fsmc</p><div class="sidebar-elems"><div class="block items"><ul><li><a href="#modules">Modules</a></li><li><a href="#structs">Structs</a></li></ul></div><p class='location'><a href='../index.html'>stm32f103xx</a></p><script>window.sidebarCurrent = {name: 'fsmc', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script></div>
+    </nav>
+
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../theme.js"></script>
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Module <a href='../index.html'>stm32f103xx</a>::<wbr><a class="mod" href=''>fsmc</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../src/stm32f103xx/lib.rs.html#327-11003' title='goto source code'>[src]</a></span></h1>
+<div class='docblock'><p>Flexible static memory controller</p>
+</div><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="bcr1/index.html"
+                                  title='mod stm32f103xx::fsmc::bcr1'>bcr1</a></td>
+                           <td class='docblock-short'>
+                                <p>SRAM/NOR-Flash chip-select control register 1</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="bcr2/index.html"
+                                  title='mod stm32f103xx::fsmc::bcr2'>bcr2</a></td>
+                           <td class='docblock-short'>
+                                <p>SRAM/NOR-Flash chip-select control register 2</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="bcr3/index.html"
+                                  title='mod stm32f103xx::fsmc::bcr3'>bcr3</a></td>
+                           <td class='docblock-short'>
+                                <p>SRAM/NOR-Flash chip-select control register 3</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="bcr4/index.html"
+                                  title='mod stm32f103xx::fsmc::bcr4'>bcr4</a></td>
+                           <td class='docblock-short'>
+                                <p>SRAM/NOR-Flash chip-select control register 4</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="btr1/index.html"
+                                  title='mod stm32f103xx::fsmc::btr1'>btr1</a></td>
+                           <td class='docblock-short'>
+                                <p>SRAM/NOR-Flash chip-select timing register 1</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="btr2/index.html"
+                                  title='mod stm32f103xx::fsmc::btr2'>btr2</a></td>
+                           <td class='docblock-short'>
+                                <p>SRAM/NOR-Flash chip-select timing register 2</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="btr3/index.html"
+                                  title='mod stm32f103xx::fsmc::btr3'>btr3</a></td>
+                           <td class='docblock-short'>
+                                <p>SRAM/NOR-Flash chip-select timing register 3</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="btr4/index.html"
+                                  title='mod stm32f103xx::fsmc::btr4'>btr4</a></td>
+                           <td class='docblock-short'>
+                                <p>SRAM/NOR-Flash chip-select timing register 4</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="bwtr1/index.html"
+                                  title='mod stm32f103xx::fsmc::bwtr1'>bwtr1</a></td>
+                           <td class='docblock-short'>
+                                <p>SRAM/NOR-Flash write timing registers 1</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="bwtr2/index.html"
+                                  title='mod stm32f103xx::fsmc::bwtr2'>bwtr2</a></td>
+                           <td class='docblock-short'>
+                                <p>SRAM/NOR-Flash write timing registers 2</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="bwtr3/index.html"
+                                  title='mod stm32f103xx::fsmc::bwtr3'>bwtr3</a></td>
+                           <td class='docblock-short'>
+                                <p>SRAM/NOR-Flash write timing registers 3</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="bwtr4/index.html"
+                                  title='mod stm32f103xx::fsmc::bwtr4'>bwtr4</a></td>
+                           <td class='docblock-short'>
+                                <p>SRAM/NOR-Flash write timing registers 4</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="eccr2/index.html"
+                                  title='mod stm32f103xx::fsmc::eccr2'>eccr2</a></td>
+                           <td class='docblock-short'>
+                                <p>ECC result register 2</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="eccr3/index.html"
+                                  title='mod stm32f103xx::fsmc::eccr3'>eccr3</a></td>
+                           <td class='docblock-short'>
+                                <p>ECC result register 3</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="patt2/index.html"
+                                  title='mod stm32f103xx::fsmc::patt2'>patt2</a></td>
+                           <td class='docblock-short'>
+                                <p>Attribute memory space timing register 2</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="patt3/index.html"
+                                  title='mod stm32f103xx::fsmc::patt3'>patt3</a></td>
+                           <td class='docblock-short'>
+                                <p>Attribute memory space timing register 3</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="patt4/index.html"
+                                  title='mod stm32f103xx::fsmc::patt4'>patt4</a></td>
+                           <td class='docblock-short'>
+                                <p>Attribute memory space timing register 4</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="pcr2/index.html"
+                                  title='mod stm32f103xx::fsmc::pcr2'>pcr2</a></td>
+                           <td class='docblock-short'>
+                                <p>PC Card/NAND Flash control register 2</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="pcr3/index.html"
+                                  title='mod stm32f103xx::fsmc::pcr3'>pcr3</a></td>
+                           <td class='docblock-short'>
+                                <p>PC Card/NAND Flash control register 3</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="pcr4/index.html"
+                                  title='mod stm32f103xx::fsmc::pcr4'>pcr4</a></td>
+                           <td class='docblock-short'>
+                                <p>PC Card/NAND Flash control register 4</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="pio4/index.html"
+                                  title='mod stm32f103xx::fsmc::pio4'>pio4</a></td>
+                           <td class='docblock-short'>
+                                <p>I/O space timing register 4</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="pmem2/index.html"
+                                  title='mod stm32f103xx::fsmc::pmem2'>pmem2</a></td>
+                           <td class='docblock-short'>
+                                <p>Common memory space timing register 2</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="pmem3/index.html"
+                                  title='mod stm32f103xx::fsmc::pmem3'>pmem3</a></td>
+                           <td class='docblock-short'>
+                                <p>Common memory space timing register 3</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="pmem4/index.html"
+                                  title='mod stm32f103xx::fsmc::pmem4'>pmem4</a></td>
+                           <td class='docblock-short'>
+                                <p>Common memory space timing register 4</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="sr2/index.html"
+                                  title='mod stm32f103xx::fsmc::sr2'>sr2</a></td>
+                           <td class='docblock-short'>
+                                <p>FIFO status and interrupt register 2</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="sr3/index.html"
+                                  title='mod stm32f103xx::fsmc::sr3'>sr3</a></td>
+                           <td class='docblock-short'>
+                                <p>FIFO status and interrupt register 3</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="sr4/index.html"
+                                  title='mod stm32f103xx::fsmc::sr4'>sr4</a></td>
+                           <td class='docblock-short'>
+                                <p>FIFO status and interrupt register 4</p>
+
+                           </td>
+                       </tr></table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.BCR1.html"
+                                  title='struct stm32f103xx::fsmc::BCR1'>BCR1</a></td>
+                           <td class='docblock-short'>
+                                <p>SRAM/NOR-Flash chip-select control register 1</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.BCR2.html"
+                                  title='struct stm32f103xx::fsmc::BCR2'>BCR2</a></td>
+                           <td class='docblock-short'>
+                                <p>SRAM/NOR-Flash chip-select control register 2</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.BCR3.html"
+                                  title='struct stm32f103xx::fsmc::BCR3'>BCR3</a></td>
+                           <td class='docblock-short'>
+                                <p>SRAM/NOR-Flash chip-select control register 3</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.BCR4.html"
+                                  title='struct stm32f103xx::fsmc::BCR4'>BCR4</a></td>
+                           <td class='docblock-short'>
+                                <p>SRAM/NOR-Flash chip-select control register 4</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.BTR1.html"
+                                  title='struct stm32f103xx::fsmc::BTR1'>BTR1</a></td>
+                           <td class='docblock-short'>
+                                <p>SRAM/NOR-Flash chip-select timing register 1</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.BTR2.html"
+                                  title='struct stm32f103xx::fsmc::BTR2'>BTR2</a></td>
+                           <td class='docblock-short'>
+                                <p>SRAM/NOR-Flash chip-select timing register 2</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.BTR3.html"
+                                  title='struct stm32f103xx::fsmc::BTR3'>BTR3</a></td>
+                           <td class='docblock-short'>
+                                <p>SRAM/NOR-Flash chip-select timing register 3</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.BTR4.html"
+                                  title='struct stm32f103xx::fsmc::BTR4'>BTR4</a></td>
+                           <td class='docblock-short'>
+                                <p>SRAM/NOR-Flash chip-select timing register 4</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.BWTR1.html"
+                                  title='struct stm32f103xx::fsmc::BWTR1'>BWTR1</a></td>
+                           <td class='docblock-short'>
+                                <p>SRAM/NOR-Flash write timing registers 1</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.BWTR2.html"
+                                  title='struct stm32f103xx::fsmc::BWTR2'>BWTR2</a></td>
+                           <td class='docblock-short'>
+                                <p>SRAM/NOR-Flash write timing registers 2</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.BWTR3.html"
+                                  title='struct stm32f103xx::fsmc::BWTR3'>BWTR3</a></td>
+                           <td class='docblock-short'>
+                                <p>SRAM/NOR-Flash write timing registers 3</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.BWTR4.html"
+                                  title='struct stm32f103xx::fsmc::BWTR4'>BWTR4</a></td>
+                           <td class='docblock-short'>
+                                <p>SRAM/NOR-Flash write timing registers 4</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.ECCR2.html"
+                                  title='struct stm32f103xx::fsmc::ECCR2'>ECCR2</a></td>
+                           <td class='docblock-short'>
+                                <p>ECC result register 2</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.ECCR3.html"
+                                  title='struct stm32f103xx::fsmc::ECCR3'>ECCR3</a></td>
+                           <td class='docblock-short'>
+                                <p>ECC result register 3</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.PATT2.html"
+                                  title='struct stm32f103xx::fsmc::PATT2'>PATT2</a></td>
+                           <td class='docblock-short'>
+                                <p>Attribute memory space timing register 2</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.PATT3.html"
+                                  title='struct stm32f103xx::fsmc::PATT3'>PATT3</a></td>
+                           <td class='docblock-short'>
+                                <p>Attribute memory space timing register 3</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.PATT4.html"
+                                  title='struct stm32f103xx::fsmc::PATT4'>PATT4</a></td>
+                           <td class='docblock-short'>
+                                <p>Attribute memory space timing register 4</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.PCR2.html"
+                                  title='struct stm32f103xx::fsmc::PCR2'>PCR2</a></td>
+                           <td class='docblock-short'>
+                                <p>PC Card/NAND Flash control register 2</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.PCR3.html"
+                                  title='struct stm32f103xx::fsmc::PCR3'>PCR3</a></td>
+                           <td class='docblock-short'>
+                                <p>PC Card/NAND Flash control register 3</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.PCR4.html"
+                                  title='struct stm32f103xx::fsmc::PCR4'>PCR4</a></td>
+                           <td class='docblock-short'>
+                                <p>PC Card/NAND Flash control register 4</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.PIO4.html"
+                                  title='struct stm32f103xx::fsmc::PIO4'>PIO4</a></td>
+                           <td class='docblock-short'>
+                                <p>I/O space timing register 4</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.PMEM2.html"
+                                  title='struct stm32f103xx::fsmc::PMEM2'>PMEM2</a></td>
+                           <td class='docblock-short'>
+                                <p>Common memory space timing register 2</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.PMEM3.html"
+                                  title='struct stm32f103xx::fsmc::PMEM3'>PMEM3</a></td>
+                           <td class='docblock-short'>
+                                <p>Common memory space timing register 3</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.PMEM4.html"
+                                  title='struct stm32f103xx::fsmc::PMEM4'>PMEM4</a></td>
+                           <td class='docblock-short'>
+                                <p>Common memory space timing register 4</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.RegisterBlock.html"
+                                  title='struct stm32f103xx::fsmc::RegisterBlock'>RegisterBlock</a></td>
+                           <td class='docblock-short'>
+                                <p>Register block</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.SR2.html"
+                                  title='struct stm32f103xx::fsmc::SR2'>SR2</a></td>
+                           <td class='docblock-short'>
+                                <p>FIFO status and interrupt register 2</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.SR3.html"
+                                  title='struct stm32f103xx::fsmc::SR3'>SR3</a></td>
+                           <td class='docblock-short'>
+                                <p>FIFO status and interrupt register 3</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.SR4.html"
+                                  title='struct stm32f103xx::fsmc::SR4'>SR4</a></td>
+                           <td class='docblock-short'>
+                                <p>FIFO status and interrupt register 4</p>
+
+                           </td>
+                       </tr></table></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt><kbd>?</kbd></dt>
+                    <dd>Show this help dialog</dd>
+                    <dt><kbd>S</kbd></dt>
+                    <dd>Focus the search field</dd>
+                    <dt><kbd>↑</kbd></dt>
+                    <dd>Move up in search results</dd>
+                    <dt><kbd>↓</kbd></dt>
+                    <dd>Move down in search results</dd>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
+                    <dd>Go to active search result</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../";
+        window.currentCrate = "stm32f103xx";
+    </script>
+    <script src="../../main.js"></script>
+    <script defer src="../../search-index.js"></script>
+</body>
+</html>

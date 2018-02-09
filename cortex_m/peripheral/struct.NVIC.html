@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `NVIC` struct in crate `cortex_m`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, NVIC">
+
+    <title>cortex_m::peripheral::NVIC - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css" id="themeStyle">
+    <script src="../../storage.js"></script>
+    
+
+    
+    
+</head>
+<body class="rustdoc struct">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
+        
+        <p class='location'>Struct NVIC</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#fields">Fields</a><div class="sidebar-links"><a href="#structfield.iser">iser</a><a href="#structfield.icer">icer</a><a href="#structfield.ispr">ispr</a><a href="#structfield.icpr">icpr</a><a href="#structfield.iabr">iabr</a><a href="#structfield.ipr">ipr</a></div><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.clear_pending">clear_pending</a><a href="#method.disable">disable</a><a href="#method.enable">enable</a><a href="#method.get_priority">get_priority</a><a href="#method.is_active">is_active</a><a href="#method.is_enabled">is_enabled</a><a href="#method.is_pending">is_pending</a><a href="#method.set_pending">set_pending</a><a href="#method.set_priority">set_priority</a></div></div><p class='location'><a href='../index.html'>cortex_m</a>::<wbr><a href='index.html'>peripheral</a></p><script>window.sidebarCurrent = {name: 'NVIC', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
+    </nav>
+
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../theme.js"></script>
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>cortex_m</a>::<wbr><a href='index.html'>peripheral</a>::<wbr><a class="struct" href=''>NVIC</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../src/cortex_m/peripheral/mod.rs.html#303-321' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'><div class="docblock attributes">#[repr(C)]
+</div>pub struct NVIC {
+    pub iser: [<a class="struct" href="../../volatile_register/struct.RW.html" title="struct volatile_register::RW">RW</a>&lt;u32&gt;; 8],
+    pub icer: [<a class="struct" href="../../volatile_register/struct.RW.html" title="struct volatile_register::RW">RW</a>&lt;u32&gt;; 8],
+    pub ispr: [<a class="struct" href="../../volatile_register/struct.RW.html" title="struct volatile_register::RW">RW</a>&lt;u32&gt;; 8],
+    pub icpr: [<a class="struct" href="../../volatile_register/struct.RW.html" title="struct volatile_register::RW">RW</a>&lt;u32&gt;; 8],
+    pub iabr: [<a class="struct" href="../../volatile_register/struct.RO.html" title="struct volatile_register::RO">RO</a>&lt;u32&gt;; 8],
+    pub ipr: [<a class="struct" href="../../volatile_register/struct.RW.html" title="struct volatile_register::RW">RW</a>&lt;u8&gt;; 240],
+    // some fields omitted
+}</pre><div class='docblock'><p>NVIC register block</p>
+</div><h2 id='fields' class='fields small-section-header'>
+                       Fields<a href='#fields' class='anchor'></a></h2><span id="structfield.iser" class="structfield small-section-header">
+                           <a href="#structfield.iser" class="anchor field"></a>
+                           <span id="iser.v" class='invisible'>
+                           <code>iser: [<a class="struct" href="../../volatile_register/struct.RW.html" title="struct volatile_register::RW">RW</a>&lt;u32&gt;; 8]</code>
+                           </span></span><div class='docblock'><p>Interrupt Set-Enable</p>
+</div><span id="structfield.icer" class="structfield small-section-header">
+                           <a href="#structfield.icer" class="anchor field"></a>
+                           <span id="icer.v" class='invisible'>
+                           <code>icer: [<a class="struct" href="../../volatile_register/struct.RW.html" title="struct volatile_register::RW">RW</a>&lt;u32&gt;; 8]</code>
+                           </span></span><div class='docblock'><p>Interrupt Clear-Enable</p>
+</div><span id="structfield.ispr" class="structfield small-section-header">
+                           <a href="#structfield.ispr" class="anchor field"></a>
+                           <span id="ispr.v" class='invisible'>
+                           <code>ispr: [<a class="struct" href="../../volatile_register/struct.RW.html" title="struct volatile_register::RW">RW</a>&lt;u32&gt;; 8]</code>
+                           </span></span><div class='docblock'><p>Interrupt Set-Pending</p>
+</div><span id="structfield.icpr" class="structfield small-section-header">
+                           <a href="#structfield.icpr" class="anchor field"></a>
+                           <span id="icpr.v" class='invisible'>
+                           <code>icpr: [<a class="struct" href="../../volatile_register/struct.RW.html" title="struct volatile_register::RW">RW</a>&lt;u32&gt;; 8]</code>
+                           </span></span><div class='docblock'><p>Interrupt Clear-Pending</p>
+</div><span id="structfield.iabr" class="structfield small-section-header">
+                           <a href="#structfield.iabr" class="anchor field"></a>
+                           <span id="iabr.v" class='invisible'>
+                           <code>iabr: [<a class="struct" href="../../volatile_register/struct.RO.html" title="struct volatile_register::RO">RO</a>&lt;u32&gt;; 8]</code>
+                           </span></span><div class='docblock'><p>Interrupt Active Bit</p>
+</div><span id="structfield.ipr" class="structfield small-section-header">
+                           <a href="#structfield.ipr" class="anchor field"></a>
+                           <span id="ipr.v" class='invisible'>
+                           <code>ipr: [<a class="struct" href="../../volatile_register/struct.RW.html" title="struct volatile_register::RW">RW</a>&lt;u8&gt;; 240]</code>
+                           </span></span><div class='docblock'><p>Interrupt Priority</p>
+</div>
+                    <h2 id='methods' class='small-section-header'>
+                      Methods<a href='#methods' class='anchor'></a>
+                    </h2>
+                <h3 id='impl' class='impl'><span class='in-band'><code>impl <a class="struct" href="../../cortex_m/peripheral/struct.NVIC.html" title="struct cortex_m::peripheral::NVIC">NVIC</a></code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/cortex_m/peripheral/mod.rs.html#323-423' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.clear_pending' class="method"><span id='clear_pending.v' class='invisible'><code>pub fn <a href='#method.clear_pending' class='fnname'>clear_pending</a>&lt;I&gt;(&amp;self, interrupt: I) <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;I: <a class="trait" href="../../cortex_m/interrupt/trait.Nr.html" title="trait cortex_m::interrupt::Nr">Nr</a>,&nbsp;</span></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/cortex_m/peripheral/mod.rs.html#325-332' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Clears <code>interrupt</code>'s pending state</p>
+</div><h4 id='method.disable' class="method"><span id='disable.v' class='invisible'><code>pub fn <a href='#method.disable' class='fnname'>disable</a>&lt;I&gt;(&amp;self, interrupt: I) <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;I: <a class="trait" href="../../cortex_m/interrupt/trait.Nr.html" title="trait cortex_m::interrupt::Nr">Nr</a>,&nbsp;</span></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/cortex_m/peripheral/mod.rs.html#335-342' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Disables <code>interrupt</code></p>
+</div><h4 id='method.enable' class="method"><span id='enable.v' class='invisible'><code>pub fn <a href='#method.enable' class='fnname'>enable</a>&lt;I&gt;(&amp;self, interrupt: I) <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;I: <a class="trait" href="../../cortex_m/interrupt/trait.Nr.html" title="trait cortex_m::interrupt::Nr">Nr</a>,&nbsp;</span></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/cortex_m/peripheral/mod.rs.html#345-352' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Enables <code>interrupt</code></p>
+</div><h4 id='method.get_priority' class="method"><span id='get_priority.v' class='invisible'><code>pub fn <a href='#method.get_priority' class='fnname'>get_priority</a>&lt;I&gt;(&amp;self, interrupt: I) -&gt; u8 <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;I: <a class="trait" href="../../cortex_m/interrupt/trait.Nr.html" title="trait cortex_m::interrupt::Nr">Nr</a>,&nbsp;</span></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/cortex_m/peripheral/mod.rs.html#359-366' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Gets the &quot;priority&quot; of <code>interrupt</code></p>
+<p>NOTE NVIC encodes priority in the highest bits of a byte so values like
+<code>1</code> and <code>2</code> have the same priority. Also for NVIC priorities, a lower
+value (e.g. <code>16</code>) has higher priority than a larger value (e.g. <code>32</code>).</p>
+</div><h4 id='method.is_active' class="method"><span id='is_active.v' class='invisible'><code>pub fn <a href='#method.is_active' class='fnname'>is_active</a>&lt;I&gt;(&amp;self, interrupt: I) -&gt; bool <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;I: <a class="trait" href="../../cortex_m/interrupt/trait.Nr.html" title="trait cortex_m::interrupt::Nr">Nr</a>,&nbsp;</span></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/cortex_m/peripheral/mod.rs.html#369-377' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Is <code>interrupt</code> active or pre-empted and stacked</p>
+</div><h4 id='method.is_enabled' class="method"><span id='is_enabled.v' class='invisible'><code>pub fn <a href='#method.is_enabled' class='fnname'>is_enabled</a>&lt;I&gt;(&amp;self, interrupt: I) -&gt; bool <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;I: <a class="trait" href="../../cortex_m/interrupt/trait.Nr.html" title="trait cortex_m::interrupt::Nr">Nr</a>,&nbsp;</span></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/cortex_m/peripheral/mod.rs.html#380-388' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Checks if <code>interrupt</code> is enabled</p>
+</div><h4 id='method.is_pending' class="method"><span id='is_pending.v' class='invisible'><code>pub fn <a href='#method.is_pending' class='fnname'>is_pending</a>&lt;I&gt;(&amp;self, interrupt: I) -&gt; bool <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;I: <a class="trait" href="../../cortex_m/interrupt/trait.Nr.html" title="trait cortex_m::interrupt::Nr">Nr</a>,&nbsp;</span></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/cortex_m/peripheral/mod.rs.html#391-399' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Checks if <code>interrupt</code> is pending</p>
+</div><h4 id='method.set_pending' class="method"><span id='set_pending.v' class='invisible'><code>pub fn <a href='#method.set_pending' class='fnname'>set_pending</a>&lt;I&gt;(&amp;self, interrupt: I) <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;I: <a class="trait" href="../../cortex_m/interrupt/trait.Nr.html" title="trait cortex_m::interrupt::Nr">Nr</a>,&nbsp;</span></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/cortex_m/peripheral/mod.rs.html#402-409' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Forces <code>interrupt</code> into pending state</p>
+</div><h4 id='method.set_priority' class="method"><span id='set_priority.v' class='invisible'><code>pub unsafe fn <a href='#method.set_priority' class='fnname'>set_priority</a>&lt;I&gt;(&amp;self, interrupt: I, prio: u8) <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;I: <a class="trait" href="../../cortex_m/interrupt/trait.Nr.html" title="trait cortex_m::interrupt::Nr">Nr</a>,&nbsp;</span></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/cortex_m/peripheral/mod.rs.html#415-422' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Sets the &quot;priority&quot; of <code>interrupt</code> to <code>prio</code></p>
+<p>NOTE See <code>get_priority</code> method for an explanation of how NVIC priorities
+work.</p>
+</div></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt><kbd>?</kbd></dt>
+                    <dd>Show this help dialog</dd>
+                    <dt><kbd>S</kbd></dt>
+                    <dd>Focus the search field</dd>
+                    <dt><kbd>↑</kbd></dt>
+                    <dd>Move up in search results</dd>
+                    <dt><kbd>↓</kbd></dt>
+                    <dd>Move down in search results</dd>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
+                    <dd>Go to active search result</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../";
+        window.currentCrate = "cortex_m";
+    </script>
+    <script src="../../main.js"></script>
+    <script defer src="../../search-index.js"></script>
+</body>
+</html>

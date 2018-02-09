@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["ACR","Opaque ACR register"],["Parts","Constrained FLASH peripheral"]],"trait":[["FlashExt","Extension trait to constrain the FLASH peripheral"]]});

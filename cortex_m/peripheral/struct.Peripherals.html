@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `Peripherals` struct in crate `cortex_m`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, Peripherals">
+
+    <title>cortex_m::peripheral::Peripherals - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css" id="themeStyle">
+    <script src="../../storage.js"></script>
+    
+
+    
+    
+</head>
+<body class="rustdoc struct">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
+        
+        <p class='location'>Struct Peripherals</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#fields">Fields</a><div class="sidebar-links"><a href="#structfield.CBP">CBP</a><a href="#structfield.CPUID">CPUID</a><a href="#structfield.DCB">DCB</a><a href="#structfield.DWT">DWT</a><a href="#structfield.FPB">FPB</a><a href="#structfield.ITM">ITM</a><a href="#structfield.MPU">MPU</a><a href="#structfield.NVIC">NVIC</a><a href="#structfield.SCB">SCB</a><a href="#structfield.SYST">SYST</a><a href="#structfield.TPIU">TPIU</a></div><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.take">take</a><a href="#method.steal">steal</a></div></div><p class='location'><a href='../index.html'>cortex_m</a>::<wbr><a href='index.html'>peripheral</a></p><script>window.sidebarCurrent = {name: 'Peripherals', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
+    </nav>
+
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../theme.js"></script>
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>cortex_m</a>::<wbr><a href='index.html'>peripheral</a>::<wbr><a class="struct" href=''>Peripherals</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../src/cortex_m/peripheral/mod.rs.html#113-143' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct Peripherals {
+    pub CBP: <a class="struct" href="../../cortex_m/peripheral/struct.CBP.html" title="struct cortex_m::peripheral::CBP">CBP</a>,
+    pub CPUID: <a class="struct" href="../../cortex_m/peripheral/struct.CPUID.html" title="struct cortex_m::peripheral::CPUID">CPUID</a>,
+    pub DCB: <a class="struct" href="../../cortex_m/peripheral/struct.DCB.html" title="struct cortex_m::peripheral::DCB">DCB</a>,
+    pub DWT: <a class="struct" href="../../cortex_m/peripheral/struct.DWT.html" title="struct cortex_m::peripheral::DWT">DWT</a>,
+    pub FPB: <a class="struct" href="../../cortex_m/peripheral/struct.FPB.html" title="struct cortex_m::peripheral::FPB">FPB</a>,
+    pub ITM: <a class="struct" href="../../cortex_m/peripheral/struct.ITM.html" title="struct cortex_m::peripheral::ITM">ITM</a>,
+    pub MPU: <a class="struct" href="../../cortex_m/peripheral/struct.MPU.html" title="struct cortex_m::peripheral::MPU">MPU</a>,
+    pub NVIC: <a class="struct" href="../../cortex_m/peripheral/struct.NVIC.html" title="struct cortex_m::peripheral::NVIC">NVIC</a>,
+    pub SCB: <a class="struct" href="../../cortex_m/peripheral/struct.SCB.html" title="struct cortex_m::peripheral::SCB">SCB</a>,
+    pub SYST: <a class="struct" href="../../cortex_m/peripheral/struct.SYST.html" title="struct cortex_m::peripheral::SYST">SYST</a>,
+    pub TPIU: <a class="struct" href="../../cortex_m/peripheral/struct.TPIU.html" title="struct cortex_m::peripheral::TPIU">TPIU</a>,
+}</pre><div class='docblock'><p>Core peripherals</p>
+</div><h2 id='fields' class='fields small-section-header'>
+                       Fields<a href='#fields' class='anchor'></a></h2><span id="structfield.CBP" class="structfield small-section-header">
+                           <a href="#structfield.CBP" class="anchor field"></a>
+                           <span id="CBP.v" class='invisible'>
+                           <code>CBP: <a class="struct" href="../../cortex_m/peripheral/struct.CBP.html" title="struct cortex_m::peripheral::CBP">CBP</a></code>
+                           </span></span><div class='docblock'><p>Cache and branch predictor maintenance operations</p>
+</div><span id="structfield.CPUID" class="structfield small-section-header">
+                           <a href="#structfield.CPUID" class="anchor field"></a>
+                           <span id="CPUID.v" class='invisible'>
+                           <code>CPUID: <a class="struct" href="../../cortex_m/peripheral/struct.CPUID.html" title="struct cortex_m::peripheral::CPUID">CPUID</a></code>
+                           </span></span><div class='docblock'><p>CPUID</p>
+</div><span id="structfield.DCB" class="structfield small-section-header">
+                           <a href="#structfield.DCB" class="anchor field"></a>
+                           <span id="DCB.v" class='invisible'>
+                           <code>DCB: <a class="struct" href="../../cortex_m/peripheral/struct.DCB.html" title="struct cortex_m::peripheral::DCB">DCB</a></code>
+                           </span></span><div class='docblock'><p>Debug Control Block</p>
+</div><span id="structfield.DWT" class="structfield small-section-header">
+                           <a href="#structfield.DWT" class="anchor field"></a>
+                           <span id="DWT.v" class='invisible'>
+                           <code>DWT: <a class="struct" href="../../cortex_m/peripheral/struct.DWT.html" title="struct cortex_m::peripheral::DWT">DWT</a></code>
+                           </span></span><div class='docblock'><p>Data Watchpoint and Trace unit</p>
+</div><span id="structfield.FPB" class="structfield small-section-header">
+                           <a href="#structfield.FPB" class="anchor field"></a>
+                           <span id="FPB.v" class='invisible'>
+                           <code>FPB: <a class="struct" href="../../cortex_m/peripheral/struct.FPB.html" title="struct cortex_m::peripheral::FPB">FPB</a></code>
+                           </span></span><div class='docblock'><p>Flash Patch and Breakpoint unit</p>
+</div><span id="structfield.ITM" class="structfield small-section-header">
+                           <a href="#structfield.ITM" class="anchor field"></a>
+                           <span id="ITM.v" class='invisible'>
+                           <code>ITM: <a class="struct" href="../../cortex_m/peripheral/struct.ITM.html" title="struct cortex_m::peripheral::ITM">ITM</a></code>
+                           </span></span><div class='docblock'><p>Instrumentation Trace Macrocell</p>
+</div><span id="structfield.MPU" class="structfield small-section-header">
+                           <a href="#structfield.MPU" class="anchor field"></a>
+                           <span id="MPU.v" class='invisible'>
+                           <code>MPU: <a class="struct" href="../../cortex_m/peripheral/struct.MPU.html" title="struct cortex_m::peripheral::MPU">MPU</a></code>
+                           </span></span><div class='docblock'><p>Memory Protection Unit</p>
+</div><span id="structfield.NVIC" class="structfield small-section-header">
+                           <a href="#structfield.NVIC" class="anchor field"></a>
+                           <span id="NVIC.v" class='invisible'>
+                           <code>NVIC: <a class="struct" href="../../cortex_m/peripheral/struct.NVIC.html" title="struct cortex_m::peripheral::NVIC">NVIC</a></code>
+                           </span></span><div class='docblock'><p>Nested Vector Interrupt Controller</p>
+</div><span id="structfield.SCB" class="structfield small-section-header">
+                           <a href="#structfield.SCB" class="anchor field"></a>
+                           <span id="SCB.v" class='invisible'>
+                           <code>SCB: <a class="struct" href="../../cortex_m/peripheral/struct.SCB.html" title="struct cortex_m::peripheral::SCB">SCB</a></code>
+                           </span></span><div class='docblock'><p>System Control Block</p>
+</div><span id="structfield.SYST" class="structfield small-section-header">
+                           <a href="#structfield.SYST" class="anchor field"></a>
+                           <span id="SYST.v" class='invisible'>
+                           <code>SYST: <a class="struct" href="../../cortex_m/peripheral/struct.SYST.html" title="struct cortex_m::peripheral::SYST">SYST</a></code>
+                           </span></span><div class='docblock'><p>SysTick: System Timer</p>
+</div><span id="structfield.TPIU" class="structfield small-section-header">
+                           <a href="#structfield.TPIU" class="anchor field"></a>
+                           <span id="TPIU.v" class='invisible'>
+                           <code>TPIU: <a class="struct" href="../../cortex_m/peripheral/struct.TPIU.html" title="struct cortex_m::peripheral::TPIU">TPIU</a></code>
+                           </span></span><div class='docblock'><p>Trace Port Interface Unit;</p>
+</div>
+                    <h2 id='methods' class='small-section-header'>
+                      Methods<a href='#methods' class='anchor'></a>
+                    </h2>
+                <h3 id='impl' class='impl'><span class='in-band'><code>impl <a class="struct" href="../../cortex_m/peripheral/struct.Peripherals.html" title="struct cortex_m::peripheral::Peripherals">Peripherals</a></code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/cortex_m/peripheral/mod.rs.html#150-213' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.take' class="method"><span id='take.v' class='invisible'><code>pub fn <a href='#method.take' class='fnname'>take</a>() -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;Self&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/cortex_m/peripheral/mod.rs.html#153-161' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Returns all the core peripherals <em>once</em></p>
+</div><h4 id='method.steal' class="method"><span id='steal.v' class='invisible'><code>pub unsafe fn <a href='#method.steal' class='fnname'>steal</a>() -&gt; Self</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/cortex_m/peripheral/mod.rs.html#164-212' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Unchecked version of <code>Peripherals::take</code></p>
+</div></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt><kbd>?</kbd></dt>
+                    <dd>Show this help dialog</dd>
+                    <dt><kbd>S</kbd></dt>
+                    <dd>Focus the search field</dd>
+                    <dt><kbd>↑</kbd></dt>
+                    <dd>Move up in search results</dd>
+                    <dt><kbd>↓</kbd></dt>
+                    <dd>Move down in search results</dd>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
+                    <dd>Go to active search result</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../";
+        window.currentCrate = "cortex_m";
+    </script>
+    <script src="../../main.js"></script>
+    <script defer src="../../search-index.js"></script>
+</body>
+</html>

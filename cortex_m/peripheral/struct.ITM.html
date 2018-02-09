@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `ITM` struct in crate `cortex_m`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, ITM">
+
+    <title>cortex_m::peripheral::ITM - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css" id="themeStyle">
+    <script src="../../storage.js"></script>
+    
+
+    
+    
+</head>
+<body class="rustdoc struct">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
+        
+        <p class='location'>Struct ITM</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#fields">Fields</a><div class="sidebar-links"><a href="#structfield.stim">stim</a><a href="#structfield.ter">ter</a><a href="#structfield.tpr">tpr</a><a href="#structfield.tcr">tcr</a><a href="#structfield.lar">lar</a><a href="#structfield.lsr">lsr</a></div></div><p class='location'><a href='../index.html'>cortex_m</a>::<wbr><a href='index.html'>peripheral</a></p><script>window.sidebarCurrent = {name: 'ITM', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
+    </nav>
+
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../theme.js"></script>
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>cortex_m</a>::<wbr><a href='index.html'>peripheral</a>::<wbr><a class="struct" href=''>ITM</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../src/cortex_m/peripheral/mod.rs.html#228-245' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'><div class="docblock attributes">#[repr(C)]
+</div>pub struct ITM {
+    pub stim: [<a class="struct" href="../../cortex_m/peripheral/struct.Stim.html" title="struct cortex_m::peripheral::Stim">Stim</a>; 256],
+    pub ter: [<a class="struct" href="../../volatile_register/struct.RW.html" title="struct volatile_register::RW">RW</a>&lt;u32&gt;; 8],
+    pub tpr: <a class="struct" href="../../volatile_register/struct.RW.html" title="struct volatile_register::RW">RW</a>&lt;u32&gt;,
+    pub tcr: <a class="struct" href="../../volatile_register/struct.RW.html" title="struct volatile_register::RW">RW</a>&lt;u32&gt;,
+    pub lar: <a class="struct" href="../../volatile_register/struct.WO.html" title="struct volatile_register::WO">WO</a>&lt;u32&gt;,
+    pub lsr: <a class="struct" href="../../volatile_register/struct.RO.html" title="struct volatile_register::RO">RO</a>&lt;u32&gt;,
+    // some fields omitted
+}</pre><div class='docblock'><p>ITM register block</p>
+</div><h2 id='fields' class='fields small-section-header'>
+                       Fields<a href='#fields' class='anchor'></a></h2><span id="structfield.stim" class="structfield small-section-header">
+                           <a href="#structfield.stim" class="anchor field"></a>
+                           <span id="stim.v" class='invisible'>
+                           <code>stim: [<a class="struct" href="../../cortex_m/peripheral/struct.Stim.html" title="struct cortex_m::peripheral::Stim">Stim</a>; 256]</code>
+                           </span></span><div class='docblock'><p>Stimulus Port</p>
+</div><span id="structfield.ter" class="structfield small-section-header">
+                           <a href="#structfield.ter" class="anchor field"></a>
+                           <span id="ter.v" class='invisible'>
+                           <code>ter: [<a class="struct" href="../../volatile_register/struct.RW.html" title="struct volatile_register::RW">RW</a>&lt;u32&gt;; 8]</code>
+                           </span></span><div class='docblock'><p>Trace Enable</p>
+</div><span id="structfield.tpr" class="structfield small-section-header">
+                           <a href="#structfield.tpr" class="anchor field"></a>
+                           <span id="tpr.v" class='invisible'>
+                           <code>tpr: <a class="struct" href="../../volatile_register/struct.RW.html" title="struct volatile_register::RW">RW</a>&lt;u32&gt;</code>
+                           </span></span><div class='docblock'><p>Trace Privilege</p>
+</div><span id="structfield.tcr" class="structfield small-section-header">
+                           <a href="#structfield.tcr" class="anchor field"></a>
+                           <span id="tcr.v" class='invisible'>
+                           <code>tcr: <a class="struct" href="../../volatile_register/struct.RW.html" title="struct volatile_register::RW">RW</a>&lt;u32&gt;</code>
+                           </span></span><div class='docblock'><p>Trace Control</p>
+</div><span id="structfield.lar" class="structfield small-section-header">
+                           <a href="#structfield.lar" class="anchor field"></a>
+                           <span id="lar.v" class='invisible'>
+                           <code>lar: <a class="struct" href="../../volatile_register/struct.WO.html" title="struct volatile_register::WO">WO</a>&lt;u32&gt;</code>
+                           </span></span><div class='docblock'><p>Lock Access</p>
+</div><span id="structfield.lsr" class="structfield small-section-header">
+                           <a href="#structfield.lsr" class="anchor field"></a>
+                           <span id="lsr.v" class='invisible'>
+                           <code>lsr: <a class="struct" href="../../volatile_register/struct.RO.html" title="struct volatile_register::RO">RO</a>&lt;u32&gt;</code>
+                           </span></span><div class='docblock'><p>Lock Status</p>
+</div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt><kbd>?</kbd></dt>
+                    <dd>Show this help dialog</dd>
+                    <dt><kbd>S</kbd></dt>
+                    <dd>Focus the search field</dd>
+                    <dt><kbd>↑</kbd></dt>
+                    <dd>Move up in search results</dd>
+                    <dt><kbd>↓</kbd></dt>
+                    <dd>Move down in search results</dd>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
+                    <dd>Go to active search result</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../";
+        window.currentCrate = "cortex_m";
+    </script>
+    <script src="../../main.js"></script>
+    <script defer src="../../search-index.js"></script>
+</body>
+</html>

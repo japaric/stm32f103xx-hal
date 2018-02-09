@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `R` struct in crate `stm32f103xx`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, R">
+
+    <title>stm32f103xx::pwr::cr::R - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../../main.css" id="themeStyle">
+    <script src="../../../storage.js"></script>
+    
+
+    
+    
+</head>
+<body class="rustdoc struct">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
+        
+        <p class='location'>Struct R</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.bits">bits</a><a href="#method.lpds">lpds</a><a href="#method.pdds">pdds</a><a href="#method.cwuf">cwuf</a><a href="#method.csbf">csbf</a><a href="#method.pvde">pvde</a><a href="#method.pls">pls</a><a href="#method.dbp">dbp</a></div></div><p class='location'><a href='../../index.html'>stm32f103xx</a>::<wbr><a href='../index.html'>pwr</a>::<wbr><a href='index.html'>cr</a></p><script>window.sidebarCurrent = {name: 'R', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
+    </nav>
+
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../../theme.js"></script>
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../../index.html'>stm32f103xx</a>::<wbr><a href='../index.html'>pwr</a>::<wbr><a href='index.html'>cr</a>::<wbr><a class="struct" href=''>R</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#11039-11041' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct R { /* fields omitted */ }</pre><div class='docblock'><p>Value read from the register</p>
+</div>
+                    <h2 id='methods' class='small-section-header'>
+                      Methods<a href='#methods' class='anchor'></a>
+                    </h2>
+                <h3 id='impl' class='impl'><span class='in-band'><code>impl <a class="struct" href="../../../stm32f103xx/pwr/cr/struct.R.html" title="struct stm32f103xx::pwr::cr::R">R</a></code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#11372-11448' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.bits' class="method"><span id='bits.v' class='invisible'><code>pub fn <a href='#method.bits' class='fnname'>bits</a>(&amp;self) -&gt; u32</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#11375-11377' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Value of the register as raw bits</p>
+</div><h4 id='method.lpds' class="method"><span id='lpds.v' class='invisible'><code>pub fn <a href='#method.lpds' class='fnname'>lpds</a>(&amp;self) -&gt; <a class="struct" href="../../../stm32f103xx/pwr/cr/struct.LPDSR.html" title="struct stm32f103xx::pwr::cr::LPDSR">LPDSR</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#11380-11387' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 0 - Low Power Deep Sleep</p>
+</div><h4 id='method.pdds' class="method"><span id='pdds.v' class='invisible'><code>pub fn <a href='#method.pdds' class='fnname'>pdds</a>(&amp;self) -&gt; <a class="struct" href="../../../stm32f103xx/pwr/cr/struct.PDDSR.html" title="struct stm32f103xx::pwr::cr::PDDSR">PDDSR</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#11390-11397' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 1 - Power Down Deep Sleep</p>
+</div><h4 id='method.cwuf' class="method"><span id='cwuf.v' class='invisible'><code>pub fn <a href='#method.cwuf' class='fnname'>cwuf</a>(&amp;self) -&gt; <a class="struct" href="../../../stm32f103xx/pwr/cr/struct.CWUFR.html" title="struct stm32f103xx::pwr::cr::CWUFR">CWUFR</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#11400-11407' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 2 - Clear Wake-up Flag</p>
+</div><h4 id='method.csbf' class="method"><span id='csbf.v' class='invisible'><code>pub fn <a href='#method.csbf' class='fnname'>csbf</a>(&amp;self) -&gt; <a class="struct" href="../../../stm32f103xx/pwr/cr/struct.CSBFR.html" title="struct stm32f103xx::pwr::cr::CSBFR">CSBFR</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#11410-11417' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 3 - Clear STANDBY Flag</p>
+</div><h4 id='method.pvde' class="method"><span id='pvde.v' class='invisible'><code>pub fn <a href='#method.pvde' class='fnname'>pvde</a>(&amp;self) -&gt; <a class="struct" href="../../../stm32f103xx/pwr/cr/struct.PVDER.html" title="struct stm32f103xx::pwr::cr::PVDER">PVDER</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#11420-11427' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 4 - Power Voltage Detector Enable</p>
+</div><h4 id='method.pls' class="method"><span id='pls.v' class='invisible'><code>pub fn <a href='#method.pls' class='fnname'>pls</a>(&amp;self) -&gt; <a class="struct" href="../../../stm32f103xx/pwr/cr/struct.PLSR.html" title="struct stm32f103xx::pwr::cr::PLSR">PLSR</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#11430-11437' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bits 5:7 - PVD Level Selection</p>
+</div><h4 id='method.dbp' class="method"><span id='dbp.v' class='invisible'><code>pub fn <a href='#method.dbp' class='fnname'>dbp</a>(&amp;self) -&gt; <a class="struct" href="../../../stm32f103xx/pwr/cr/struct.DBPR.html" title="struct stm32f103xx::pwr::cr::DBPR">DBPR</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#11440-11447' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 8 - Disable Backup Domain write protection</p>
+</div></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt><kbd>?</kbd></dt>
+                    <dd>Show this help dialog</dd>
+                    <dt><kbd>S</kbd></dt>
+                    <dd>Focus the search field</dd>
+                    <dt><kbd>↑</kbd></dt>
+                    <dd>Move up in search results</dd>
+                    <dt><kbd>↓</kbd></dt>
+                    <dd>Move down in search results</dd>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
+                    <dd>Go to active search result</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../../";
+        window.currentCrate = "stm32f103xx";
+    </script>
+    <script src="../../../main.js"></script>
+    <script defer src="../../../search-index.js"></script>
+</body>
+</html>

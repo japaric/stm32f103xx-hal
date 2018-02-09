@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `adc2` mod in crate `stm32f103xx`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, adc2">
+
+    <title>stm32f103xx::adc2 - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css" id="themeStyle">
+    <script src="../../storage.js"></script>
+    
+
+    
+    
+</head>
+<body class="rustdoc mod">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
+        
+        <p class='location'>Module adc2</p><div class="sidebar-elems"><div class="block items"><ul><li><a href="#modules">Modules</a></li><li><a href="#structs">Structs</a></li></ul></div><p class='location'><a href='../index.html'>stm32f103xx</a></p><script>window.sidebarCurrent = {name: 'adc2', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script></div>
+    </nav>
+
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../theme.js"></script>
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Module <a href='../index.html'>stm32f103xx</a>::<wbr><a class="mod" href=''>adc2</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../src/stm32f103xx/lib.rs.html#98203-103138' title='goto source code'>[src]</a></span></h1>
+<div class='docblock'><p>Analog to digital converter</p>
+</div><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="cr1/index.html"
+                                  title='mod stm32f103xx::adc2::cr1'>cr1</a></td>
+                           <td class='docblock-short'>
+                                <p>control register 1</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="cr2/index.html"
+                                  title='mod stm32f103xx::adc2::cr2'>cr2</a></td>
+                           <td class='docblock-short'>
+                                <p>control register 2</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="dr/index.html"
+                                  title='mod stm32f103xx::adc2::dr'>dr</a></td>
+                           <td class='docblock-short'>
+                                <p>regular data register</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="htr/index.html"
+                                  title='mod stm32f103xx::adc2::htr'>htr</a></td>
+                           <td class='docblock-short'>
+                                <p>watchdog higher threshold register</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="jdr1/index.html"
+                                  title='mod stm32f103xx::adc2::jdr1'>jdr1</a></td>
+                           <td class='docblock-short'>
+                                <p>injected data register x</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="jdr2/index.html"
+                                  title='mod stm32f103xx::adc2::jdr2'>jdr2</a></td>
+                           <td class='docblock-short'>
+                                <p>injected data register x</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="jdr3/index.html"
+                                  title='mod stm32f103xx::adc2::jdr3'>jdr3</a></td>
+                           <td class='docblock-short'>
+                                <p>injected data register x</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="jdr4/index.html"
+                                  title='mod stm32f103xx::adc2::jdr4'>jdr4</a></td>
+                           <td class='docblock-short'>
+                                <p>injected data register x</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="jofr1/index.html"
+                                  title='mod stm32f103xx::adc2::jofr1'>jofr1</a></td>
+                           <td class='docblock-short'>
+                                <p>injected channel data offset register x</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="jofr2/index.html"
+                                  title='mod stm32f103xx::adc2::jofr2'>jofr2</a></td>
+                           <td class='docblock-short'>
+                                <p>injected channel data offset register x</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="jofr3/index.html"
+                                  title='mod stm32f103xx::adc2::jofr3'>jofr3</a></td>
+                           <td class='docblock-short'>
+                                <p>injected channel data offset register x</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="jofr4/index.html"
+                                  title='mod stm32f103xx::adc2::jofr4'>jofr4</a></td>
+                           <td class='docblock-short'>
+                                <p>injected channel data offset register x</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="jsqr/index.html"
+                                  title='mod stm32f103xx::adc2::jsqr'>jsqr</a></td>
+                           <td class='docblock-short'>
+                                <p>injected sequence register</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="ltr/index.html"
+                                  title='mod stm32f103xx::adc2::ltr'>ltr</a></td>
+                           <td class='docblock-short'>
+                                <p>watchdog lower threshold register</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="smpr1/index.html"
+                                  title='mod stm32f103xx::adc2::smpr1'>smpr1</a></td>
+                           <td class='docblock-short'>
+                                <p>sample time register 1</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="smpr2/index.html"
+                                  title='mod stm32f103xx::adc2::smpr2'>smpr2</a></td>
+                           <td class='docblock-short'>
+                                <p>sample time register 2</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="sqr1/index.html"
+                                  title='mod stm32f103xx::adc2::sqr1'>sqr1</a></td>
+                           <td class='docblock-short'>
+                                <p>regular sequence register 1</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="sqr2/index.html"
+                                  title='mod stm32f103xx::adc2::sqr2'>sqr2</a></td>
+                           <td class='docblock-short'>
+                                <p>regular sequence register 2</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="sqr3/index.html"
+                                  title='mod stm32f103xx::adc2::sqr3'>sqr3</a></td>
+                           <td class='docblock-short'>
+                                <p>regular sequence register 3</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="sr/index.html"
+                                  title='mod stm32f103xx::adc2::sr'>sr</a></td>
+                           <td class='docblock-short'>
+                                <p>status register</p>
+
+                           </td>
+                       </tr></table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.CR1.html"
+                                  title='struct stm32f103xx::adc2::CR1'>CR1</a></td>
+                           <td class='docblock-short'>
+                                <p>control register 1</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.CR2.html"
+                                  title='struct stm32f103xx::adc2::CR2'>CR2</a></td>
+                           <td class='docblock-short'>
+                                <p>control register 2</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.DR.html"
+                                  title='struct stm32f103xx::adc2::DR'>DR</a></td>
+                           <td class='docblock-short'>
+                                <p>regular data register</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.HTR.html"
+                                  title='struct stm32f103xx::adc2::HTR'>HTR</a></td>
+                           <td class='docblock-short'>
+                                <p>watchdog higher threshold register</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.JDR1.html"
+                                  title='struct stm32f103xx::adc2::JDR1'>JDR1</a></td>
+                           <td class='docblock-short'>
+                                <p>injected data register x</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.JDR2.html"
+                                  title='struct stm32f103xx::adc2::JDR2'>JDR2</a></td>
+                           <td class='docblock-short'>
+                                <p>injected data register x</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.JDR3.html"
+                                  title='struct stm32f103xx::adc2::JDR3'>JDR3</a></td>
+                           <td class='docblock-short'>
+                                <p>injected data register x</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.JDR4.html"
+                                  title='struct stm32f103xx::adc2::JDR4'>JDR4</a></td>
+                           <td class='docblock-short'>
+                                <p>injected data register x</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.JOFR1.html"
+                                  title='struct stm32f103xx::adc2::JOFR1'>JOFR1</a></td>
+                           <td class='docblock-short'>
+                                <p>injected channel data offset register x</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.JOFR2.html"
+                                  title='struct stm32f103xx::adc2::JOFR2'>JOFR2</a></td>
+                           <td class='docblock-short'>
+                                <p>injected channel data offset register x</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.JOFR3.html"
+                                  title='struct stm32f103xx::adc2::JOFR3'>JOFR3</a></td>
+                           <td class='docblock-short'>
+                                <p>injected channel data offset register x</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.JOFR4.html"
+                                  title='struct stm32f103xx::adc2::JOFR4'>JOFR4</a></td>
+                           <td class='docblock-short'>
+                                <p>injected channel data offset register x</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.JSQR.html"
+                                  title='struct stm32f103xx::adc2::JSQR'>JSQR</a></td>
+                           <td class='docblock-short'>
+                                <p>injected sequence register</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.LTR.html"
+                                  title='struct stm32f103xx::adc2::LTR'>LTR</a></td>
+                           <td class='docblock-short'>
+                                <p>watchdog lower threshold register</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.RegisterBlock.html"
+                                  title='struct stm32f103xx::adc2::RegisterBlock'>RegisterBlock</a></td>
+                           <td class='docblock-short'>
+                                <p>Register block</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.SMPR1.html"
+                                  title='struct stm32f103xx::adc2::SMPR1'>SMPR1</a></td>
+                           <td class='docblock-short'>
+                                <p>sample time register 1</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.SMPR2.html"
+                                  title='struct stm32f103xx::adc2::SMPR2'>SMPR2</a></td>
+                           <td class='docblock-short'>
+                                <p>sample time register 2</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.SQR1.html"
+                                  title='struct stm32f103xx::adc2::SQR1'>SQR1</a></td>
+                           <td class='docblock-short'>
+                                <p>regular sequence register 1</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.SQR2.html"
+                                  title='struct stm32f103xx::adc2::SQR2'>SQR2</a></td>
+                           <td class='docblock-short'>
+                                <p>regular sequence register 2</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.SQR3.html"
+                                  title='struct stm32f103xx::adc2::SQR3'>SQR3</a></td>
+                           <td class='docblock-short'>
+                                <p>regular sequence register 3</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.SR.html"
+                                  title='struct stm32f103xx::adc2::SR'>SR</a></td>
+                           <td class='docblock-short'>
+                                <p>status register</p>
+
+                           </td>
+                       </tr></table></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt><kbd>?</kbd></dt>
+                    <dd>Show this help dialog</dd>
+                    <dt><kbd>S</kbd></dt>
+                    <dd>Focus the search field</dd>
+                    <dt><kbd>↑</kbd></dt>
+                    <dd>Move up in search results</dd>
+                    <dt><kbd>↓</kbd></dt>
+                    <dd>Move down in search results</dd>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
+                    <dd>Go to active search result</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../";
+        window.currentCrate = "stm32f103xx";
+    </script>
+    <script src="../../main.js"></script>
+    <script defer src="../../search-index.js"></script>
+</body>
+</html>

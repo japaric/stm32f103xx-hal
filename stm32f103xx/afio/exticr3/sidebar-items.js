@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["EXTI10R","Value of the field"],["EXTI11R","Value of the field"],["EXTI8R","Value of the field"],["EXTI9R","Value of the field"],["R","Value read from the register"],["W","Value to write to the register"],["_EXTI10W","Proxy"],["_EXTI11W","Proxy"],["_EXTI8W","Proxy"],["_EXTI9W","Proxy"]]});

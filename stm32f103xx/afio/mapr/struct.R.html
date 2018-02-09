@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `R` struct in crate `stm32f103xx`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, R">
+
+    <title>stm32f103xx::afio::mapr::R - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../../main.css" id="themeStyle">
+    <script src="../../../storage.js"></script>
+    
+
+    
+    
+</head>
+<body class="rustdoc struct">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
+        
+        <p class='location'>Struct R</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.bits">bits</a><a href="#method.spi1_remap">spi1_remap</a><a href="#method.i2c1_remap">i2c1_remap</a><a href="#method.usart1_remap">usart1_remap</a><a href="#method.usart2_remap">usart2_remap</a><a href="#method.usart3_remap">usart3_remap</a><a href="#method.tim1_remap">tim1_remap</a><a href="#method.tim2_remap">tim2_remap</a><a href="#method.tim3_remap">tim3_remap</a><a href="#method.tim4_remap">tim4_remap</a><a href="#method.can_remap">can_remap</a><a href="#method.pd01_remap">pd01_remap</a><a href="#method.tim5ch4_iremap">tim5ch4_iremap</a><a href="#method.adc1_etrginj_remap">adc1_etrginj_remap</a><a href="#method.adc1_etrgreg_remap">adc1_etrgreg_remap</a><a href="#method.adc2_etrginj_remap">adc2_etrginj_remap</a><a href="#method.adc2_etrgreg_remap">adc2_etrgreg_remap</a></div></div><p class='location'><a href='../../index.html'>stm32f103xx</a>::<wbr><a href='../index.html'>afio</a>::<wbr><a href='index.html'>mapr</a></p><script>window.sidebarCurrent = {name: 'R', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
+    </nav>
+
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../../theme.js"></script>
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../../index.html'>stm32f103xx</a>::<wbr><a href='../index.html'>afio</a>::<wbr><a href='index.html'>mapr</a>::<wbr><a class="struct" href=''>R</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#28508-28510' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct R { /* fields omitted */ }</pre><div class='docblock'><p>Value read from the register</p>
+</div>
+                    <h2 id='methods' class='small-section-header'>
+                      Methods<a href='#methods' class='anchor'></a>
+                    </h2>
+                <h3 id='impl' class='impl'><span class='in-band'><code>impl <a class="struct" href="../../../stm32f103xx/afio/mapr/struct.R.html" title="struct stm32f103xx::afio::mapr::R">R</a></code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#29180-29346' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.bits' class="method"><span id='bits.v' class='invisible'><code>pub fn <a href='#method.bits' class='fnname'>bits</a>(&amp;self) -&gt; u32</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#29183-29185' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Value of the register as raw bits</p>
+</div><h4 id='method.spi1_remap' class="method"><span id='spi1_remap.v' class='invisible'><code>pub fn <a href='#method.spi1_remap' class='fnname'>spi1_remap</a>(&amp;self) -&gt; <a class="struct" href="../../../stm32f103xx/afio/mapr/struct.SPI1_REMAPR.html" title="struct stm32f103xx::afio::mapr::SPI1_REMAPR">SPI1_REMAPR</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#29188-29195' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 0 - SPI1 remapping</p>
+</div><h4 id='method.i2c1_remap' class="method"><span id='i2c1_remap.v' class='invisible'><code>pub fn <a href='#method.i2c1_remap' class='fnname'>i2c1_remap</a>(&amp;self) -&gt; <a class="struct" href="../../../stm32f103xx/afio/mapr/struct.I2C1_REMAPR.html" title="struct stm32f103xx::afio::mapr::I2C1_REMAPR">I2C1_REMAPR</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#29198-29205' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 1 - I2C1 remapping</p>
+</div><h4 id='method.usart1_remap' class="method"><span id='usart1_remap.v' class='invisible'><code>pub fn <a href='#method.usart1_remap' class='fnname'>usart1_remap</a>(&amp;self) -&gt; <a class="struct" href="../../../stm32f103xx/afio/mapr/struct.USART1_REMAPR.html" title="struct stm32f103xx::afio::mapr::USART1_REMAPR">USART1_REMAPR</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#29208-29215' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 2 - USART1 remapping</p>
+</div><h4 id='method.usart2_remap' class="method"><span id='usart2_remap.v' class='invisible'><code>pub fn <a href='#method.usart2_remap' class='fnname'>usart2_remap</a>(&amp;self) -&gt; <a class="struct" href="../../../stm32f103xx/afio/mapr/struct.USART2_REMAPR.html" title="struct stm32f103xx::afio::mapr::USART2_REMAPR">USART2_REMAPR</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#29218-29225' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 3 - USART2 remapping</p>
+</div><h4 id='method.usart3_remap' class="method"><span id='usart3_remap.v' class='invisible'><code>pub fn <a href='#method.usart3_remap' class='fnname'>usart3_remap</a>(&amp;self) -&gt; <a class="struct" href="../../../stm32f103xx/afio/mapr/struct.USART3_REMAPR.html" title="struct stm32f103xx::afio::mapr::USART3_REMAPR">USART3_REMAPR</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#29228-29235' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bits 4:5 - USART3 remapping</p>
+</div><h4 id='method.tim1_remap' class="method"><span id='tim1_remap.v' class='invisible'><code>pub fn <a href='#method.tim1_remap' class='fnname'>tim1_remap</a>(&amp;self) -&gt; <a class="struct" href="../../../stm32f103xx/afio/mapr/struct.TIM1_REMAPR.html" title="struct stm32f103xx::afio::mapr::TIM1_REMAPR">TIM1_REMAPR</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#29238-29245' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bits 6:7 - TIM1 remapping</p>
+</div><h4 id='method.tim2_remap' class="method"><span id='tim2_remap.v' class='invisible'><code>pub fn <a href='#method.tim2_remap' class='fnname'>tim2_remap</a>(&amp;self) -&gt; <a class="struct" href="../../../stm32f103xx/afio/mapr/struct.TIM2_REMAPR.html" title="struct stm32f103xx::afio::mapr::TIM2_REMAPR">TIM2_REMAPR</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#29248-29255' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bits 8:9 - TIM2 remapping</p>
+</div><h4 id='method.tim3_remap' class="method"><span id='tim3_remap.v' class='invisible'><code>pub fn <a href='#method.tim3_remap' class='fnname'>tim3_remap</a>(&amp;self) -&gt; <a class="struct" href="../../../stm32f103xx/afio/mapr/struct.TIM3_REMAPR.html" title="struct stm32f103xx::afio::mapr::TIM3_REMAPR">TIM3_REMAPR</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#29258-29265' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bits 10:11 - TIM3 remapping</p>
+</div><h4 id='method.tim4_remap' class="method"><span id='tim4_remap.v' class='invisible'><code>pub fn <a href='#method.tim4_remap' class='fnname'>tim4_remap</a>(&amp;self) -&gt; <a class="struct" href="../../../stm32f103xx/afio/mapr/struct.TIM4_REMAPR.html" title="struct stm32f103xx::afio::mapr::TIM4_REMAPR">TIM4_REMAPR</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#29268-29275' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 12 - TIM4 remapping</p>
+</div><h4 id='method.can_remap' class="method"><span id='can_remap.v' class='invisible'><code>pub fn <a href='#method.can_remap' class='fnname'>can_remap</a>(&amp;self) -&gt; <a class="struct" href="../../../stm32f103xx/afio/mapr/struct.CAN_REMAPR.html" title="struct stm32f103xx::afio::mapr::CAN_REMAPR">CAN_REMAPR</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#29278-29285' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bits 13:14 - CAN1 remapping</p>
+</div><h4 id='method.pd01_remap' class="method"><span id='pd01_remap.v' class='invisible'><code>pub fn <a href='#method.pd01_remap' class='fnname'>pd01_remap</a>(&amp;self) -&gt; <a class="struct" href="../../../stm32f103xx/afio/mapr/struct.PD01_REMAPR.html" title="struct stm32f103xx::afio::mapr::PD01_REMAPR">PD01_REMAPR</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#29288-29295' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 15 - Port D0/Port D1 mapping on OSCIN/OSCOUT</p>
+</div><h4 id='method.tim5ch4_iremap' class="method"><span id='tim5ch4_iremap.v' class='invisible'><code>pub fn <a href='#method.tim5ch4_iremap' class='fnname'>tim5ch4_iremap</a>(&amp;self) -&gt; <a class="struct" href="../../../stm32f103xx/afio/mapr/struct.TIM5CH4_IREMAPR.html" title="struct stm32f103xx::afio::mapr::TIM5CH4_IREMAPR">TIM5CH4_IREMAPR</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#29298-29305' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 16 - Set and cleared by software</p>
+</div><h4 id='method.adc1_etrginj_remap' class="method"><span id='adc1_etrginj_remap.v' class='invisible'><code>pub fn <a href='#method.adc1_etrginj_remap' class='fnname'>adc1_etrginj_remap</a>(&amp;self) -&gt; <a class="struct" href="../../../stm32f103xx/afio/mapr/struct.ADC1_ETRGINJ_REMAPR.html" title="struct stm32f103xx::afio::mapr::ADC1_ETRGINJ_REMAPR">ADC1_ETRGINJ_REMAPR</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#29308-29315' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 17 - ADC 1 External trigger injected conversion remapping</p>
+</div><h4 id='method.adc1_etrgreg_remap' class="method"><span id='adc1_etrgreg_remap.v' class='invisible'><code>pub fn <a href='#method.adc1_etrgreg_remap' class='fnname'>adc1_etrgreg_remap</a>(&amp;self) -&gt; <a class="struct" href="../../../stm32f103xx/afio/mapr/struct.ADC1_ETRGREG_REMAPR.html" title="struct stm32f103xx::afio::mapr::ADC1_ETRGREG_REMAPR">ADC1_ETRGREG_REMAPR</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#29318-29325' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 18 - ADC 1 external trigger regular conversion remapping</p>
+</div><h4 id='method.adc2_etrginj_remap' class="method"><span id='adc2_etrginj_remap.v' class='invisible'><code>pub fn <a href='#method.adc2_etrginj_remap' class='fnname'>adc2_etrginj_remap</a>(&amp;self) -&gt; <a class="struct" href="../../../stm32f103xx/afio/mapr/struct.ADC2_ETRGINJ_REMAPR.html" title="struct stm32f103xx::afio::mapr::ADC2_ETRGINJ_REMAPR">ADC2_ETRGINJ_REMAPR</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#29328-29335' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 19 - ADC 2 external trigger injected conversion remapping</p>
+</div><h4 id='method.adc2_etrgreg_remap' class="method"><span id='adc2_etrgreg_remap.v' class='invisible'><code>pub fn <a href='#method.adc2_etrgreg_remap' class='fnname'>adc2_etrgreg_remap</a>(&amp;self) -&gt; <a class="struct" href="../../../stm32f103xx/afio/mapr/struct.ADC2_ETRGREG_REMAPR.html" title="struct stm32f103xx::afio::mapr::ADC2_ETRGREG_REMAPR">ADC2_ETRGREG_REMAPR</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#29338-29345' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 20 - ADC 2 external trigger regular conversion remapping</p>
+</div></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt><kbd>?</kbd></dt>
+                    <dd>Show this help dialog</dd>
+                    <dt><kbd>S</kbd></dt>
+                    <dd>Focus the search field</dd>
+                    <dt><kbd>↑</kbd></dt>
+                    <dd>Move up in search results</dd>
+                    <dt><kbd>↓</kbd></dt>
+                    <dd>Move down in search results</dd>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
+                    <dd>Go to active search result</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../../";
+        window.currentCrate = "stm32f103xx";
+    </script>
+    <script src="../../../main.js"></script>
+    <script defer src="../../../search-index.js"></script>
+</body>
+</html>

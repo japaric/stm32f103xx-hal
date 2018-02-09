@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `W` struct in crate `stm32f103xx`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, W">
+
+    <title>stm32f103xx::rcc::apb2rstr::W - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../../main.css" id="themeStyle">
+    <script src="../../../storage.js"></script>
+    
+
+    
+    
+</head>
+<body class="rustdoc struct">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
+        
+        <p class='location'>Struct W</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.reset_value">reset_value</a><a href="#method.bits">bits</a><a href="#method.afiorst">afiorst</a><a href="#method.ioparst">ioparst</a><a href="#method.iopbrst">iopbrst</a><a href="#method.iopcrst">iopcrst</a><a href="#method.iopdrst">iopdrst</a><a href="#method.ioperst">ioperst</a><a href="#method.iopfrst">iopfrst</a><a href="#method.iopgrst">iopgrst</a><a href="#method.adc1rst">adc1rst</a><a href="#method.adc2rst">adc2rst</a><a href="#method.tim1rst">tim1rst</a><a href="#method.spi1rst">spi1rst</a><a href="#method.tim8rst">tim8rst</a><a href="#method.usart1rst">usart1rst</a><a href="#method.adc3rst">adc3rst</a><a href="#method.tim9rst">tim9rst</a><a href="#method.tim10rst">tim10rst</a><a href="#method.tim11rst">tim11rst</a></div></div><p class='location'><a href='../../index.html'>stm32f103xx</a>::<wbr><a href='../index.html'>rcc</a>::<wbr><a href='index.html'>apb2rstr</a></p><script>window.sidebarCurrent = {name: 'W', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
+    </nav>
+
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../../theme.js"></script>
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../../index.html'>stm32f103xx</a>::<wbr><a href='../index.html'>rcc</a>::<wbr><a href='index.html'>apb2rstr</a>::<wbr><a class="struct" href=''>W</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#14767-14769' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct W { /* fields omitted */ }</pre><div class='docblock'><p>Value to write to the register</p>
+</div>
+                    <h2 id='methods' class='small-section-header'>
+                      Methods<a href='#methods' class='anchor'></a>
+                    </h2>
+                <h3 id='impl' class='impl'><span class='in-band'><code>impl <a class="struct" href="../../../stm32f103xx/rcc/apb2rstr/struct.W.html" title="struct stm32f103xx::rcc::apb2rstr::W">W</a></code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#15785-15887' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.reset_value' class="method"><span id='reset_value.v' class='invisible'><code>pub fn <a href='#method.reset_value' class='fnname'>reset_value</a>() -&gt; <a class="struct" href="../../../stm32f103xx/rcc/apb2rstr/struct.W.html" title="struct stm32f103xx::rcc::apb2rstr::W">W</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#15788-15790' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Reset value of the register</p>
+</div><h4 id='method.bits' class="method"><span id='bits.v' class='invisible'><code>pub unsafe fn <a href='#method.bits' class='fnname'>bits</a>(&amp;mut self, bits: u32) -&gt; &amp;mut Self</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#15793-15796' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Writes raw bits to the register</p>
+</div><h4 id='method.afiorst' class="method"><span id='afiorst.v' class='invisible'><code>pub fn <a href='#method.afiorst' class='fnname'>afiorst</a>(&amp;mut self) -&gt; <a class="struct" href="../../../stm32f103xx/rcc/apb2rstr/struct._AFIORSTW.html" title="struct stm32f103xx::rcc::apb2rstr::_AFIORSTW">_AFIORSTW</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#15799-15801' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 0 - Alternate function I/O reset</p>
+</div><h4 id='method.ioparst' class="method"><span id='ioparst.v' class='invisible'><code>pub fn <a href='#method.ioparst' class='fnname'>ioparst</a>(&amp;mut self) -&gt; <a class="struct" href="../../../stm32f103xx/rcc/apb2rstr/struct._IOPARSTW.html" title="struct stm32f103xx::rcc::apb2rstr::_IOPARSTW">_IOPARSTW</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#15804-15806' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 2 - IO port A reset</p>
+</div><h4 id='method.iopbrst' class="method"><span id='iopbrst.v' class='invisible'><code>pub fn <a href='#method.iopbrst' class='fnname'>iopbrst</a>(&amp;mut self) -&gt; <a class="struct" href="../../../stm32f103xx/rcc/apb2rstr/struct._IOPBRSTW.html" title="struct stm32f103xx::rcc::apb2rstr::_IOPBRSTW">_IOPBRSTW</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#15809-15811' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 3 - IO port B reset</p>
+</div><h4 id='method.iopcrst' class="method"><span id='iopcrst.v' class='invisible'><code>pub fn <a href='#method.iopcrst' class='fnname'>iopcrst</a>(&amp;mut self) -&gt; <a class="struct" href="../../../stm32f103xx/rcc/apb2rstr/struct._IOPCRSTW.html" title="struct stm32f103xx::rcc::apb2rstr::_IOPCRSTW">_IOPCRSTW</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#15814-15816' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 4 - IO port C reset</p>
+</div><h4 id='method.iopdrst' class="method"><span id='iopdrst.v' class='invisible'><code>pub fn <a href='#method.iopdrst' class='fnname'>iopdrst</a>(&amp;mut self) -&gt; <a class="struct" href="../../../stm32f103xx/rcc/apb2rstr/struct._IOPDRSTW.html" title="struct stm32f103xx::rcc::apb2rstr::_IOPDRSTW">_IOPDRSTW</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#15819-15821' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 5 - IO port D reset</p>
+</div><h4 id='method.ioperst' class="method"><span id='ioperst.v' class='invisible'><code>pub fn <a href='#method.ioperst' class='fnname'>ioperst</a>(&amp;mut self) -&gt; <a class="struct" href="../../../stm32f103xx/rcc/apb2rstr/struct._IOPERSTW.html" title="struct stm32f103xx::rcc::apb2rstr::_IOPERSTW">_IOPERSTW</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#15824-15826' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 6 - IO port E reset</p>
+</div><h4 id='method.iopfrst' class="method"><span id='iopfrst.v' class='invisible'><code>pub fn <a href='#method.iopfrst' class='fnname'>iopfrst</a>(&amp;mut self) -&gt; <a class="struct" href="../../../stm32f103xx/rcc/apb2rstr/struct._IOPFRSTW.html" title="struct stm32f103xx::rcc::apb2rstr::_IOPFRSTW">_IOPFRSTW</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#15829-15831' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 7 - IO port F reset</p>
+</div><h4 id='method.iopgrst' class="method"><span id='iopgrst.v' class='invisible'><code>pub fn <a href='#method.iopgrst' class='fnname'>iopgrst</a>(&amp;mut self) -&gt; <a class="struct" href="../../../stm32f103xx/rcc/apb2rstr/struct._IOPGRSTW.html" title="struct stm32f103xx::rcc::apb2rstr::_IOPGRSTW">_IOPGRSTW</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#15834-15836' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 8 - IO port G reset</p>
+</div><h4 id='method.adc1rst' class="method"><span id='adc1rst.v' class='invisible'><code>pub fn <a href='#method.adc1rst' class='fnname'>adc1rst</a>(&amp;mut self) -&gt; <a class="struct" href="../../../stm32f103xx/rcc/apb2rstr/struct._ADC1RSTW.html" title="struct stm32f103xx::rcc::apb2rstr::_ADC1RSTW">_ADC1RSTW</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#15839-15841' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 9 - ADC 1 interface reset</p>
+</div><h4 id='method.adc2rst' class="method"><span id='adc2rst.v' class='invisible'><code>pub fn <a href='#method.adc2rst' class='fnname'>adc2rst</a>(&amp;mut self) -&gt; <a class="struct" href="../../../stm32f103xx/rcc/apb2rstr/struct._ADC2RSTW.html" title="struct stm32f103xx::rcc::apb2rstr::_ADC2RSTW">_ADC2RSTW</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#15844-15846' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 10 - ADC 2 interface reset</p>
+</div><h4 id='method.tim1rst' class="method"><span id='tim1rst.v' class='invisible'><code>pub fn <a href='#method.tim1rst' class='fnname'>tim1rst</a>(&amp;mut self) -&gt; <a class="struct" href="../../../stm32f103xx/rcc/apb2rstr/struct._TIM1RSTW.html" title="struct stm32f103xx::rcc::apb2rstr::_TIM1RSTW">_TIM1RSTW</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#15849-15851' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 11 - TIM1 timer reset</p>
+</div><h4 id='method.spi1rst' class="method"><span id='spi1rst.v' class='invisible'><code>pub fn <a href='#method.spi1rst' class='fnname'>spi1rst</a>(&amp;mut self) -&gt; <a class="struct" href="../../../stm32f103xx/rcc/apb2rstr/struct._SPI1RSTW.html" title="struct stm32f103xx::rcc::apb2rstr::_SPI1RSTW">_SPI1RSTW</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#15854-15856' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 12 - SPI 1 reset</p>
+</div><h4 id='method.tim8rst' class="method"><span id='tim8rst.v' class='invisible'><code>pub fn <a href='#method.tim8rst' class='fnname'>tim8rst</a>(&amp;mut self) -&gt; <a class="struct" href="../../../stm32f103xx/rcc/apb2rstr/struct._TIM8RSTW.html" title="struct stm32f103xx::rcc::apb2rstr::_TIM8RSTW">_TIM8RSTW</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#15859-15861' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 13 - TIM8 timer reset</p>
+</div><h4 id='method.usart1rst' class="method"><span id='usart1rst.v' class='invisible'><code>pub fn <a href='#method.usart1rst' class='fnname'>usart1rst</a>(&amp;mut self) -&gt; <a class="struct" href="../../../stm32f103xx/rcc/apb2rstr/struct._USART1RSTW.html" title="struct stm32f103xx::rcc::apb2rstr::_USART1RSTW">_USART1RSTW</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#15864-15866' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 14 - USART1 reset</p>
+</div><h4 id='method.adc3rst' class="method"><span id='adc3rst.v' class='invisible'><code>pub fn <a href='#method.adc3rst' class='fnname'>adc3rst</a>(&amp;mut self) -&gt; <a class="struct" href="../../../stm32f103xx/rcc/apb2rstr/struct._ADC3RSTW.html" title="struct stm32f103xx::rcc::apb2rstr::_ADC3RSTW">_ADC3RSTW</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#15869-15871' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 15 - ADC 3 interface reset</p>
+</div><h4 id='method.tim9rst' class="method"><span id='tim9rst.v' class='invisible'><code>pub fn <a href='#method.tim9rst' class='fnname'>tim9rst</a>(&amp;mut self) -&gt; <a class="struct" href="../../../stm32f103xx/rcc/apb2rstr/struct._TIM9RSTW.html" title="struct stm32f103xx::rcc::apb2rstr::_TIM9RSTW">_TIM9RSTW</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#15874-15876' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 19 - TIM9 timer reset</p>
+</div><h4 id='method.tim10rst' class="method"><span id='tim10rst.v' class='invisible'><code>pub fn <a href='#method.tim10rst' class='fnname'>tim10rst</a>(&amp;mut self) -&gt; <a class="struct" href="../../../stm32f103xx/rcc/apb2rstr/struct._TIM10RSTW.html" title="struct stm32f103xx::rcc::apb2rstr::_TIM10RSTW">_TIM10RSTW</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#15879-15881' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 20 - TIM10 timer reset</p>
+</div><h4 id='method.tim11rst' class="method"><span id='tim11rst.v' class='invisible'><code>pub fn <a href='#method.tim11rst' class='fnname'>tim11rst</a>(&amp;mut self) -&gt; <a class="struct" href="../../../stm32f103xx/rcc/apb2rstr/struct._TIM11RSTW.html" title="struct stm32f103xx::rcc::apb2rstr::_TIM11RSTW">_TIM11RSTW</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#15884-15886' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 21 - TIM11 timer reset</p>
+</div></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt><kbd>?</kbd></dt>
+                    <dd>Show this help dialog</dd>
+                    <dt><kbd>S</kbd></dt>
+                    <dd>Focus the search field</dd>
+                    <dt><kbd>↑</kbd></dt>
+                    <dd>Move up in search results</dd>
+                    <dt><kbd>↓</kbd></dt>
+                    <dd>Move down in search results</dd>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
+                    <dd>Go to active search result</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../../";
+        window.currentCrate = "stm32f103xx";
+    </script>
+    <script src="../../../main.js"></script>
+    <script defer src="../../../search-index.js"></script>
+</body>
+</html>

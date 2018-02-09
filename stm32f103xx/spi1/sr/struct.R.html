@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `R` struct in crate `stm32f103xx`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, R">
+
+    <title>stm32f103xx::spi1::sr::R - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../../main.css" id="themeStyle">
+    <script src="../../../storage.js"></script>
+    
+
+    
+    
+</head>
+<body class="rustdoc struct">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
+        
+        <p class='location'>Struct R</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.bits">bits</a><a href="#method.bsy">bsy</a><a href="#method.ovr">ovr</a><a href="#method.modf">modf</a><a href="#method.crcerr">crcerr</a><a href="#method.udr">udr</a><a href="#method.chside">chside</a><a href="#method.txe">txe</a><a href="#method.rxne">rxne</a></div></div><p class='location'><a href='../../index.html'>stm32f103xx</a>::<wbr><a href='../index.html'>spi1</a>::<wbr><a href='index.html'>sr</a></p><script>window.sidebarCurrent = {name: 'R', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
+    </nav>
+
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../../theme.js"></script>
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../../index.html'>stm32f103xx</a>::<wbr><a href='../index.html'>spi1</a>::<wbr><a href='index.html'>sr</a>::<wbr><a class="struct" href=''>R</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#88588-88590' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct R { /* fields omitted */ }</pre><div class='docblock'><p>Value read from the register</p>
+</div>
+                    <h2 id='methods' class='small-section-header'>
+                      Methods<a href='#methods' class='anchor'></a>
+                    </h2>
+                <h3 id='impl' class='impl'><span class='in-band'><code>impl <a class="struct" href="../../../stm32f103xx/spi1/sr/struct.R.html" title="struct stm32f103xx::spi1::sr::R">R</a></code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#88822-88908' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.bits' class="method"><span id='bits.v' class='invisible'><code>pub fn <a href='#method.bits' class='fnname'>bits</a>(&amp;self) -&gt; u32</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#88825-88827' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Value of the register as raw bits</p>
+</div><h4 id='method.bsy' class="method"><span id='bsy.v' class='invisible'><code>pub fn <a href='#method.bsy' class='fnname'>bsy</a>(&amp;self) -&gt; <a class="struct" href="../../../stm32f103xx/spi1/sr/struct.BSYR.html" title="struct stm32f103xx::spi1::sr::BSYR">BSYR</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#88830-88837' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 7 - Busy flag</p>
+</div><h4 id='method.ovr' class="method"><span id='ovr.v' class='invisible'><code>pub fn <a href='#method.ovr' class='fnname'>ovr</a>(&amp;self) -&gt; <a class="struct" href="../../../stm32f103xx/spi1/sr/struct.OVRR.html" title="struct stm32f103xx::spi1::sr::OVRR">OVRR</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#88840-88847' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 6 - Overrun flag</p>
+</div><h4 id='method.modf' class="method"><span id='modf.v' class='invisible'><code>pub fn <a href='#method.modf' class='fnname'>modf</a>(&amp;self) -&gt; <a class="struct" href="../../../stm32f103xx/spi1/sr/struct.MODFR.html" title="struct stm32f103xx::spi1::sr::MODFR">MODFR</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#88850-88857' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 5 - Mode fault</p>
+</div><h4 id='method.crcerr' class="method"><span id='crcerr.v' class='invisible'><code>pub fn <a href='#method.crcerr' class='fnname'>crcerr</a>(&amp;self) -&gt; <a class="struct" href="../../../stm32f103xx/spi1/sr/struct.CRCERRR.html" title="struct stm32f103xx::spi1::sr::CRCERRR">CRCERRR</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#88860-88867' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 4 - CRC error flag</p>
+</div><h4 id='method.udr' class="method"><span id='udr.v' class='invisible'><code>pub fn <a href='#method.udr' class='fnname'>udr</a>(&amp;self) -&gt; <a class="struct" href="../../../stm32f103xx/spi1/sr/struct.UDRR.html" title="struct stm32f103xx::spi1::sr::UDRR">UDRR</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#88870-88877' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 3 - Underrun flag</p>
+</div><h4 id='method.chside' class="method"><span id='chside.v' class='invisible'><code>pub fn <a href='#method.chside' class='fnname'>chside</a>(&amp;self) -&gt; <a class="struct" href="../../../stm32f103xx/spi1/sr/struct.CHSIDER.html" title="struct stm32f103xx::spi1::sr::CHSIDER">CHSIDER</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#88880-88887' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 2 - Channel side</p>
+</div><h4 id='method.txe' class="method"><span id='txe.v' class='invisible'><code>pub fn <a href='#method.txe' class='fnname'>txe</a>(&amp;self) -&gt; <a class="struct" href="../../../stm32f103xx/spi1/sr/struct.TXER.html" title="struct stm32f103xx::spi1::sr::TXER">TXER</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#88890-88897' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 1 - Transmit buffer empty</p>
+</div><h4 id='method.rxne' class="method"><span id='rxne.v' class='invisible'><code>pub fn <a href='#method.rxne' class='fnname'>rxne</a>(&amp;self) -&gt; <a class="struct" href="../../../stm32f103xx/spi1/sr/struct.RXNER.html" title="struct stm32f103xx::spi1::sr::RXNER">RXNER</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#88900-88907' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 0 - Receive buffer not empty</p>
+</div></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt><kbd>?</kbd></dt>
+                    <dd>Show this help dialog</dd>
+                    <dt><kbd>S</kbd></dt>
+                    <dd>Focus the search field</dd>
+                    <dt><kbd>↑</kbd></dt>
+                    <dd>Move up in search results</dd>
+                    <dt><kbd>↓</kbd></dt>
+                    <dd>Move down in search results</dd>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
+                    <dd>Go to active search result</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../../";
+        window.currentCrate = "stm32f103xx";
+    </script>
+    <script src="../../../main.js"></script>
+    <script defer src="../../../search-index.js"></script>
+</body>
+</html>

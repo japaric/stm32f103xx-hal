@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `usb` mod in crate `stm32f103xx`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, usb">
+
+    <title>stm32f103xx::usb - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css" id="themeStyle">
+    <script src="../../storage.js"></script>
+    
+
+    
+    
+</head>
+<body class="rustdoc mod">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
+        
+        <p class='location'>Module usb</p><div class="sidebar-elems"><div class="block items"><ul><li><a href="#modules">Modules</a></li><li><a href="#structs">Structs</a></li></ul></div><p class='location'><a href='../index.html'>stm32f103xx</a></p><script>window.sidebarCurrent = {name: 'usb', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script></div>
+    </nav>
+
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../theme.js"></script>
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Module <a href='../index.html'>stm32f103xx</a>::<wbr><a class="mod" href=''>usb</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../src/stm32f103xx/lib.rs.html#180363-187730' title='goto source code'>[src]</a></span></h1>
+<div class='docblock'><p>Universal serial bus full-speed device interface</p>
+</div><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="btable/index.html"
+                                  title='mod stm32f103xx::usb::btable'>btable</a></td>
+                           <td class='docblock-short'>
+                                <p>Buffer table address</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="cntr/index.html"
+                                  title='mod stm32f103xx::usb::cntr'>cntr</a></td>
+                           <td class='docblock-short'>
+                                <p>control register</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="daddr/index.html"
+                                  title='mod stm32f103xx::usb::daddr'>daddr</a></td>
+                           <td class='docblock-short'>
+                                <p>device address</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="ep0r/index.html"
+                                  title='mod stm32f103xx::usb::ep0r'>ep0r</a></td>
+                           <td class='docblock-short'>
+                                <p>endpoint 0 register</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="ep1r/index.html"
+                                  title='mod stm32f103xx::usb::ep1r'>ep1r</a></td>
+                           <td class='docblock-short'>
+                                <p>endpoint 1 register</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="ep2r/index.html"
+                                  title='mod stm32f103xx::usb::ep2r'>ep2r</a></td>
+                           <td class='docblock-short'>
+                                <p>endpoint 2 register</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="ep3r/index.html"
+                                  title='mod stm32f103xx::usb::ep3r'>ep3r</a></td>
+                           <td class='docblock-short'>
+                                <p>endpoint 3 register</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="ep4r/index.html"
+                                  title='mod stm32f103xx::usb::ep4r'>ep4r</a></td>
+                           <td class='docblock-short'>
+                                <p>endpoint 4 register</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="ep5r/index.html"
+                                  title='mod stm32f103xx::usb::ep5r'>ep5r</a></td>
+                           <td class='docblock-short'>
+                                <p>endpoint 5 register</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="ep6r/index.html"
+                                  title='mod stm32f103xx::usb::ep6r'>ep6r</a></td>
+                           <td class='docblock-short'>
+                                <p>endpoint 6 register</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="ep7r/index.html"
+                                  title='mod stm32f103xx::usb::ep7r'>ep7r</a></td>
+                           <td class='docblock-short'>
+                                <p>endpoint 7 register</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="fnr/index.html"
+                                  title='mod stm32f103xx::usb::fnr'>fnr</a></td>
+                           <td class='docblock-short'>
+                                <p>frame number register</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="istr/index.html"
+                                  title='mod stm32f103xx::usb::istr'>istr</a></td>
+                           <td class='docblock-short'>
+                                <p>interrupt status register</p>
+
+                           </td>
+                       </tr></table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.BTABLE.html"
+                                  title='struct stm32f103xx::usb::BTABLE'>BTABLE</a></td>
+                           <td class='docblock-short'>
+                                <p>Buffer table address</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.CNTR.html"
+                                  title='struct stm32f103xx::usb::CNTR'>CNTR</a></td>
+                           <td class='docblock-short'>
+                                <p>control register</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.DADDR.html"
+                                  title='struct stm32f103xx::usb::DADDR'>DADDR</a></td>
+                           <td class='docblock-short'>
+                                <p>device address</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.EP0R.html"
+                                  title='struct stm32f103xx::usb::EP0R'>EP0R</a></td>
+                           <td class='docblock-short'>
+                                <p>endpoint 0 register</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.EP1R.html"
+                                  title='struct stm32f103xx::usb::EP1R'>EP1R</a></td>
+                           <td class='docblock-short'>
+                                <p>endpoint 1 register</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.EP2R.html"
+                                  title='struct stm32f103xx::usb::EP2R'>EP2R</a></td>
+                           <td class='docblock-short'>
+                                <p>endpoint 2 register</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.EP3R.html"
+                                  title='struct stm32f103xx::usb::EP3R'>EP3R</a></td>
+                           <td class='docblock-short'>
+                                <p>endpoint 3 register</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.EP4R.html"
+                                  title='struct stm32f103xx::usb::EP4R'>EP4R</a></td>
+                           <td class='docblock-short'>
+                                <p>endpoint 4 register</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.EP5R.html"
+                                  title='struct stm32f103xx::usb::EP5R'>EP5R</a></td>
+                           <td class='docblock-short'>
+                                <p>endpoint 5 register</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.EP6R.html"
+                                  title='struct stm32f103xx::usb::EP6R'>EP6R</a></td>
+                           <td class='docblock-short'>
+                                <p>endpoint 6 register</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.EP7R.html"
+                                  title='struct stm32f103xx::usb::EP7R'>EP7R</a></td>
+                           <td class='docblock-short'>
+                                <p>endpoint 7 register</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.FNR.html"
+                                  title='struct stm32f103xx::usb::FNR'>FNR</a></td>
+                           <td class='docblock-short'>
+                                <p>frame number register</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.ISTR.html"
+                                  title='struct stm32f103xx::usb::ISTR'>ISTR</a></td>
+                           <td class='docblock-short'>
+                                <p>interrupt status register</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.RegisterBlock.html"
+                                  title='struct stm32f103xx::usb::RegisterBlock'>RegisterBlock</a></td>
+                           <td class='docblock-short'>
+                                <p>Register block</p>
+
+                           </td>
+                       </tr></table></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt><kbd>?</kbd></dt>
+                    <dd>Show this help dialog</dd>
+                    <dt><kbd>S</kbd></dt>
+                    <dd>Focus the search field</dd>
+                    <dt><kbd>↑</kbd></dt>
+                    <dd>Move up in search results</dd>
+                    <dt><kbd>↓</kbd></dt>
+                    <dd>Move down in search results</dd>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
+                    <dd>Go to active search result</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../";
+        window.currentCrate = "stm32f103xx";
+    </script>
+    <script src="../../main.js"></script>
+    <script defer src="../../search-index.js"></script>
+</body>
+</html>

@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["CC1SR","Value of the field"],["OC1PER","Value of the field"],["R","Value read from the register"],["W","Value to write to the register"],["_CC1SW","Proxy"],["_OC1MW","Proxy"],["_OC1PEW","Proxy"]],"type":[["OC1MR","Possible values of the field `OC1M`"],["OC1MW","Values that can be written to the field `OC1M`"]]});

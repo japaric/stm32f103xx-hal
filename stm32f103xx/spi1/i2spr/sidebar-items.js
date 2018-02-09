@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["I2SDIVR","Value of the field"],["MCKOER","Value of the field"],["ODDR","Value of the field"],["R","Value read from the register"],["W","Value to write to the register"],["_I2SDIVW","Proxy"],["_MCKOEW","Proxy"],["_ODDW","Proxy"]]});

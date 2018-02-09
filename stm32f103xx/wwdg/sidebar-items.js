@@ -1,0 +1,1 @@
+initSidebarItems({"mod":[["cfr","Configuration register (WWDG_CFR)"],["cr","Control register (WWDG_CR)"],["sr","Status register (WWDG_SR)"]],"struct":[["CFR","Configuration register (WWDG_CFR)"],["CR","Control register (WWDG_CR)"],["RegisterBlock","Register block"],["SR","Status register (WWDG_SR)"]]});

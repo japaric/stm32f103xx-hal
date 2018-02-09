@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `apb1enr` mod in crate `stm32f103xx`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, apb1enr">
+
+    <title>stm32f103xx::rcc::apb1enr - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../../main.css" id="themeStyle">
+    <script src="../../../storage.js"></script>
+    
+
+    
+    
+</head>
+<body class="rustdoc mod">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
+        
+        <p class='location'>Module apb1enr</p><div class="sidebar-elems"><div class="block items"><ul><li><a href="#structs">Structs</a></li><li><a href="#types">Type Definitions</a></li></ul></div><p class='location'><a href='../../index.html'>stm32f103xx</a>::<wbr><a href='../index.html'>rcc</a></p><script>window.sidebarCurrent = {name: 'apb1enr', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script></div>
+    </nav>
+
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../../theme.js"></script>
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Module <a href='../../index.html'>stm32f103xx</a>::<wbr><a href='../index.html'>rcc</a>::<wbr><a class="mod" href=''>apb1enr</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#18971-20370' title='goto source code'>[src]</a></span></h1>
+<div class='docblock'><p>APB1 peripheral clock enable register (RCC_APB1ENR)</p>
+</div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.R.html"
+                                  title='struct stm32f103xx::rcc::apb1enr::R'>R</a></td>
+                           <td class='docblock-short'>
+                                <p>Value read from the register</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.W.html"
+                                  title='struct stm32f103xx::rcc::apb1enr::W'>W</a></td>
+                           <td class='docblock-short'>
+                                <p>Value to write to the register</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct._BKPENW.html"
+                                  title='struct stm32f103xx::rcc::apb1enr::_BKPENW'>_BKPENW</a></td>
+                           <td class='docblock-short'>
+                                <p>Proxy</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct._CANENW.html"
+                                  title='struct stm32f103xx::rcc::apb1enr::_CANENW'>_CANENW</a></td>
+                           <td class='docblock-short'>
+                                <p>Proxy</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct._DACENW.html"
+                                  title='struct stm32f103xx::rcc::apb1enr::_DACENW'>_DACENW</a></td>
+                           <td class='docblock-short'>
+                                <p>Proxy</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct._I2C1ENW.html"
+                                  title='struct stm32f103xx::rcc::apb1enr::_I2C1ENW'>_I2C1ENW</a></td>
+                           <td class='docblock-short'>
+                                <p>Proxy</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct._I2C2ENW.html"
+                                  title='struct stm32f103xx::rcc::apb1enr::_I2C2ENW'>_I2C2ENW</a></td>
+                           <td class='docblock-short'>
+                                <p>Proxy</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct._PWRENW.html"
+                                  title='struct stm32f103xx::rcc::apb1enr::_PWRENW'>_PWRENW</a></td>
+                           <td class='docblock-short'>
+                                <p>Proxy</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct._SPI2ENW.html"
+                                  title='struct stm32f103xx::rcc::apb1enr::_SPI2ENW'>_SPI2ENW</a></td>
+                           <td class='docblock-short'>
+                                <p>Proxy</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct._SPI3ENW.html"
+                                  title='struct stm32f103xx::rcc::apb1enr::_SPI3ENW'>_SPI3ENW</a></td>
+                           <td class='docblock-short'>
+                                <p>Proxy</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct._TIM12ENW.html"
+                                  title='struct stm32f103xx::rcc::apb1enr::_TIM12ENW'>_TIM12ENW</a></td>
+                           <td class='docblock-short'>
+                                <p>Proxy</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct._TIM13ENW.html"
+                                  title='struct stm32f103xx::rcc::apb1enr::_TIM13ENW'>_TIM13ENW</a></td>
+                           <td class='docblock-short'>
+                                <p>Proxy</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct._TIM14ENW.html"
+                                  title='struct stm32f103xx::rcc::apb1enr::_TIM14ENW'>_TIM14ENW</a></td>
+                           <td class='docblock-short'>
+                                <p>Proxy</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct._TIM2ENW.html"
+                                  title='struct stm32f103xx::rcc::apb1enr::_TIM2ENW'>_TIM2ENW</a></td>
+                           <td class='docblock-short'>
+                                <p>Proxy</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct._TIM3ENW.html"
+                                  title='struct stm32f103xx::rcc::apb1enr::_TIM3ENW'>_TIM3ENW</a></td>
+                           <td class='docblock-short'>
+                                <p>Proxy</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct._TIM4ENW.html"
+                                  title='struct stm32f103xx::rcc::apb1enr::_TIM4ENW'>_TIM4ENW</a></td>
+                           <td class='docblock-short'>
+                                <p>Proxy</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct._TIM5ENW.html"
+                                  title='struct stm32f103xx::rcc::apb1enr::_TIM5ENW'>_TIM5ENW</a></td>
+                           <td class='docblock-short'>
+                                <p>Proxy</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct._TIM6ENW.html"
+                                  title='struct stm32f103xx::rcc::apb1enr::_TIM6ENW'>_TIM6ENW</a></td>
+                           <td class='docblock-short'>
+                                <p>Proxy</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct._TIM7ENW.html"
+                                  title='struct stm32f103xx::rcc::apb1enr::_TIM7ENW'>_TIM7ENW</a></td>
+                           <td class='docblock-short'>
+                                <p>Proxy</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct._UART4ENW.html"
+                                  title='struct stm32f103xx::rcc::apb1enr::_UART4ENW'>_UART4ENW</a></td>
+                           <td class='docblock-short'>
+                                <p>Proxy</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct._UART5ENW.html"
+                                  title='struct stm32f103xx::rcc::apb1enr::_UART5ENW'>_UART5ENW</a></td>
+                           <td class='docblock-short'>
+                                <p>Proxy</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct._USART2ENW.html"
+                                  title='struct stm32f103xx::rcc::apb1enr::_USART2ENW'>_USART2ENW</a></td>
+                           <td class='docblock-short'>
+                                <p>Proxy</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct._USART3ENW.html"
+                                  title='struct stm32f103xx::rcc::apb1enr::_USART3ENW'>_USART3ENW</a></td>
+                           <td class='docblock-short'>
+                                <p>Proxy</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct._USBENW.html"
+                                  title='struct stm32f103xx::rcc::apb1enr::_USBENW'>_USBENW</a></td>
+                           <td class='docblock-short'>
+                                <p>Proxy</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct._WWDGENW.html"
+                                  title='struct stm32f103xx::rcc::apb1enr::_WWDGENW'>_WWDGENW</a></td>
+                           <td class='docblock-short'>
+                                <p>Proxy</p>
+
+                           </td>
+                       </tr></table><h2 id='types' class='section-header'><a href="#types">Type Definitions</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.BKPENR.html"
+                                  title='type stm32f103xx::rcc::apb1enr::BKPENR'>BKPENR</a></td>
+                           <td class='docblock-short'>
+                                <p>Possible values of the field <code>BKPEN</code></p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.BKPENW.html"
+                                  title='type stm32f103xx::rcc::apb1enr::BKPENW'>BKPENW</a></td>
+                           <td class='docblock-short'>
+                                <p>Values that can be written to the field <code>BKPEN</code></p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.CANENR.html"
+                                  title='type stm32f103xx::rcc::apb1enr::CANENR'>CANENR</a></td>
+                           <td class='docblock-short'>
+                                <p>Possible values of the field <code>CANEN</code></p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.CANENW.html"
+                                  title='type stm32f103xx::rcc::apb1enr::CANENW'>CANENW</a></td>
+                           <td class='docblock-short'>
+                                <p>Values that can be written to the field <code>CANEN</code></p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.DACENR.html"
+                                  title='type stm32f103xx::rcc::apb1enr::DACENR'>DACENR</a></td>
+                           <td class='docblock-short'>
+                                <p>Possible values of the field <code>DACEN</code></p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.DACENW.html"
+                                  title='type stm32f103xx::rcc::apb1enr::DACENW'>DACENW</a></td>
+                           <td class='docblock-short'>
+                                <p>Values that can be written to the field <code>DACEN</code></p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.I2C1ENR.html"
+                                  title='type stm32f103xx::rcc::apb1enr::I2C1ENR'>I2C1ENR</a></td>
+                           <td class='docblock-short'>
+                                <p>Possible values of the field <code>I2C1EN</code></p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.I2C1ENW.html"
+                                  title='type stm32f103xx::rcc::apb1enr::I2C1ENW'>I2C1ENW</a></td>
+                           <td class='docblock-short'>
+                                <p>Values that can be written to the field <code>I2C1EN</code></p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.I2C2ENR.html"
+                                  title='type stm32f103xx::rcc::apb1enr::I2C2ENR'>I2C2ENR</a></td>
+                           <td class='docblock-short'>
+                                <p>Possible values of the field <code>I2C2EN</code></p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.I2C2ENW.html"
+                                  title='type stm32f103xx::rcc::apb1enr::I2C2ENW'>I2C2ENW</a></td>
+                           <td class='docblock-short'>
+                                <p>Values that can be written to the field <code>I2C2EN</code></p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.PWRENR.html"
+                                  title='type stm32f103xx::rcc::apb1enr::PWRENR'>PWRENR</a></td>
+                           <td class='docblock-short'>
+                                <p>Possible values of the field <code>PWREN</code></p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.PWRENW.html"
+                                  title='type stm32f103xx::rcc::apb1enr::PWRENW'>PWRENW</a></td>
+                           <td class='docblock-short'>
+                                <p>Values that can be written to the field <code>PWREN</code></p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.SPI2ENR.html"
+                                  title='type stm32f103xx::rcc::apb1enr::SPI2ENR'>SPI2ENR</a></td>
+                           <td class='docblock-short'>
+                                <p>Possible values of the field <code>SPI2EN</code></p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.SPI2ENW.html"
+                                  title='type stm32f103xx::rcc::apb1enr::SPI2ENW'>SPI2ENW</a></td>
+                           <td class='docblock-short'>
+                                <p>Values that can be written to the field <code>SPI2EN</code></p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.SPI3ENR.html"
+                                  title='type stm32f103xx::rcc::apb1enr::SPI3ENR'>SPI3ENR</a></td>
+                           <td class='docblock-short'>
+                                <p>Possible values of the field <code>SPI3EN</code></p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.SPI3ENW.html"
+                                  title='type stm32f103xx::rcc::apb1enr::SPI3ENW'>SPI3ENW</a></td>
+                           <td class='docblock-short'>
+                                <p>Values that can be written to the field <code>SPI3EN</code></p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.TIM12ENR.html"
+                                  title='type stm32f103xx::rcc::apb1enr::TIM12ENR'>TIM12ENR</a></td>
+                           <td class='docblock-short'>
+                                <p>Possible values of the field <code>TIM12EN</code></p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.TIM12ENW.html"
+                                  title='type stm32f103xx::rcc::apb1enr::TIM12ENW'>TIM12ENW</a></td>
+                           <td class='docblock-short'>
+                                <p>Values that can be written to the field <code>TIM12EN</code></p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.TIM13ENR.html"
+                                  title='type stm32f103xx::rcc::apb1enr::TIM13ENR'>TIM13ENR</a></td>
+                           <td class='docblock-short'>
+                                <p>Possible values of the field <code>TIM13EN</code></p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.TIM13ENW.html"
+                                  title='type stm32f103xx::rcc::apb1enr::TIM13ENW'>TIM13ENW</a></td>
+                           <td class='docblock-short'>
+                                <p>Values that can be written to the field <code>TIM13EN</code></p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.TIM14ENR.html"
+                                  title='type stm32f103xx::rcc::apb1enr::TIM14ENR'>TIM14ENR</a></td>
+                           <td class='docblock-short'>
+                                <p>Possible values of the field <code>TIM14EN</code></p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.TIM14ENW.html"
+                                  title='type stm32f103xx::rcc::apb1enr::TIM14ENW'>TIM14ENW</a></td>
+                           <td class='docblock-short'>
+                                <p>Values that can be written to the field <code>TIM14EN</code></p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.TIM2ENR.html"
+                                  title='type stm32f103xx::rcc::apb1enr::TIM2ENR'>TIM2ENR</a></td>
+                           <td class='docblock-short'>
+                                <p>Possible values of the field <code>TIM2EN</code></p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.TIM2ENW.html"
+                                  title='type stm32f103xx::rcc::apb1enr::TIM2ENW'>TIM2ENW</a></td>
+                           <td class='docblock-short'>
+                                <p>Values that can be written to the field <code>TIM2EN</code></p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.TIM3ENR.html"
+                                  title='type stm32f103xx::rcc::apb1enr::TIM3ENR'>TIM3ENR</a></td>
+                           <td class='docblock-short'>
+                                <p>Possible values of the field <code>TIM3EN</code></p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.TIM3ENW.html"
+                                  title='type stm32f103xx::rcc::apb1enr::TIM3ENW'>TIM3ENW</a></td>
+                           <td class='docblock-short'>
+                                <p>Values that can be written to the field <code>TIM3EN</code></p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.TIM4ENR.html"
+                                  title='type stm32f103xx::rcc::apb1enr::TIM4ENR'>TIM4ENR</a></td>
+                           <td class='docblock-short'>
+                                <p>Possible values of the field <code>TIM4EN</code></p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.TIM4ENW.html"
+                                  title='type stm32f103xx::rcc::apb1enr::TIM4ENW'>TIM4ENW</a></td>
+                           <td class='docblock-short'>
+                                <p>Values that can be written to the field <code>TIM4EN</code></p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.TIM5ENR.html"
+                                  title='type stm32f103xx::rcc::apb1enr::TIM5ENR'>TIM5ENR</a></td>
+                           <td class='docblock-short'>
+                                <p>Possible values of the field <code>TIM5EN</code></p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.TIM5ENW.html"
+                                  title='type stm32f103xx::rcc::apb1enr::TIM5ENW'>TIM5ENW</a></td>
+                           <td class='docblock-short'>
+                                <p>Values that can be written to the field <code>TIM5EN</code></p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.TIM6ENR.html"
+                                  title='type stm32f103xx::rcc::apb1enr::TIM6ENR'>TIM6ENR</a></td>
+                           <td class='docblock-short'>
+                                <p>Possible values of the field <code>TIM6EN</code></p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.TIM6ENW.html"
+                                  title='type stm32f103xx::rcc::apb1enr::TIM6ENW'>TIM6ENW</a></td>
+                           <td class='docblock-short'>
+                                <p>Values that can be written to the field <code>TIM6EN</code></p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.TIM7ENR.html"
+                                  title='type stm32f103xx::rcc::apb1enr::TIM7ENR'>TIM7ENR</a></td>
+                           <td class='docblock-short'>
+                                <p>Possible values of the field <code>TIM7EN</code></p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.TIM7ENW.html"
+                                  title='type stm32f103xx::rcc::apb1enr::TIM7ENW'>TIM7ENW</a></td>
+                           <td class='docblock-short'>
+                                <p>Values that can be written to the field <code>TIM7EN</code></p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.UART4ENR.html"
+                                  title='type stm32f103xx::rcc::apb1enr::UART4ENR'>UART4ENR</a></td>
+                           <td class='docblock-short'>
+                                <p>Possible values of the field <code>UART4EN</code></p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.UART4ENW.html"
+                                  title='type stm32f103xx::rcc::apb1enr::UART4ENW'>UART4ENW</a></td>
+                           <td class='docblock-short'>
+                                <p>Values that can be written to the field <code>UART4EN</code></p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.UART5ENR.html"
+                                  title='type stm32f103xx::rcc::apb1enr::UART5ENR'>UART5ENR</a></td>
+                           <td class='docblock-short'>
+                                <p>Possible values of the field <code>UART5EN</code></p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.UART5ENW.html"
+                                  title='type stm32f103xx::rcc::apb1enr::UART5ENW'>UART5ENW</a></td>
+                           <td class='docblock-short'>
+                                <p>Values that can be written to the field <code>UART5EN</code></p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.USART2ENR.html"
+                                  title='type stm32f103xx::rcc::apb1enr::USART2ENR'>USART2ENR</a></td>
+                           <td class='docblock-short'>
+                                <p>Possible values of the field <code>USART2EN</code></p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.USART2ENW.html"
+                                  title='type stm32f103xx::rcc::apb1enr::USART2ENW'>USART2ENW</a></td>
+                           <td class='docblock-short'>
+                                <p>Values that can be written to the field <code>USART2EN</code></p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.USART3ENR.html"
+                                  title='type stm32f103xx::rcc::apb1enr::USART3ENR'>USART3ENR</a></td>
+                           <td class='docblock-short'>
+                                <p>Possible values of the field <code>USART3EN</code></p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.USART3ENW.html"
+                                  title='type stm32f103xx::rcc::apb1enr::USART3ENW'>USART3ENW</a></td>
+                           <td class='docblock-short'>
+                                <p>Values that can be written to the field <code>USART3EN</code></p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.USBENR.html"
+                                  title='type stm32f103xx::rcc::apb1enr::USBENR'>USBENR</a></td>
+                           <td class='docblock-short'>
+                                <p>Possible values of the field <code>USBEN</code></p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.USBENW.html"
+                                  title='type stm32f103xx::rcc::apb1enr::USBENW'>USBENW</a></td>
+                           <td class='docblock-short'>
+                                <p>Values that can be written to the field <code>USBEN</code></p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.WWDGENR.html"
+                                  title='type stm32f103xx::rcc::apb1enr::WWDGENR'>WWDGENR</a></td>
+                           <td class='docblock-short'>
+                                <p>Possible values of the field <code>WWDGEN</code></p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.WWDGENW.html"
+                                  title='type stm32f103xx::rcc::apb1enr::WWDGENW'>WWDGENW</a></td>
+                           <td class='docblock-short'>
+                                <p>Values that can be written to the field <code>WWDGEN</code></p>
+
+                           </td>
+                       </tr></table></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt><kbd>?</kbd></dt>
+                    <dd>Show this help dialog</dd>
+                    <dt><kbd>S</kbd></dt>
+                    <dd>Focus the search field</dd>
+                    <dt><kbd>↑</kbd></dt>
+                    <dd>Move up in search results</dd>
+                    <dt><kbd>↓</kbd></dt>
+                    <dd>Move down in search results</dd>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
+                    <dd>Go to active search result</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../../";
+        window.currentCrate = "stm32f103xx";
+    </script>
+    <script src="../../../main.js"></script>
+    <script defer src="../../../search-index.js"></script>
+</body>
+</html>

@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["MEMHIZXR","Value of the field"],["MEMHOLDXR","Value of the field"],["MEMSETXR","Value of the field"],["MEMWAITXR","Value of the field"],["R","Value read from the register"],["W","Value to write to the register"],["_MEMHIZXW","Proxy"],["_MEMHOLDXW","Proxy"],["_MEMSETXW","Proxy"],["_MEMWAITXW","Proxy"]]});

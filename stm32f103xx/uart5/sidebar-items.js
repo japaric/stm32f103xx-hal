@@ -1,0 +1,1 @@
+initSidebarItems({"mod":[["brr","UART4_BRR"],["cr1","UART4_CR1"],["cr2","UART4_CR2"],["cr3","UART4_CR3"],["dr","UART4_DR"],["sr","UART4_SR"]],"struct":[["BRR","UART4_BRR"],["CR1","UART4_CR1"],["CR2","UART4_CR2"],["CR3","UART4_CR3"],["DR","UART4_DR"],["RegisterBlock","Register block"],["SR","UART4_SR"]]});

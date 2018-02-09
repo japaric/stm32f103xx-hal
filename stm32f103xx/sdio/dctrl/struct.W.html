@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `W` struct in crate `stm32f103xx`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, W">
+
+    <title>stm32f103xx::sdio::dctrl::W - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../../main.css" id="themeStyle">
+    <script src="../../../storage.js"></script>
+    
+
+    
+    
+</head>
+<body class="rustdoc struct">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
+        
+        <p class='location'>Struct W</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.reset_value">reset_value</a><a href="#method.bits">bits</a><a href="#method.dten">dten</a><a href="#method.dtdir">dtdir</a><a href="#method.dtmode">dtmode</a><a href="#method.dmaen">dmaen</a><a href="#method.dblocksize">dblocksize</a><a href="#method.pwstart">pwstart</a><a href="#method.pwstop">pwstop</a><a href="#method.rwmod">rwmod</a><a href="#method.sdioen">sdioen</a></div></div><p class='location'><a href='../../index.html'>stm32f103xx</a>::<wbr><a href='../index.html'>sdio</a>::<wbr><a href='index.html'>dctrl</a></p><script>window.sidebarCurrent = {name: 'W', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
+    </nav>
+
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../../theme.js"></script>
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../../index.html'>stm32f103xx</a>::<wbr><a href='../index.html'>sdio</a>::<wbr><a href='index.html'>dctrl</a>::<wbr><a class="struct" href=''>W</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#49409-49411' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct W { /* fields omitted */ }</pre><div class='docblock'><p>Value to write to the register</p>
+</div>
+                    <h2 id='methods' class='small-section-header'>
+                      Methods<a href='#methods' class='anchor'></a>
+                    </h2>
+                <h3 id='impl' class='impl'><span class='in-band'><code>impl <a class="struct" href="../../../stm32f103xx/sdio/dctrl/struct.W.html" title="struct stm32f103xx::sdio::dctrl::W">W</a></code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#49923-49980' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.reset_value' class="method"><span id='reset_value.v' class='invisible'><code>pub fn <a href='#method.reset_value' class='fnname'>reset_value</a>() -&gt; <a class="struct" href="../../../stm32f103xx/sdio/dctrl/struct.W.html" title="struct stm32f103xx::sdio::dctrl::W">W</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#49926-49928' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Reset value of the register</p>
+</div><h4 id='method.bits' class="method"><span id='bits.v' class='invisible'><code>pub unsafe fn <a href='#method.bits' class='fnname'>bits</a>(&amp;mut self, bits: u32) -&gt; &amp;mut Self</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#49931-49934' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Writes raw bits to the register</p>
+</div><h4 id='method.dten' class="method"><span id='dten.v' class='invisible'><code>pub fn <a href='#method.dten' class='fnname'>dten</a>(&amp;mut self) -&gt; <a class="struct" href="../../../stm32f103xx/sdio/dctrl/struct._DTENW.html" title="struct stm32f103xx::sdio::dctrl::_DTENW">_DTENW</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#49937-49939' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 0 - DTEN</p>
+</div><h4 id='method.dtdir' class="method"><span id='dtdir.v' class='invisible'><code>pub fn <a href='#method.dtdir' class='fnname'>dtdir</a>(&amp;mut self) -&gt; <a class="struct" href="../../../stm32f103xx/sdio/dctrl/struct._DTDIRW.html" title="struct stm32f103xx::sdio::dctrl::_DTDIRW">_DTDIRW</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#49942-49944' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 1 - DTDIR</p>
+</div><h4 id='method.dtmode' class="method"><span id='dtmode.v' class='invisible'><code>pub fn <a href='#method.dtmode' class='fnname'>dtmode</a>(&amp;mut self) -&gt; <a class="struct" href="../../../stm32f103xx/sdio/dctrl/struct._DTMODEW.html" title="struct stm32f103xx::sdio::dctrl::_DTMODEW">_DTMODEW</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#49947-49949' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 2 - DTMODE</p>
+</div><h4 id='method.dmaen' class="method"><span id='dmaen.v' class='invisible'><code>pub fn <a href='#method.dmaen' class='fnname'>dmaen</a>(&amp;mut self) -&gt; <a class="struct" href="../../../stm32f103xx/sdio/dctrl/struct._DMAENW.html" title="struct stm32f103xx::sdio::dctrl::_DMAENW">_DMAENW</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#49952-49954' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 3 - DMAEN</p>
+</div><h4 id='method.dblocksize' class="method"><span id='dblocksize.v' class='invisible'><code>pub fn <a href='#method.dblocksize' class='fnname'>dblocksize</a>(&amp;mut self) -&gt; <a class="struct" href="../../../stm32f103xx/sdio/dctrl/struct._DBLOCKSIZEW.html" title="struct stm32f103xx::sdio::dctrl::_DBLOCKSIZEW">_DBLOCKSIZEW</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#49957-49959' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bits 4:7 - DBLOCKSIZE</p>
+</div><h4 id='method.pwstart' class="method"><span id='pwstart.v' class='invisible'><code>pub fn <a href='#method.pwstart' class='fnname'>pwstart</a>(&amp;mut self) -&gt; <a class="struct" href="../../../stm32f103xx/sdio/dctrl/struct._PWSTARTW.html" title="struct stm32f103xx::sdio::dctrl::_PWSTARTW">_PWSTARTW</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#49962-49964' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 8 - PWSTART</p>
+</div><h4 id='method.pwstop' class="method"><span id='pwstop.v' class='invisible'><code>pub fn <a href='#method.pwstop' class='fnname'>pwstop</a>(&amp;mut self) -&gt; <a class="struct" href="../../../stm32f103xx/sdio/dctrl/struct._PWSTOPW.html" title="struct stm32f103xx::sdio::dctrl::_PWSTOPW">_PWSTOPW</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#49967-49969' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 9 - PWSTOP</p>
+</div><h4 id='method.rwmod' class="method"><span id='rwmod.v' class='invisible'><code>pub fn <a href='#method.rwmod' class='fnname'>rwmod</a>(&amp;mut self) -&gt; <a class="struct" href="../../../stm32f103xx/sdio/dctrl/struct._RWMODW.html" title="struct stm32f103xx::sdio::dctrl::_RWMODW">_RWMODW</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#49972-49974' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 10 - RWMOD</p>
+</div><h4 id='method.sdioen' class="method"><span id='sdioen.v' class='invisible'><code>pub fn <a href='#method.sdioen' class='fnname'>sdioen</a>(&amp;mut self) -&gt; <a class="struct" href="../../../stm32f103xx/sdio/dctrl/struct._SDIOENW.html" title="struct stm32f103xx::sdio::dctrl::_SDIOENW">_SDIOENW</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#49977-49979' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 11 - SDIOEN</p>
+</div></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt><kbd>?</kbd></dt>
+                    <dd>Show this help dialog</dd>
+                    <dt><kbd>S</kbd></dt>
+                    <dd>Focus the search field</dd>
+                    <dt><kbd>↑</kbd></dt>
+                    <dd>Move up in search results</dd>
+                    <dt><kbd>↓</kbd></dt>
+                    <dd>Move down in search results</dd>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
+                    <dd>Go to active search result</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../../";
+        window.currentCrate = "stm32f103xx";
+    </script>
+    <script src="../../../main.js"></script>
+    <script defer src="../../../search-index.js"></script>
+</body>
+</html>

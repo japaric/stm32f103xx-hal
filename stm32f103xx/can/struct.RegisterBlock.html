@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `RegisterBlock` struct in crate `stm32f103xx`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, RegisterBlock">
+
+    <title>stm32f103xx::can::RegisterBlock - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css" id="themeStyle">
+    <script src="../../storage.js"></script>
+    
+
+    
+    
+</head>
+<body class="rustdoc struct">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
+        
+        <p class='location'>Struct RegisterBlock</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#fields">Fields</a><div class="sidebar-links"><a href="#structfield.can_mcr">can_mcr</a><a href="#structfield.can_msr">can_msr</a><a href="#structfield.can_tsr">can_tsr</a><a href="#structfield.can_rf0r">can_rf0r</a><a href="#structfield.can_rf1r">can_rf1r</a><a href="#structfield.can_ier">can_ier</a><a href="#structfield.can_esr">can_esr</a><a href="#structfield.can_btr">can_btr</a><a href="#structfield.can_ti0r">can_ti0r</a><a href="#structfield.can_tdt0r">can_tdt0r</a><a href="#structfield.can_tdl0r">can_tdl0r</a><a href="#structfield.can_tdh0r">can_tdh0r</a><a href="#structfield.can_ti1r">can_ti1r</a><a href="#structfield.can_tdt1r">can_tdt1r</a><a href="#structfield.can_tdl1r">can_tdl1r</a><a href="#structfield.can_tdh1r">can_tdh1r</a><a href="#structfield.can_ti2r">can_ti2r</a><a href="#structfield.can_tdt2r">can_tdt2r</a><a href="#structfield.can_tdl2r">can_tdl2r</a><a href="#structfield.can_tdh2r">can_tdh2r</a><a href="#structfield.can_ri0r">can_ri0r</a><a href="#structfield.can_rdt0r">can_rdt0r</a><a href="#structfield.can_rdl0r">can_rdl0r</a><a href="#structfield.can_rdh0r">can_rdh0r</a><a href="#structfield.can_ri1r">can_ri1r</a><a href="#structfield.can_rdt1r">can_rdt1r</a><a href="#structfield.can_rdl1r">can_rdl1r</a><a href="#structfield.can_rdh1r">can_rdh1r</a><a href="#structfield.can_fmr">can_fmr</a><a href="#structfield.can_fm1r">can_fm1r</a><a href="#structfield.can_fs1r">can_fs1r</a><a href="#structfield.can_ffa1r">can_ffa1r</a><a href="#structfield.can_fa1r">can_fa1r</a><a href="#structfield.f0r1">f0r1</a><a href="#structfield.f0r2">f0r2</a><a href="#structfield.f1r1">f1r1</a><a href="#structfield.f1r2">f1r2</a><a href="#structfield.f2r1">f2r1</a><a href="#structfield.f2r2">f2r2</a><a href="#structfield.f3r1">f3r1</a><a href="#structfield.f3r2">f3r2</a><a href="#structfield.f4r1">f4r1</a><a href="#structfield.f4r2">f4r2</a><a href="#structfield.f5r1">f5r1</a><a href="#structfield.f5r2">f5r2</a><a href="#structfield.f6r1">f6r1</a><a href="#structfield.f6r2">f6r2</a><a href="#structfield.f7r1">f7r1</a><a href="#structfield.f7r2">f7r2</a><a href="#structfield.f8r1">f8r1</a><a href="#structfield.f8r2">f8r2</a><a href="#structfield.f9r1">f9r1</a><a href="#structfield.f9r2">f9r2</a><a href="#structfield.f10r1">f10r1</a><a href="#structfield.f10r2">f10r2</a><a href="#structfield.f11r1">f11r1</a><a href="#structfield.f11r2">f11r2</a><a href="#structfield.f12r1">f12r1</a><a href="#structfield.f12r2">f12r2</a><a href="#structfield.f13r1">f13r1</a><a href="#structfield.f13r2">f13r2</a></div></div><p class='location'><a href='../index.html'>stm32f103xx</a>::<wbr><a href='index.html'>can</a></p><script>window.sidebarCurrent = {name: 'RegisterBlock', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
+    </nav>
+
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../theme.js"></script>
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>stm32f103xx</a>::<wbr><a href='index.html'>can</a>::<wbr><a class="struct" href=''>RegisterBlock</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../src/stm32f103xx/lib.rs.html#103178-103307' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'><div class="docblock attributes">#[repr(C)]
+</div>pub struct RegisterBlock {
+    pub can_mcr: <a class="struct" href="../../stm32f103xx/can/struct.CAN_MCR.html" title="struct stm32f103xx::can::CAN_MCR">CAN_MCR</a>,
+    pub can_msr: <a class="struct" href="../../stm32f103xx/can/struct.CAN_MSR.html" title="struct stm32f103xx::can::CAN_MSR">CAN_MSR</a>,
+    pub can_tsr: <a class="struct" href="../../stm32f103xx/can/struct.CAN_TSR.html" title="struct stm32f103xx::can::CAN_TSR">CAN_TSR</a>,
+    pub can_rf0r: <a class="struct" href="../../stm32f103xx/can/struct.CAN_RF0R.html" title="struct stm32f103xx::can::CAN_RF0R">CAN_RF0R</a>,
+    pub can_rf1r: <a class="struct" href="../../stm32f103xx/can/struct.CAN_RF1R.html" title="struct stm32f103xx::can::CAN_RF1R">CAN_RF1R</a>,
+    pub can_ier: <a class="struct" href="../../stm32f103xx/can/struct.CAN_IER.html" title="struct stm32f103xx::can::CAN_IER">CAN_IER</a>,
+    pub can_esr: <a class="struct" href="../../stm32f103xx/can/struct.CAN_ESR.html" title="struct stm32f103xx::can::CAN_ESR">CAN_ESR</a>,
+    pub can_btr: <a class="struct" href="../../stm32f103xx/can/struct.CAN_BTR.html" title="struct stm32f103xx::can::CAN_BTR">CAN_BTR</a>,
+    pub can_ti0r: <a class="struct" href="../../stm32f103xx/can/struct.CAN_TI0R.html" title="struct stm32f103xx::can::CAN_TI0R">CAN_TI0R</a>,
+    pub can_tdt0r: <a class="struct" href="../../stm32f103xx/can/struct.CAN_TDT0R.html" title="struct stm32f103xx::can::CAN_TDT0R">CAN_TDT0R</a>,
+    pub can_tdl0r: <a class="struct" href="../../stm32f103xx/can/struct.CAN_TDL0R.html" title="struct stm32f103xx::can::CAN_TDL0R">CAN_TDL0R</a>,
+    pub can_tdh0r: <a class="struct" href="../../stm32f103xx/can/struct.CAN_TDH0R.html" title="struct stm32f103xx::can::CAN_TDH0R">CAN_TDH0R</a>,
+    pub can_ti1r: <a class="struct" href="../../stm32f103xx/can/struct.CAN_TI1R.html" title="struct stm32f103xx::can::CAN_TI1R">CAN_TI1R</a>,
+    pub can_tdt1r: <a class="struct" href="../../stm32f103xx/can/struct.CAN_TDT1R.html" title="struct stm32f103xx::can::CAN_TDT1R">CAN_TDT1R</a>,
+    pub can_tdl1r: <a class="struct" href="../../stm32f103xx/can/struct.CAN_TDL1R.html" title="struct stm32f103xx::can::CAN_TDL1R">CAN_TDL1R</a>,
+    pub can_tdh1r: <a class="struct" href="../../stm32f103xx/can/struct.CAN_TDH1R.html" title="struct stm32f103xx::can::CAN_TDH1R">CAN_TDH1R</a>,
+    pub can_ti2r: <a class="struct" href="../../stm32f103xx/can/struct.CAN_TI2R.html" title="struct stm32f103xx::can::CAN_TI2R">CAN_TI2R</a>,
+    pub can_tdt2r: <a class="struct" href="../../stm32f103xx/can/struct.CAN_TDT2R.html" title="struct stm32f103xx::can::CAN_TDT2R">CAN_TDT2R</a>,
+    pub can_tdl2r: <a class="struct" href="../../stm32f103xx/can/struct.CAN_TDL2R.html" title="struct stm32f103xx::can::CAN_TDL2R">CAN_TDL2R</a>,
+    pub can_tdh2r: <a class="struct" href="../../stm32f103xx/can/struct.CAN_TDH2R.html" title="struct stm32f103xx::can::CAN_TDH2R">CAN_TDH2R</a>,
+    pub can_ri0r: <a class="struct" href="../../stm32f103xx/can/struct.CAN_RI0R.html" title="struct stm32f103xx::can::CAN_RI0R">CAN_RI0R</a>,
+    pub can_rdt0r: <a class="struct" href="../../stm32f103xx/can/struct.CAN_RDT0R.html" title="struct stm32f103xx::can::CAN_RDT0R">CAN_RDT0R</a>,
+    pub can_rdl0r: <a class="struct" href="../../stm32f103xx/can/struct.CAN_RDL0R.html" title="struct stm32f103xx::can::CAN_RDL0R">CAN_RDL0R</a>,
+    pub can_rdh0r: <a class="struct" href="../../stm32f103xx/can/struct.CAN_RDH0R.html" title="struct stm32f103xx::can::CAN_RDH0R">CAN_RDH0R</a>,
+    pub can_ri1r: <a class="struct" href="../../stm32f103xx/can/struct.CAN_RI1R.html" title="struct stm32f103xx::can::CAN_RI1R">CAN_RI1R</a>,
+    pub can_rdt1r: <a class="struct" href="../../stm32f103xx/can/struct.CAN_RDT1R.html" title="struct stm32f103xx::can::CAN_RDT1R">CAN_RDT1R</a>,
+    pub can_rdl1r: <a class="struct" href="../../stm32f103xx/can/struct.CAN_RDL1R.html" title="struct stm32f103xx::can::CAN_RDL1R">CAN_RDL1R</a>,
+    pub can_rdh1r: <a class="struct" href="../../stm32f103xx/can/struct.CAN_RDH1R.html" title="struct stm32f103xx::can::CAN_RDH1R">CAN_RDH1R</a>,
+    pub can_fmr: <a class="struct" href="../../stm32f103xx/can/struct.CAN_FMR.html" title="struct stm32f103xx::can::CAN_FMR">CAN_FMR</a>,
+    pub can_fm1r: <a class="struct" href="../../stm32f103xx/can/struct.CAN_FM1R.html" title="struct stm32f103xx::can::CAN_FM1R">CAN_FM1R</a>,
+    pub can_fs1r: <a class="struct" href="../../stm32f103xx/can/struct.CAN_FS1R.html" title="struct stm32f103xx::can::CAN_FS1R">CAN_FS1R</a>,
+    pub can_ffa1r: <a class="struct" href="../../stm32f103xx/can/struct.CAN_FFA1R.html" title="struct stm32f103xx::can::CAN_FFA1R">CAN_FFA1R</a>,
+    pub can_fa1r: <a class="struct" href="../../stm32f103xx/can/struct.CAN_FA1R.html" title="struct stm32f103xx::can::CAN_FA1R">CAN_FA1R</a>,
+    pub f0r1: <a class="struct" href="../../stm32f103xx/can/struct.F0R1.html" title="struct stm32f103xx::can::F0R1">F0R1</a>,
+    pub f0r2: <a class="struct" href="../../stm32f103xx/can/struct.F0R2.html" title="struct stm32f103xx::can::F0R2">F0R2</a>,
+    pub f1r1: <a class="struct" href="../../stm32f103xx/can/struct.F1R1.html" title="struct stm32f103xx::can::F1R1">F1R1</a>,
+    pub f1r2: <a class="struct" href="../../stm32f103xx/can/struct.F1R2.html" title="struct stm32f103xx::can::F1R2">F1R2</a>,
+    pub f2r1: <a class="struct" href="../../stm32f103xx/can/struct.F2R1.html" title="struct stm32f103xx::can::F2R1">F2R1</a>,
+    pub f2r2: <a class="struct" href="../../stm32f103xx/can/struct.F2R2.html" title="struct stm32f103xx::can::F2R2">F2R2</a>,
+    pub f3r1: <a class="struct" href="../../stm32f103xx/can/struct.F3R1.html" title="struct stm32f103xx::can::F3R1">F3R1</a>,
+    pub f3r2: <a class="struct" href="../../stm32f103xx/can/struct.F3R2.html" title="struct stm32f103xx::can::F3R2">F3R2</a>,
+    pub f4r1: <a class="struct" href="../../stm32f103xx/can/struct.F4R1.html" title="struct stm32f103xx::can::F4R1">F4R1</a>,
+    pub f4r2: <a class="struct" href="../../stm32f103xx/can/struct.F4R2.html" title="struct stm32f103xx::can::F4R2">F4R2</a>,
+    pub f5r1: <a class="struct" href="../../stm32f103xx/can/struct.F5R1.html" title="struct stm32f103xx::can::F5R1">F5R1</a>,
+    pub f5r2: <a class="struct" href="../../stm32f103xx/can/struct.F5R2.html" title="struct stm32f103xx::can::F5R2">F5R2</a>,
+    pub f6r1: <a class="struct" href="../../stm32f103xx/can/struct.F6R1.html" title="struct stm32f103xx::can::F6R1">F6R1</a>,
+    pub f6r2: <a class="struct" href="../../stm32f103xx/can/struct.F6R2.html" title="struct stm32f103xx::can::F6R2">F6R2</a>,
+    pub f7r1: <a class="struct" href="../../stm32f103xx/can/struct.F7R1.html" title="struct stm32f103xx::can::F7R1">F7R1</a>,
+    pub f7r2: <a class="struct" href="../../stm32f103xx/can/struct.F7R2.html" title="struct stm32f103xx::can::F7R2">F7R2</a>,
+    pub f8r1: <a class="struct" href="../../stm32f103xx/can/struct.F8R1.html" title="struct stm32f103xx::can::F8R1">F8R1</a>,
+    pub f8r2: <a class="struct" href="../../stm32f103xx/can/struct.F8R2.html" title="struct stm32f103xx::can::F8R2">F8R2</a>,
+    pub f9r1: <a class="struct" href="../../stm32f103xx/can/struct.F9R1.html" title="struct stm32f103xx::can::F9R1">F9R1</a>,
+    pub f9r2: <a class="struct" href="../../stm32f103xx/can/struct.F9R2.html" title="struct stm32f103xx::can::F9R2">F9R2</a>,
+    pub f10r1: <a class="struct" href="../../stm32f103xx/can/struct.F10R1.html" title="struct stm32f103xx::can::F10R1">F10R1</a>,
+    pub f10r2: <a class="struct" href="../../stm32f103xx/can/struct.F10R2.html" title="struct stm32f103xx::can::F10R2">F10R2</a>,
+    pub f11r1: <a class="struct" href="../../stm32f103xx/can/struct.F11R1.html" title="struct stm32f103xx::can::F11R1">F11R1</a>,
+    pub f11r2: <a class="struct" href="../../stm32f103xx/can/struct.F11R2.html" title="struct stm32f103xx::can::F11R2">F11R2</a>,
+    pub f12r1: <a class="struct" href="../../stm32f103xx/can/struct.F12R1.html" title="struct stm32f103xx::can::F12R1">F12R1</a>,
+    pub f12r2: <a class="struct" href="../../stm32f103xx/can/struct.F12R2.html" title="struct stm32f103xx::can::F12R2">F12R2</a>,
+    pub f13r1: <a class="struct" href="../../stm32f103xx/can/struct.F13R1.html" title="struct stm32f103xx::can::F13R1">F13R1</a>,
+    pub f13r2: <a class="struct" href="../../stm32f103xx/can/struct.F13R2.html" title="struct stm32f103xx::can::F13R2">F13R2</a>,
+    // some fields omitted
+}</pre><div class='docblock'><p>Register block</p>
+</div><h2 id='fields' class='fields small-section-header'>
+                       Fields<a href='#fields' class='anchor'></a></h2><span id="structfield.can_mcr" class="structfield small-section-header">
+                           <a href="#structfield.can_mcr" class="anchor field"></a>
+                           <span id="can_mcr.v" class='invisible'>
+                           <code>can_mcr: <a class="struct" href="../../stm32f103xx/can/struct.CAN_MCR.html" title="struct stm32f103xx::can::CAN_MCR">CAN_MCR</a></code>
+                           </span></span><div class='docblock'><p>0x00 - CAN_MCR</p>
+</div><span id="structfield.can_msr" class="structfield small-section-header">
+                           <a href="#structfield.can_msr" class="anchor field"></a>
+                           <span id="can_msr.v" class='invisible'>
+                           <code>can_msr: <a class="struct" href="../../stm32f103xx/can/struct.CAN_MSR.html" title="struct stm32f103xx::can::CAN_MSR">CAN_MSR</a></code>
+                           </span></span><div class='docblock'><p>0x04 - CAN_MSR</p>
+</div><span id="structfield.can_tsr" class="structfield small-section-header">
+                           <a href="#structfield.can_tsr" class="anchor field"></a>
+                           <span id="can_tsr.v" class='invisible'>
+                           <code>can_tsr: <a class="struct" href="../../stm32f103xx/can/struct.CAN_TSR.html" title="struct stm32f103xx::can::CAN_TSR">CAN_TSR</a></code>
+                           </span></span><div class='docblock'><p>0x08 - CAN_TSR</p>
+</div><span id="structfield.can_rf0r" class="structfield small-section-header">
+                           <a href="#structfield.can_rf0r" class="anchor field"></a>
+                           <span id="can_rf0r.v" class='invisible'>
+                           <code>can_rf0r: <a class="struct" href="../../stm32f103xx/can/struct.CAN_RF0R.html" title="struct stm32f103xx::can::CAN_RF0R">CAN_RF0R</a></code>
+                           </span></span><div class='docblock'><p>0x0c - CAN_RF0R</p>
+</div><span id="structfield.can_rf1r" class="structfield small-section-header">
+                           <a href="#structfield.can_rf1r" class="anchor field"></a>
+                           <span id="can_rf1r.v" class='invisible'>
+                           <code>can_rf1r: <a class="struct" href="../../stm32f103xx/can/struct.CAN_RF1R.html" title="struct stm32f103xx::can::CAN_RF1R">CAN_RF1R</a></code>
+                           </span></span><div class='docblock'><p>0x10 - CAN_RF1R</p>
+</div><span id="structfield.can_ier" class="structfield small-section-header">
+                           <a href="#structfield.can_ier" class="anchor field"></a>
+                           <span id="can_ier.v" class='invisible'>
+                           <code>can_ier: <a class="struct" href="../../stm32f103xx/can/struct.CAN_IER.html" title="struct stm32f103xx::can::CAN_IER">CAN_IER</a></code>
+                           </span></span><div class='docblock'><p>0x14 - CAN_IER</p>
+</div><span id="structfield.can_esr" class="structfield small-section-header">
+                           <a href="#structfield.can_esr" class="anchor field"></a>
+                           <span id="can_esr.v" class='invisible'>
+                           <code>can_esr: <a class="struct" href="../../stm32f103xx/can/struct.CAN_ESR.html" title="struct stm32f103xx::can::CAN_ESR">CAN_ESR</a></code>
+                           </span></span><div class='docblock'><p>0x18 - CAN_ESR</p>
+</div><span id="structfield.can_btr" class="structfield small-section-header">
+                           <a href="#structfield.can_btr" class="anchor field"></a>
+                           <span id="can_btr.v" class='invisible'>
+                           <code>can_btr: <a class="struct" href="../../stm32f103xx/can/struct.CAN_BTR.html" title="struct stm32f103xx::can::CAN_BTR">CAN_BTR</a></code>
+                           </span></span><div class='docblock'><p>0x1c - CAN_BTR</p>
+</div><span id="structfield.can_ti0r" class="structfield small-section-header">
+                           <a href="#structfield.can_ti0r" class="anchor field"></a>
+                           <span id="can_ti0r.v" class='invisible'>
+                           <code>can_ti0r: <a class="struct" href="../../stm32f103xx/can/struct.CAN_TI0R.html" title="struct stm32f103xx::can::CAN_TI0R">CAN_TI0R</a></code>
+                           </span></span><div class='docblock'><p>0x180 - CAN_TI0R</p>
+</div><span id="structfield.can_tdt0r" class="structfield small-section-header">
+                           <a href="#structfield.can_tdt0r" class="anchor field"></a>
+                           <span id="can_tdt0r.v" class='invisible'>
+                           <code>can_tdt0r: <a class="struct" href="../../stm32f103xx/can/struct.CAN_TDT0R.html" title="struct stm32f103xx::can::CAN_TDT0R">CAN_TDT0R</a></code>
+                           </span></span><div class='docblock'><p>0x184 - CAN_TDT0R</p>
+</div><span id="structfield.can_tdl0r" class="structfield small-section-header">
+                           <a href="#structfield.can_tdl0r" class="anchor field"></a>
+                           <span id="can_tdl0r.v" class='invisible'>
+                           <code>can_tdl0r: <a class="struct" href="../../stm32f103xx/can/struct.CAN_TDL0R.html" title="struct stm32f103xx::can::CAN_TDL0R">CAN_TDL0R</a></code>
+                           </span></span><div class='docblock'><p>0x188 - CAN_TDL0R</p>
+</div><span id="structfield.can_tdh0r" class="structfield small-section-header">
+                           <a href="#structfield.can_tdh0r" class="anchor field"></a>
+                           <span id="can_tdh0r.v" class='invisible'>
+                           <code>can_tdh0r: <a class="struct" href="../../stm32f103xx/can/struct.CAN_TDH0R.html" title="struct stm32f103xx::can::CAN_TDH0R">CAN_TDH0R</a></code>
+                           </span></span><div class='docblock'><p>0x18c - CAN_TDH0R</p>
+</div><span id="structfield.can_ti1r" class="structfield small-section-header">
+                           <a href="#structfield.can_ti1r" class="anchor field"></a>
+                           <span id="can_ti1r.v" class='invisible'>
+                           <code>can_ti1r: <a class="struct" href="../../stm32f103xx/can/struct.CAN_TI1R.html" title="struct stm32f103xx::can::CAN_TI1R">CAN_TI1R</a></code>
+                           </span></span><div class='docblock'><p>0x190 - CAN_TI1R</p>
+</div><span id="structfield.can_tdt1r" class="structfield small-section-header">
+                           <a href="#structfield.can_tdt1r" class="anchor field"></a>
+                           <span id="can_tdt1r.v" class='invisible'>
+                           <code>can_tdt1r: <a class="struct" href="../../stm32f103xx/can/struct.CAN_TDT1R.html" title="struct stm32f103xx::can::CAN_TDT1R">CAN_TDT1R</a></code>
+                           </span></span><div class='docblock'><p>0x194 - CAN_TDT1R</p>
+</div><span id="structfield.can_tdl1r" class="structfield small-section-header">
+                           <a href="#structfield.can_tdl1r" class="anchor field"></a>
+                           <span id="can_tdl1r.v" class='invisible'>
+                           <code>can_tdl1r: <a class="struct" href="../../stm32f103xx/can/struct.CAN_TDL1R.html" title="struct stm32f103xx::can::CAN_TDL1R">CAN_TDL1R</a></code>
+                           </span></span><div class='docblock'><p>0x198 - CAN_TDL1R</p>
+</div><span id="structfield.can_tdh1r" class="structfield small-section-header">
+                           <a href="#structfield.can_tdh1r" class="anchor field"></a>
+                           <span id="can_tdh1r.v" class='invisible'>
+                           <code>can_tdh1r: <a class="struct" href="../../stm32f103xx/can/struct.CAN_TDH1R.html" title="struct stm32f103xx::can::CAN_TDH1R">CAN_TDH1R</a></code>
+                           </span></span><div class='docblock'><p>0x19c - CAN_TDH1R</p>
+</div><span id="structfield.can_ti2r" class="structfield small-section-header">
+                           <a href="#structfield.can_ti2r" class="anchor field"></a>
+                           <span id="can_ti2r.v" class='invisible'>
+                           <code>can_ti2r: <a class="struct" href="../../stm32f103xx/can/struct.CAN_TI2R.html" title="struct stm32f103xx::can::CAN_TI2R">CAN_TI2R</a></code>
+                           </span></span><div class='docblock'><p>0x1a0 - CAN_TI2R</p>
+</div><span id="structfield.can_tdt2r" class="structfield small-section-header">
+                           <a href="#structfield.can_tdt2r" class="anchor field"></a>
+                           <span id="can_tdt2r.v" class='invisible'>
+                           <code>can_tdt2r: <a class="struct" href="../../stm32f103xx/can/struct.CAN_TDT2R.html" title="struct stm32f103xx::can::CAN_TDT2R">CAN_TDT2R</a></code>
+                           </span></span><div class='docblock'><p>0x1a4 - CAN_TDT2R</p>
+</div><span id="structfield.can_tdl2r" class="structfield small-section-header">
+                           <a href="#structfield.can_tdl2r" class="anchor field"></a>
+                           <span id="can_tdl2r.v" class='invisible'>
+                           <code>can_tdl2r: <a class="struct" href="../../stm32f103xx/can/struct.CAN_TDL2R.html" title="struct stm32f103xx::can::CAN_TDL2R">CAN_TDL2R</a></code>
+                           </span></span><div class='docblock'><p>0x1a8 - CAN_TDL2R</p>
+</div><span id="structfield.can_tdh2r" class="structfield small-section-header">
+                           <a href="#structfield.can_tdh2r" class="anchor field"></a>
+                           <span id="can_tdh2r.v" class='invisible'>
+                           <code>can_tdh2r: <a class="struct" href="../../stm32f103xx/can/struct.CAN_TDH2R.html" title="struct stm32f103xx::can::CAN_TDH2R">CAN_TDH2R</a></code>
+                           </span></span><div class='docblock'><p>0x1ac - CAN_TDH2R</p>
+</div><span id="structfield.can_ri0r" class="structfield small-section-header">
+                           <a href="#structfield.can_ri0r" class="anchor field"></a>
+                           <span id="can_ri0r.v" class='invisible'>
+                           <code>can_ri0r: <a class="struct" href="../../stm32f103xx/can/struct.CAN_RI0R.html" title="struct stm32f103xx::can::CAN_RI0R">CAN_RI0R</a></code>
+                           </span></span><div class='docblock'><p>0x1b0 - CAN_RI0R</p>
+</div><span id="structfield.can_rdt0r" class="structfield small-section-header">
+                           <a href="#structfield.can_rdt0r" class="anchor field"></a>
+                           <span id="can_rdt0r.v" class='invisible'>
+                           <code>can_rdt0r: <a class="struct" href="../../stm32f103xx/can/struct.CAN_RDT0R.html" title="struct stm32f103xx::can::CAN_RDT0R">CAN_RDT0R</a></code>
+                           </span></span><div class='docblock'><p>0x1b4 - CAN_RDT0R</p>
+</div><span id="structfield.can_rdl0r" class="structfield small-section-header">
+                           <a href="#structfield.can_rdl0r" class="anchor field"></a>
+                           <span id="can_rdl0r.v" class='invisible'>
+                           <code>can_rdl0r: <a class="struct" href="../../stm32f103xx/can/struct.CAN_RDL0R.html" title="struct stm32f103xx::can::CAN_RDL0R">CAN_RDL0R</a></code>
+                           </span></span><div class='docblock'><p>0x1b8 - CAN_RDL0R</p>
+</div><span id="structfield.can_rdh0r" class="structfield small-section-header">
+                           <a href="#structfield.can_rdh0r" class="anchor field"></a>
+                           <span id="can_rdh0r.v" class='invisible'>
+                           <code>can_rdh0r: <a class="struct" href="../../stm32f103xx/can/struct.CAN_RDH0R.html" title="struct stm32f103xx::can::CAN_RDH0R">CAN_RDH0R</a></code>
+                           </span></span><div class='docblock'><p>0x1bc - CAN_RDH0R</p>
+</div><span id="structfield.can_ri1r" class="structfield small-section-header">
+                           <a href="#structfield.can_ri1r" class="anchor field"></a>
+                           <span id="can_ri1r.v" class='invisible'>
+                           <code>can_ri1r: <a class="struct" href="../../stm32f103xx/can/struct.CAN_RI1R.html" title="struct stm32f103xx::can::CAN_RI1R">CAN_RI1R</a></code>
+                           </span></span><div class='docblock'><p>0x1c0 - CAN_RI1R</p>
+</div><span id="structfield.can_rdt1r" class="structfield small-section-header">
+                           <a href="#structfield.can_rdt1r" class="anchor field"></a>
+                           <span id="can_rdt1r.v" class='invisible'>
+                           <code>can_rdt1r: <a class="struct" href="../../stm32f103xx/can/struct.CAN_RDT1R.html" title="struct stm32f103xx::can::CAN_RDT1R">CAN_RDT1R</a></code>
+                           </span></span><div class='docblock'><p>0x1c4 - CAN_RDT1R</p>
+</div><span id="structfield.can_rdl1r" class="structfield small-section-header">
+                           <a href="#structfield.can_rdl1r" class="anchor field"></a>
+                           <span id="can_rdl1r.v" class='invisible'>
+                           <code>can_rdl1r: <a class="struct" href="../../stm32f103xx/can/struct.CAN_RDL1R.html" title="struct stm32f103xx::can::CAN_RDL1R">CAN_RDL1R</a></code>
+                           </span></span><div class='docblock'><p>0x1c8 - CAN_RDL1R</p>
+</div><span id="structfield.can_rdh1r" class="structfield small-section-header">
+                           <a href="#structfield.can_rdh1r" class="anchor field"></a>
+                           <span id="can_rdh1r.v" class='invisible'>
+                           <code>can_rdh1r: <a class="struct" href="../../stm32f103xx/can/struct.CAN_RDH1R.html" title="struct stm32f103xx::can::CAN_RDH1R">CAN_RDH1R</a></code>
+                           </span></span><div class='docblock'><p>0x1cc - CAN_RDH1R</p>
+</div><span id="structfield.can_fmr" class="structfield small-section-header">
+                           <a href="#structfield.can_fmr" class="anchor field"></a>
+                           <span id="can_fmr.v" class='invisible'>
+                           <code>can_fmr: <a class="struct" href="../../stm32f103xx/can/struct.CAN_FMR.html" title="struct stm32f103xx::can::CAN_FMR">CAN_FMR</a></code>
+                           </span></span><div class='docblock'><p>0x200 - CAN_FMR</p>
+</div><span id="structfield.can_fm1r" class="structfield small-section-header">
+                           <a href="#structfield.can_fm1r" class="anchor field"></a>
+                           <span id="can_fm1r.v" class='invisible'>
+                           <code>can_fm1r: <a class="struct" href="../../stm32f103xx/can/struct.CAN_FM1R.html" title="struct stm32f103xx::can::CAN_FM1R">CAN_FM1R</a></code>
+                           </span></span><div class='docblock'><p>0x204 - CAN_FM1R</p>
+</div><span id="structfield.can_fs1r" class="structfield small-section-header">
+                           <a href="#structfield.can_fs1r" class="anchor field"></a>
+                           <span id="can_fs1r.v" class='invisible'>
+                           <code>can_fs1r: <a class="struct" href="../../stm32f103xx/can/struct.CAN_FS1R.html" title="struct stm32f103xx::can::CAN_FS1R">CAN_FS1R</a></code>
+                           </span></span><div class='docblock'><p>0x20c - CAN_FS1R</p>
+</div><span id="structfield.can_ffa1r" class="structfield small-section-header">
+                           <a href="#structfield.can_ffa1r" class="anchor field"></a>
+                           <span id="can_ffa1r.v" class='invisible'>
+                           <code>can_ffa1r: <a class="struct" href="../../stm32f103xx/can/struct.CAN_FFA1R.html" title="struct stm32f103xx::can::CAN_FFA1R">CAN_FFA1R</a></code>
+                           </span></span><div class='docblock'><p>0x214 - CAN_FFA1R</p>
+</div><span id="structfield.can_fa1r" class="structfield small-section-header">
+                           <a href="#structfield.can_fa1r" class="anchor field"></a>
+                           <span id="can_fa1r.v" class='invisible'>
+                           <code>can_fa1r: <a class="struct" href="../../stm32f103xx/can/struct.CAN_FA1R.html" title="struct stm32f103xx::can::CAN_FA1R">CAN_FA1R</a></code>
+                           </span></span><div class='docblock'><p>0x21c - CAN_FA1R</p>
+</div><span id="structfield.f0r1" class="structfield small-section-header">
+                           <a href="#structfield.f0r1" class="anchor field"></a>
+                           <span id="f0r1.v" class='invisible'>
+                           <code>f0r1: <a class="struct" href="../../stm32f103xx/can/struct.F0R1.html" title="struct stm32f103xx::can::F0R1">F0R1</a></code>
+                           </span></span><div class='docblock'><p>0x240 - Filter bank 0 register 1</p>
+</div><span id="structfield.f0r2" class="structfield small-section-header">
+                           <a href="#structfield.f0r2" class="anchor field"></a>
+                           <span id="f0r2.v" class='invisible'>
+                           <code>f0r2: <a class="struct" href="../../stm32f103xx/can/struct.F0R2.html" title="struct stm32f103xx::can::F0R2">F0R2</a></code>
+                           </span></span><div class='docblock'><p>0x244 - Filter bank 0 register 2</p>
+</div><span id="structfield.f1r1" class="structfield small-section-header">
+                           <a href="#structfield.f1r1" class="anchor field"></a>
+                           <span id="f1r1.v" class='invisible'>
+                           <code>f1r1: <a class="struct" href="../../stm32f103xx/can/struct.F1R1.html" title="struct stm32f103xx::can::F1R1">F1R1</a></code>
+                           </span></span><div class='docblock'><p>0x248 - Filter bank 1 register 1</p>
+</div><span id="structfield.f1r2" class="structfield small-section-header">
+                           <a href="#structfield.f1r2" class="anchor field"></a>
+                           <span id="f1r2.v" class='invisible'>
+                           <code>f1r2: <a class="struct" href="../../stm32f103xx/can/struct.F1R2.html" title="struct stm32f103xx::can::F1R2">F1R2</a></code>
+                           </span></span><div class='docblock'><p>0x24c - Filter bank 1 register 2</p>
+</div><span id="structfield.f2r1" class="structfield small-section-header">
+                           <a href="#structfield.f2r1" class="anchor field"></a>
+                           <span id="f2r1.v" class='invisible'>
+                           <code>f2r1: <a class="struct" href="../../stm32f103xx/can/struct.F2R1.html" title="struct stm32f103xx::can::F2R1">F2R1</a></code>
+                           </span></span><div class='docblock'><p>0x250 - Filter bank 2 register 1</p>
+</div><span id="structfield.f2r2" class="structfield small-section-header">
+                           <a href="#structfield.f2r2" class="anchor field"></a>
+                           <span id="f2r2.v" class='invisible'>
+                           <code>f2r2: <a class="struct" href="../../stm32f103xx/can/struct.F2R2.html" title="struct stm32f103xx::can::F2R2">F2R2</a></code>
+                           </span></span><div class='docblock'><p>0x254 - Filter bank 2 register 2</p>
+</div><span id="structfield.f3r1" class="structfield small-section-header">
+                           <a href="#structfield.f3r1" class="anchor field"></a>
+                           <span id="f3r1.v" class='invisible'>
+                           <code>f3r1: <a class="struct" href="../../stm32f103xx/can/struct.F3R1.html" title="struct stm32f103xx::can::F3R1">F3R1</a></code>
+                           </span></span><div class='docblock'><p>0x258 - Filter bank 3 register 1</p>
+</div><span id="structfield.f3r2" class="structfield small-section-header">
+                           <a href="#structfield.f3r2" class="anchor field"></a>
+                           <span id="f3r2.v" class='invisible'>
+                           <code>f3r2: <a class="struct" href="../../stm32f103xx/can/struct.F3R2.html" title="struct stm32f103xx::can::F3R2">F3R2</a></code>
+                           </span></span><div class='docblock'><p>0x25c - Filter bank 3 register 2</p>
+</div><span id="structfield.f4r1" class="structfield small-section-header">
+                           <a href="#structfield.f4r1" class="anchor field"></a>
+                           <span id="f4r1.v" class='invisible'>
+                           <code>f4r1: <a class="struct" href="../../stm32f103xx/can/struct.F4R1.html" title="struct stm32f103xx::can::F4R1">F4R1</a></code>
+                           </span></span><div class='docblock'><p>0x260 - Filter bank 4 register 1</p>
+</div><span id="structfield.f4r2" class="structfield small-section-header">
+                           <a href="#structfield.f4r2" class="anchor field"></a>
+                           <span id="f4r2.v" class='invisible'>
+                           <code>f4r2: <a class="struct" href="../../stm32f103xx/can/struct.F4R2.html" title="struct stm32f103xx::can::F4R2">F4R2</a></code>
+                           </span></span><div class='docblock'><p>0x264 - Filter bank 4 register 2</p>
+</div><span id="structfield.f5r1" class="structfield small-section-header">
+                           <a href="#structfield.f5r1" class="anchor field"></a>
+                           <span id="f5r1.v" class='invisible'>
+                           <code>f5r1: <a class="struct" href="../../stm32f103xx/can/struct.F5R1.html" title="struct stm32f103xx::can::F5R1">F5R1</a></code>
+                           </span></span><div class='docblock'><p>0x268 - Filter bank 5 register 1</p>
+</div><span id="structfield.f5r2" class="structfield small-section-header">
+                           <a href="#structfield.f5r2" class="anchor field"></a>
+                           <span id="f5r2.v" class='invisible'>
+                           <code>f5r2: <a class="struct" href="../../stm32f103xx/can/struct.F5R2.html" title="struct stm32f103xx::can::F5R2">F5R2</a></code>
+                           </span></span><div class='docblock'><p>0x26c - Filter bank 5 register 2</p>
+</div><span id="structfield.f6r1" class="structfield small-section-header">
+                           <a href="#structfield.f6r1" class="anchor field"></a>
+                           <span id="f6r1.v" class='invisible'>
+                           <code>f6r1: <a class="struct" href="../../stm32f103xx/can/struct.F6R1.html" title="struct stm32f103xx::can::F6R1">F6R1</a></code>
+                           </span></span><div class='docblock'><p>0x270 - Filter bank 6 register 1</p>
+</div><span id="structfield.f6r2" class="structfield small-section-header">
+                           <a href="#structfield.f6r2" class="anchor field"></a>
+                           <span id="f6r2.v" class='invisible'>
+                           <code>f6r2: <a class="struct" href="../../stm32f103xx/can/struct.F6R2.html" title="struct stm32f103xx::can::F6R2">F6R2</a></code>
+                           </span></span><div class='docblock'><p>0x274 - Filter bank 6 register 2</p>
+</div><span id="structfield.f7r1" class="structfield small-section-header">
+                           <a href="#structfield.f7r1" class="anchor field"></a>
+                           <span id="f7r1.v" class='invisible'>
+                           <code>f7r1: <a class="struct" href="../../stm32f103xx/can/struct.F7R1.html" title="struct stm32f103xx::can::F7R1">F7R1</a></code>
+                           </span></span><div class='docblock'><p>0x278 - Filter bank 7 register 1</p>
+</div><span id="structfield.f7r2" class="structfield small-section-header">
+                           <a href="#structfield.f7r2" class="anchor field"></a>
+                           <span id="f7r2.v" class='invisible'>
+                           <code>f7r2: <a class="struct" href="../../stm32f103xx/can/struct.F7R2.html" title="struct stm32f103xx::can::F7R2">F7R2</a></code>
+                           </span></span><div class='docblock'><p>0x27c - Filter bank 7 register 2</p>
+</div><span id="structfield.f8r1" class="structfield small-section-header">
+                           <a href="#structfield.f8r1" class="anchor field"></a>
+                           <span id="f8r1.v" class='invisible'>
+                           <code>f8r1: <a class="struct" href="../../stm32f103xx/can/struct.F8R1.html" title="struct stm32f103xx::can::F8R1">F8R1</a></code>
+                           </span></span><div class='docblock'><p>0x280 - Filter bank 8 register 1</p>
+</div><span id="structfield.f8r2" class="structfield small-section-header">
+                           <a href="#structfield.f8r2" class="anchor field"></a>
+                           <span id="f8r2.v" class='invisible'>
+                           <code>f8r2: <a class="struct" href="../../stm32f103xx/can/struct.F8R2.html" title="struct stm32f103xx::can::F8R2">F8R2</a></code>
+                           </span></span><div class='docblock'><p>0x284 - Filter bank 8 register 2</p>
+</div><span id="structfield.f9r1" class="structfield small-section-header">
+                           <a href="#structfield.f9r1" class="anchor field"></a>
+                           <span id="f9r1.v" class='invisible'>
+                           <code>f9r1: <a class="struct" href="../../stm32f103xx/can/struct.F9R1.html" title="struct stm32f103xx::can::F9R1">F9R1</a></code>
+                           </span></span><div class='docblock'><p>0x288 - Filter bank 9 register 1</p>
+</div><span id="structfield.f9r2" class="structfield small-section-header">
+                           <a href="#structfield.f9r2" class="anchor field"></a>
+                           <span id="f9r2.v" class='invisible'>
+                           <code>f9r2: <a class="struct" href="../../stm32f103xx/can/struct.F9R2.html" title="struct stm32f103xx::can::F9R2">F9R2</a></code>
+                           </span></span><div class='docblock'><p>0x28c - Filter bank 9 register 2</p>
+</div><span id="structfield.f10r1" class="structfield small-section-header">
+                           <a href="#structfield.f10r1" class="anchor field"></a>
+                           <span id="f10r1.v" class='invisible'>
+                           <code>f10r1: <a class="struct" href="../../stm32f103xx/can/struct.F10R1.html" title="struct stm32f103xx::can::F10R1">F10R1</a></code>
+                           </span></span><div class='docblock'><p>0x290 - Filter bank 10 register 1</p>
+</div><span id="structfield.f10r2" class="structfield small-section-header">
+                           <a href="#structfield.f10r2" class="anchor field"></a>
+                           <span id="f10r2.v" class='invisible'>
+                           <code>f10r2: <a class="struct" href="../../stm32f103xx/can/struct.F10R2.html" title="struct stm32f103xx::can::F10R2">F10R2</a></code>
+                           </span></span><div class='docblock'><p>0x294 - Filter bank 10 register 2</p>
+</div><span id="structfield.f11r1" class="structfield small-section-header">
+                           <a href="#structfield.f11r1" class="anchor field"></a>
+                           <span id="f11r1.v" class='invisible'>
+                           <code>f11r1: <a class="struct" href="../../stm32f103xx/can/struct.F11R1.html" title="struct stm32f103xx::can::F11R1">F11R1</a></code>
+                           </span></span><div class='docblock'><p>0x298 - Filter bank 11 register 1</p>
+</div><span id="structfield.f11r2" class="structfield small-section-header">
+                           <a href="#structfield.f11r2" class="anchor field"></a>
+                           <span id="f11r2.v" class='invisible'>
+                           <code>f11r2: <a class="struct" href="../../stm32f103xx/can/struct.F11R2.html" title="struct stm32f103xx::can::F11R2">F11R2</a></code>
+                           </span></span><div class='docblock'><p>0x29c - Filter bank 11 register 2</p>
+</div><span id="structfield.f12r1" class="structfield small-section-header">
+                           <a href="#structfield.f12r1" class="anchor field"></a>
+                           <span id="f12r1.v" class='invisible'>
+                           <code>f12r1: <a class="struct" href="../../stm32f103xx/can/struct.F12R1.html" title="struct stm32f103xx::can::F12R1">F12R1</a></code>
+                           </span></span><div class='docblock'><p>0x2a0 - Filter bank 4 register 1</p>
+</div><span id="structfield.f12r2" class="structfield small-section-header">
+                           <a href="#structfield.f12r2" class="anchor field"></a>
+                           <span id="f12r2.v" class='invisible'>
+                           <code>f12r2: <a class="struct" href="../../stm32f103xx/can/struct.F12R2.html" title="struct stm32f103xx::can::F12R2">F12R2</a></code>
+                           </span></span><div class='docblock'><p>0x2a4 - Filter bank 12 register 2</p>
+</div><span id="structfield.f13r1" class="structfield small-section-header">
+                           <a href="#structfield.f13r1" class="anchor field"></a>
+                           <span id="f13r1.v" class='invisible'>
+                           <code>f13r1: <a class="struct" href="../../stm32f103xx/can/struct.F13R1.html" title="struct stm32f103xx::can::F13R1">F13R1</a></code>
+                           </span></span><div class='docblock'><p>0x2a8 - Filter bank 13 register 1</p>
+</div><span id="structfield.f13r2" class="structfield small-section-header">
+                           <a href="#structfield.f13r2" class="anchor field"></a>
+                           <span id="f13r2.v" class='invisible'>
+                           <code>f13r2: <a class="struct" href="../../stm32f103xx/can/struct.F13R2.html" title="struct stm32f103xx::can::F13R2">F13R2</a></code>
+                           </span></span><div class='docblock'><p>0x2ac - Filter bank 13 register 2</p>
+</div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt><kbd>?</kbd></dt>
+                    <dd>Show this help dialog</dd>
+                    <dt><kbd>S</kbd></dt>
+                    <dd>Focus the search field</dd>
+                    <dt><kbd>↑</kbd></dt>
+                    <dd>Move up in search results</dd>
+                    <dt><kbd>↓</kbd></dt>
+                    <dd>Move down in search results</dd>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
+                    <dd>Go to active search result</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../";
+        window.currentCrate = "stm32f103xx";
+    </script>
+    <script src="../../main.js"></script>
+    <script defer src="../../search-index.js"></script>
+</body>
+</html>

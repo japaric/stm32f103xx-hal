@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["AHB","AMBA High-performance Bus (AHB) registers"],["APB1","Advanced Peripheral Bus 1 (APB1) registers"],["APB2","Advanced Peripheral Bus 2 (APB2) registers"],["CFGR",""],["Clocks","Frozen clock frequencies"],["Rcc","Constrained RCC peripheral"]],"trait":[["RccExt","Extension trait that constrains the `RCC` peripheral"]]});

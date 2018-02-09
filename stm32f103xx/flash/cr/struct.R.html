@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `R` struct in crate `stm32f103xx`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, R">
+
+    <title>stm32f103xx::flash::cr::R - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../../main.css" id="themeStyle">
+    <script src="../../../storage.js"></script>
+    
+
+    
+    
+</head>
+<body class="rustdoc struct">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
+        
+        <p class='location'>Struct R</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.bits">bits</a><a href="#method.pg">pg</a><a href="#method.per">per</a><a href="#method.mer">mer</a><a href="#method.optpg">optpg</a><a href="#method.opter">opter</a><a href="#method.strt">strt</a><a href="#method.lock">lock</a><a href="#method.optwre">optwre</a><a href="#method.errie">errie</a><a href="#method.eopie">eopie</a></div></div><p class='location'><a href='../../index.html'>stm32f103xx</a>::<wbr><a href='../index.html'>flash</a>::<wbr><a href='index.html'>cr</a></p><script>window.sidebarCurrent = {name: 'R', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
+    </nav>
+
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../../theme.js"></script>
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../../index.html'>stm32f103xx</a>::<wbr><a href='../index.html'>flash</a>::<wbr><a href='index.html'>cr</a>::<wbr><a class="struct" href=''>R</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#179362-179364' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct R { /* fields omitted */ }</pre><div class='docblock'><p>Value read from the register</p>
+</div>
+                    <h2 id='methods' class='small-section-header'>
+                      Methods<a href='#methods' class='anchor'></a>
+                    </h2>
+                <h3 id='impl' class='impl'><span class='in-band'><code>impl <a class="struct" href="../../../stm32f103xx/flash/cr/struct.R.html" title="struct stm32f103xx::flash::cr::R">R</a></code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#179845-179951' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.bits' class="method"><span id='bits.v' class='invisible'><code>pub fn <a href='#method.bits' class='fnname'>bits</a>(&amp;self) -&gt; u32</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#179848-179850' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Value of the register as raw bits</p>
+</div><h4 id='method.pg' class="method"><span id='pg.v' class='invisible'><code>pub fn <a href='#method.pg' class='fnname'>pg</a>(&amp;self) -&gt; <a class="struct" href="../../../stm32f103xx/flash/cr/struct.PGR.html" title="struct stm32f103xx::flash::cr::PGR">PGR</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#179853-179860' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 0 - Programming</p>
+</div><h4 id='method.per' class="method"><span id='per.v' class='invisible'><code>pub fn <a href='#method.per' class='fnname'>per</a>(&amp;self) -&gt; <a class="struct" href="../../../stm32f103xx/flash/cr/struct.PERR.html" title="struct stm32f103xx::flash::cr::PERR">PERR</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#179863-179870' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 1 - Page Erase</p>
+</div><h4 id='method.mer' class="method"><span id='mer.v' class='invisible'><code>pub fn <a href='#method.mer' class='fnname'>mer</a>(&amp;self) -&gt; <a class="struct" href="../../../stm32f103xx/flash/cr/struct.MERR.html" title="struct stm32f103xx::flash::cr::MERR">MERR</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#179873-179880' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 2 - Mass Erase</p>
+</div><h4 id='method.optpg' class="method"><span id='optpg.v' class='invisible'><code>pub fn <a href='#method.optpg' class='fnname'>optpg</a>(&amp;self) -&gt; <a class="struct" href="../../../stm32f103xx/flash/cr/struct.OPTPGR.html" title="struct stm32f103xx::flash::cr::OPTPGR">OPTPGR</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#179883-179890' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 4 - Option byte programming</p>
+</div><h4 id='method.opter' class="method"><span id='opter.v' class='invisible'><code>pub fn <a href='#method.opter' class='fnname'>opter</a>(&amp;self) -&gt; <a class="struct" href="../../../stm32f103xx/flash/cr/struct.OPTERR.html" title="struct stm32f103xx::flash::cr::OPTERR">OPTERR</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#179893-179900' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 5 - Option byte erase</p>
+</div><h4 id='method.strt' class="method"><span id='strt.v' class='invisible'><code>pub fn <a href='#method.strt' class='fnname'>strt</a>(&amp;self) -&gt; <a class="struct" href="../../../stm32f103xx/flash/cr/struct.STRTR.html" title="struct stm32f103xx::flash::cr::STRTR">STRTR</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#179903-179910' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 6 - Start</p>
+</div><h4 id='method.lock' class="method"><span id='lock.v' class='invisible'><code>pub fn <a href='#method.lock' class='fnname'>lock</a>(&amp;self) -&gt; <a class="struct" href="../../../stm32f103xx/flash/cr/struct.LOCKR.html" title="struct stm32f103xx::flash::cr::LOCKR">LOCKR</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#179913-179920' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 7 - Lock</p>
+</div><h4 id='method.optwre' class="method"><span id='optwre.v' class='invisible'><code>pub fn <a href='#method.optwre' class='fnname'>optwre</a>(&amp;self) -&gt; <a class="struct" href="../../../stm32f103xx/flash/cr/struct.OPTWRER.html" title="struct stm32f103xx::flash::cr::OPTWRER">OPTWRER</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#179923-179930' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 9 - Option bytes write enable</p>
+</div><h4 id='method.errie' class="method"><span id='errie.v' class='invisible'><code>pub fn <a href='#method.errie' class='fnname'>errie</a>(&amp;self) -&gt; <a class="struct" href="../../../stm32f103xx/flash/cr/struct.ERRIER.html" title="struct stm32f103xx::flash::cr::ERRIER">ERRIER</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#179933-179940' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 10 - Error interrupt enable</p>
+</div><h4 id='method.eopie' class="method"><span id='eopie.v' class='invisible'><code>pub fn <a href='#method.eopie' class='fnname'>eopie</a>(&amp;self) -&gt; <a class="struct" href="../../../stm32f103xx/flash/cr/struct.EOPIER.html" title="struct stm32f103xx::flash::cr::EOPIER">EOPIER</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/stm32f103xx/lib.rs.html#179943-179950' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Bit 12 - End of operation interrupt enable</p>
+</div></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt><kbd>?</kbd></dt>
+                    <dd>Show this help dialog</dd>
+                    <dt><kbd>S</kbd></dt>
+                    <dd>Focus the search field</dd>
+                    <dt><kbd>↑</kbd></dt>
+                    <dd>Move up in search results</dd>
+                    <dt><kbd>↓</kbd></dt>
+                    <dd>Move down in search results</dd>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
+                    <dd>Go to active search result</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../../";
+        window.currentCrate = "stm32f103xx";
+    </script>
+    <script src="../../../main.js"></script>
+    <script defer src="../../../search-index.js"></script>
+</body>
+</html>
