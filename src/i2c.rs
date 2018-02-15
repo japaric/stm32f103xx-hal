@@ -1,13 +1,11 @@
 //! Inter-Integrated Circuit (I2C) bus
 
 use afio::MAPR;
-use cast::{u16, u8};
 use gpio::{Alternate, OpenDrain};
 use gpio::gpiob::{PB10, PB11, PB6, PB7, PB8, PB9};
 use hal::blocking::i2c::{Write, WriteRead};
 use rcc::{APB1, Clocks};
 use stm32f103xx::{I2C1, I2C2};
-use time::Hertz;
 
 /// I2C error
 #[derive(Debug)]
@@ -186,7 +184,7 @@ macro_rules! hal {
 
                             i2c.ccr.write(|w| {
                                 let (freq, duty) = match duty_cycle {
-                                    DutyCycle::Ratio1to1 => (((i2cclk / (freq * 3)) as u16).max(1), false),
+                                    DutyCycle::Ratio1to1 => (((i2cclk / (freq * 2)) as u16).max(1), false),
                                     DutyCycle::Ratio16to9 => (((i2cclk / (freq * 25)) as u16).max(1), true)
                                 };
 
@@ -202,6 +200,31 @@ macro_rules! hal {
                     I2c { i2c, pins }
                 }
 
+                fn send_start_and_wait(&self) -> Result<(), Error> {
+                    self.i2c.cr1.modify(|_, w| w.start().set_bit());
+                    busy_wait!(self.i2c, sb);
+
+                    Ok(())
+                }
+
+                fn send_addr(&self, addr: u8, read: bool) {
+                    self.i2c.dr.write(|w| unsafe { w.dr().bits(addr << 1 | (if read {1} else {0})) });
+                }
+
+                fn send_addr_and_wait(&self, addr: u8, read: bool) -> Result<(), Error> {
+                    self.send_addr(addr, read);
+                    busy_wait!(self.i2c, addr);
+                    self.i2c.sr2.read();
+
+                    Ok(())
+                }
+
+                fn send_stop(&self) -> Result<(), Error> {
+                    self.i2c.cr1.modify(|_, w| w.stop().set_bit());
+
+                    Ok(())
+                }
+
                 /// Releases the I2C peripheral and associated pins
                 pub fn free(self) -> ($I2CX, PINS) {
                     (self.i2c, self.pins)
@@ -212,15 +235,8 @@ macro_rules! hal {
                 type Error = Error;
 
                 fn write(&mut self, addr: u8, bytes: &[u8]) -> Result<(), Error> {
-                    // TODO support transfers of more than 255 bytes
-                    assert!(bytes.len() < 256 && bytes.len() > 0);
-
-                    self.i2c.cr1.modify(|_, w| w.start().set_bit());
-                    busy_wait!(self.i2c, sb);
-
-                    self.i2c.dr.write(|w| unsafe { w.dr().bits(addr & 0b1111_1110) });
-                    busy_wait!(self.i2c, addr);
-                    let _ = self.i2c.sr2.read();
+                    self.send_start_and_wait()?;
+                    self.send_addr_and_wait(addr, false)?;
 
                     for byte in bytes {
                         busy_wait!(self.i2c, tx_e);
@@ -228,7 +244,7 @@ macro_rules! hal {
                     }
                     busy_wait!(self.i2c, tx_e);
 
-                    self.i2c.cr1.modify(|_, w| w.stop().set_bit());
+                    self.send_stop()?;
 
                     Ok(())
                 }
@@ -243,36 +259,62 @@ macro_rules! hal {
                     bytes: &[u8],
                     buffer: &mut [u8],
                 ) -> Result<(), Error> {
-                    // TODO support transfers of more than 255 bytes
-                    assert!(bytes.len() < 256 && bytes.len() > 0);
-                    assert!(buffer.len() < 256 && buffer.len() > 0);
+                    assert!(buffer.len() > 0);
 
-                    self.i2c.cr1.modify(|_, w| w.start().set_bit());
-                    busy_wait!(self.i2c, sb);
+                    if bytes.len() != 0 {
+                        self.send_start_and_wait()?;
+                        self.send_addr_and_wait(addr, false)?;
 
-                    self.i2c.dr.write(|w| unsafe { w.dr().bits(addr & 0b1111_1110) });
-                    busy_wait!(self.i2c, addr);
-                    let _ = self.i2c.sr2.read();
-
-                    for byte in bytes {
+                        for byte in bytes {
+                            busy_wait!(self.i2c, tx_e);
+                            self.i2c.dr.write(|w| unsafe { w.dr().bits(*byte) });
+                        }
                         busy_wait!(self.i2c, tx_e);
-                        self.i2c.dr.write(|w| unsafe { w.dr().bits(*byte) });
-                    }
-                    busy_wait!(self.i2c, tx_e);
-
-                    self.i2c.cr1.modify(|_, w| w.start().set_bit());
-                    busy_wait!(self.i2c, sb);
-
-                    self.i2c.dr.write(|w| unsafe { w.dr().bits(addr | 0b0000_0001) });
-                    busy_wait!(self.i2c, addr);
-                    let _ = self.i2c.sr2.read();
-
-                    for byte in buffer {
-                        busy_wait!(self.i2c, rx_ne);
-                        *byte = self.i2c.dr.read().dr().bits();
                     }
 
-                    self.i2c.cr1.modify(|_, w| w.stop().set_bit());
+                    self.send_start_and_wait()?;
+
+                    match buffer.len() {
+                        1 => {
+                            self.send_addr(addr, true);
+                            busy_wait!(self.i2c, addr);
+                            self.i2c.cr1.modify(|_, w| w.ack().clear_bit());
+                            let _ = self.i2c.sr2.read();
+                            self.send_stop()?;
+
+                            busy_wait!(self.i2c, rx_ne);
+                            buffer[0] = self.i2c.dr.read().dr().bits();
+                        },
+                        2 => {
+                            self.i2c.cr1.modify(|_, w| w.pos().set_bit().ack().set_bit());
+                            self.send_addr_and_wait(addr, true)?;
+                            self.i2c.cr1.modify(|_, w| w.ack().clear_bit());
+
+                            busy_wait!(self.i2c, btf);
+                            self.send_stop()?;
+                            buffer[0] = self.i2c.dr.read().dr().bits();
+                            buffer[1] = self.i2c.dr.read().dr().bits();
+                        },
+                        buffer_len => {
+                            self.i2c.cr1.modify(|_, w| w.ack().set_bit());
+                            self.send_addr_and_wait(addr, true)?;
+
+                            let (mut first_bytes, mut last_two_bytes) = buffer.split_at_mut(buffer_len - 3);
+                            for mut byte in first_bytes {
+                                self.i2c.cr1.modify(|_, w| w.ack().set_bit());
+                                busy_wait!(self.i2c, rx_ne);
+                                *byte = self.i2c.dr.read().dr().bits();
+                            }
+
+                            busy_wait!(self.i2c, btf);
+                            self.i2c.cr1.modify(|_, w| w.ack().clear_bit());
+                            last_two_bytes[0] = self.i2c.dr.read().dr().bits();
+                            self.send_stop()?;
+                            last_two_bytes[1] = self.i2c.dr.read().dr().bits();
+                            busy_wait!(self.i2c, rx_ne);
+                            last_two_bytes[2] = self.i2c.dr.read().dr().bits();
+                        }
+                    }
 
                     Ok(())
                 }
