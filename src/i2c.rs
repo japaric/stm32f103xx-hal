@@ -14,7 +14,9 @@ pub enum Error {
     Bus,
     /// Arbitration loss
     Arbitration,
+    /// No ack received
     Acknowledge,
+    /// Overrun/underrun
     Overrun,
     // Pec, // SMBUS mode only
     // Timeout, // SMBUS mode only
@@ -22,11 +24,13 @@ pub enum Error {
     #[doc(hidden)] _Extensible,
 }
 
+#[derive(Debug)]
 pub enum DutyCycle {
     Ratio1to1,
     Ratio16to9,
 }
 
+#[derive(Debug)]
 pub enum Mode {
     Standard { frequency: u32 },
     Fast { frequency: u32, duty_cycle: DutyCycle },
