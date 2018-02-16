@@ -151,8 +151,8 @@ macro_rules! hal {
 
                     assert!(freq <= 400_000);
 
-                    let i2cclk = clocks.pclk1().0;
-                    let freqrange = (i2cclk / 1000000) as u16;
+                    let pclk1 = clocks.pclk1().0;
+                    let pclk1_mhz = (pclk1 / 1000000) as u16;
 
                     i2c.cr2.modify(|_, w| unsafe {
                         w.
@@ -161,7 +161,7 @@ macro_rules! hal {
                             itbufen().clear_bit().
                             itevten().clear_bit().
                             iterren().clear_bit().
-                            freq().bits(freqrange as u8)
+                            freq().bits(pclk1_mhz as u8)
                     });
                     i2c.cr1.write(|w| {
                         w.
@@ -171,25 +171,25 @@ macro_rules! hal {
                     match mode {
                         Mode::Standard { .. } => {
                             i2c.trise.write(|w| unsafe {
-                                w.trise().bits((freqrange + 1) as u8)
+                                w.trise().bits((pclk1_mhz + 1) as u8)
                             });
-                            i2c.ccr.modify(|_, w| unsafe {
-                                w.ccr().bits(((i2cclk / (freq * 2)) as u16).max(4))
+                            i2c.ccr.write(|w| unsafe {
+                                w.ccr().bits(((pclk1 / (freq * 2)) as u16).max(4))
                             });
                         },
                         Mode::Fast { duty_cycle, .. } => {
                             i2c.trise.write(|w| unsafe {
-                                w.trise().bits((freqrange * 300 / 1000 + 1) as u8)
+                                w.trise().bits((pclk1_mhz * 300 / 1000 + 1) as u8)
                             });
 
                             i2c.ccr.write(|w| {
                                 let (freq, duty) = match duty_cycle {
-                                    DutyCycle::Ratio1to1 => (((i2cclk / (freq * 2)) as u16).max(1), false),
-                                    DutyCycle::Ratio16to9 => (((i2cclk / (freq * 25)) as u16).max(1), true)
+                                    DutyCycle::Ratio1to1 => (((pclk1 / (freq * 3)) as u16).max(1), false),
+                                    DutyCycle::Ratio16to9 => (((pclk1 / (freq * 25)) as u16).max(1), true)
                                 };
 
                                 unsafe {
-                                    w.ccr().bits(freq).duty().bit(duty)
+                                    w.ccr().bits(freq).duty().bit(duty).f_s().set_bit()
                                 }
                             });
                         }
