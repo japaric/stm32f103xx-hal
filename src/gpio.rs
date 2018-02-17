@@ -147,7 +147,10 @@ macro_rules! gpio {
                 }
             }
 
-
+            /// In OpenDrain mode writing a high to the output causes
+            /// it to float. Therefore whether the pin is high or low
+            /// depends on other periphery connected to that pin. Therefore
+            /// one needs to read from IDR instead from ODR in this mode.
             impl OutputPin for $PXx<Output<OpenDrain>> {
                 fn is_low(&self) -> bool {
                     // NOTE(unsafe) atomic read with no side effects
@@ -328,8 +331,11 @@ macro_rules! gpio {
                     }
                 }
 
+                /// In OpenDrain mode writing a high to the output causes
+                /// it to float. Therefore whether the pin is high or low
+                /// depends on other periphery connected to that pin. Therefore
+                /// one needs to read from IDR instead from ODR in this mode.
                 impl OutputPin for $PXi<Output<OpenDrain>> {
-
                     fn is_low(&self) -> bool {
                         // NOTE(unsafe) atomic read with no side effects
                         unsafe { (*$GPIOX::ptr()).idr.read().bits() & (1 << $i) == 0 }
