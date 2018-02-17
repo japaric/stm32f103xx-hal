@@ -3,7 +3,7 @@
 use afio::MAPR;
 use gpio::{Alternate, OpenDrain};
 use gpio::gpiob::{PB10, PB11, PB6, PB7, PB8, PB9};
-use hal::blocking::i2c::{Write, WriteRead};
+use hal::blocking::i2c::{Read, Write, WriteRead};
 use rcc::{APB1, Clocks};
 use stm32f103xx::{I2C1, I2C2};
 
@@ -233,12 +233,8 @@ macro_rules! hal {
                 pub fn free(self) -> ($I2CX, PINS) {
                     (self.i2c, self.pins)
                 }
-            }
 
-            impl<PINS> Write for I2c<$I2CX, PINS> {
-                type Error = Error;
-
-                fn write(&mut self, addr: u8, bytes: &[u8]) -> Result<(), Error> {
+                fn write_without_stop(&mut self, addr: u8, bytes: &[u8]) -> Result<(), Error> {
                     self.send_start_and_wait()?;
                     self.send_addr_and_wait(addr, false)?;
 
@@ -248,34 +244,25 @@ macro_rules! hal {
                     }
                     busy_wait!(self.i2c, tx_e);
 
+                    Ok(())
+                }
+            }
+
+            impl<PINS> Write for I2c<$I2CX, PINS> {
+                type Error = Error;
+
+                fn write(&mut self, addr: u8, bytes: &[u8]) -> Result<(), Error> {
+                    self.write_without_stop(addr, bytes)?;
                     self.send_stop()?;
 
                     Ok(())
                 }
             }
 
-            impl<PINS> WriteRead for I2c<$I2CX, PINS> {
+            impl<PINS> Read for I2c<$I2CX, PINS> {
                 type Error = Error;
 
-                fn write_read(
-                    &mut self,
-                    addr: u8,
-                    bytes: &[u8],
-                    buffer: &mut [u8],
-                ) -> Result<(), Error> {
-                    assert!(buffer.len() > 0);
-
-                    if bytes.len() != 0 {
-                        self.send_start_and_wait()?;
-                        self.send_addr_and_wait(addr, false)?;
-
-                        for byte in bytes {
-                            busy_wait!(self.i2c, tx_e);
-                            self.i2c.dr.write(|w| unsafe { w.dr().bits(*byte) });
-                        }
-                        busy_wait!(self.i2c, tx_e);
-                    }
-
+                fn read(&mut self, addr: u8, buffer: &mut [u8]) -> Result<(), Error> {
                     self.send_start_and_wait()?;
 
                     match buffer.len() {
@@ -319,6 +306,27 @@ macro_rules! hal {
                             last_two_bytes[2] = self.i2c.dr.read().dr().bits();
                         }
                     }
+
+                    Ok(())
+                }
+            }
+
+            impl<PINS> WriteRead for I2c<$I2CX, PINS> {
+                type Error = Error;
+
+                fn write_read(
+                    &mut self,
+                    addr: u8,
+                    bytes: &[u8],
+                    buffer: &mut [u8],
+                ) -> Result<(), Error> {
+                    assert!(buffer.len() > 0);
+
+                    if bytes.len() != 0 {
+                        self.write_without_stop(addr, bytes)?;
+                    }
+
+                    self.read(addr, buffer)?;
 
                     Ok(())
                 }
