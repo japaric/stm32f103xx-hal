@@ -1,5 +1,3 @@
-
-
 //! General Purpose Input / Output
 
 // TODO the pins here currently correspond to the LQFP-48 package. There should be Cargo features
