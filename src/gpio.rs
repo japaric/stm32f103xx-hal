@@ -1,3 +1,5 @@
+
+
 //! General Purpose Input / Output
 
 // TODO the pins here currently correspond to the LQFP-48 package. There should be Cargo features
@@ -123,24 +125,33 @@ macro_rules! gpio {
                 _mode: PhantomData<MODE>,
             }
 
+
             impl<MODE> OutputPin for $PXx<Output<MODE>> {
-                fn is_high(&self) -> bool {
+                default fn is_high(&self) -> bool {
                     !self.is_low()
                 }
 
-                fn is_low(&self) -> bool {
+                default fn is_low(&self) -> bool {
                     // NOTE(unsafe) atomic read with no side effects
                     unsafe { (*$GPIOX::ptr()).odr.read().bits() & (1 << self.i) == 0 }
                 }
 
-                fn set_high(&mut self) {
+                default fn set_high(&mut self) {
                     // NOTE(unsafe) atomic write to a stateless register
                     unsafe { (*$GPIOX::ptr()).bsrr.write(|w| w.bits(1 << self.i)) }
                 }
 
-                fn set_low(&mut self) {
+                default fn set_low(&mut self) {
                     // NOTE(unsafe) atomic write to a stateless register
                     unsafe { (*$GPIOX::ptr()).bsrr.write(|w| w.bits(1 << (16 + self.i))) }
+                }
+            }
+
+
+            impl OutputPin for $PXx<Output<OpenDrain>> {
+                fn is_low(&self) -> bool {
+                    // NOTE(unsafe) atomic read with no side effects
+                    unsafe { (*$GPIOX::ptr()).idr.read().bits() & (1 << self.i) == 0 }
                 }
             }
 
@@ -238,6 +249,9 @@ macro_rules! gpio {
                     // }
 
                     /// Configures the pin to operate as an open drain output pin
+                    /// The Output implementation for [Output#is_low(&self)] and
+                    /// [Output#is_high(&self)] read from the IDR instead from the ODR
+                    /// since a written high does not need to mean the pin is actually high
                     pub fn into_open_drain_output(
                         self,
                         cr: &mut $CR,
@@ -294,23 +308,31 @@ macro_rules! gpio {
                 }
 
                 impl<MODE> OutputPin for $PXi<Output<MODE>> {
-                    fn is_high(&self) -> bool {
+                    default fn is_high(&self) -> bool {
                         !self.is_low()
                     }
 
-                    fn is_low(&self) -> bool {
+                    default fn is_low(&self) -> bool {
                         // NOTE(unsafe) atomic read with no side effects
                         unsafe { (*$GPIOX::ptr()).odr.read().bits() & (1 << $i) == 0 }
                     }
 
-                    fn set_high(&mut self) {
+                    default fn set_high(&mut self) {
                         // NOTE(unsafe) atomic write to a stateless register
                         unsafe { (*$GPIOX::ptr()).bsrr.write(|w| w.bits(1 << $i)) }
                     }
 
-                    fn set_low(&mut self) {
+                    default fn set_low(&mut self) {
                         // NOTE(unsafe) atomic write to a stateless register
                         unsafe { (*$GPIOX::ptr()).bsrr.write(|w| w.bits(1 << (16 + $i))) }
+                    }
+                }
+
+                impl OutputPin for $PXi<Output<OpenDrain>> {
+
+                    fn is_low(&self) -> bool {
+                        // NOTE(unsafe) atomic read with no side effects
+                        unsafe { (*$GPIOX::ptr()).idr.read().bits() & (1 << $i) == 0 }
                     }
                 }
             )+
