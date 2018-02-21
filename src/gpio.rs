@@ -260,8 +260,8 @@ macro_rules! gpio {
                         let offset = (4 * $i) % 32;
                         // General purpose output open-drain
                         let cnf = 0b01;
-                        // Open-Drain Output mode, max speed 2 MHz
-                        let mode = 0b10;
+                        // Open-Drain Output mode, max speed 50 MHz
+                        let mode = 0b11;
                         let bits = (cnf << 2) | mode;
 
                         cr
