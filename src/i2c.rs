@@ -165,6 +165,7 @@ macro_rules! hal {
                     apb.rstr().modify(|_, w| w.$i2cXrst().set_bit());
                     apb.rstr().modify(|_, w| w.$i2cXrst().clear_bit());
 
+                    // 25 ms bus timeout @ ~10 clks per busy_wait cycle
                     let bus_timeout = (clocks.sysclk().0 / 400).max(10);
                     let pclk1 = clocks.pclk1().0;
 
@@ -178,8 +179,6 @@ macro_rules! hal {
                 fn init(&mut self) {
                     let freq = self.mode.get_frequency();
                     let pclk1_mhz = (self.pclk1 / 1000000) as u16;
-
-                    // 25 ms bus timeout @ ~10 clks per busy_wait cycle
 
                     self.i2c.cr2.write(|w| unsafe {
                         w.freq().bits(pclk1_mhz as u8)
