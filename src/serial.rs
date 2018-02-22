@@ -177,22 +177,41 @@ macro_rules! hal {
                     // NOTE(unsafe) atomic read with no side effects
                     let sr = unsafe { (*$USARTX::ptr()).sr.read() };
 
-                    Err(if sr.pe().bit_is_set() {
-                        nb::Error::Other(Error::Parity)
+                    // Check for any errors
+                    let err = if sr.pe().bit_is_set() {
+                        Some(Error::Parity)
                     } else if sr.fe().bit_is_set() {
-                        nb::Error::Other(Error::Framing)
+                        Some(Error::Framing)
                     } else if sr.ne().bit_is_set() {
-                        nb::Error::Other(Error::Noise)
+                        Some(Error::Noise)
                     } else if sr.ore().bit_is_set() {
-                        nb::Error::Other(Error::Overrun)
-                    } else if sr.rxne().bit_is_set() {
-                        // NOTE(read_volatile) see `write_volatile` below
-                        return Ok(unsafe {
-                            ptr::read_volatile(&(*$USARTX::ptr()).dr as *const _ as *const _)
-                        });
+                        Some(Error::Overrun)
                     } else {
-                        nb::Error::WouldBlock
-                    })
+                        None
+                    };
+
+                    if let Some(err) = err {
+                        // Some error occured. In order to clear that error flag, you have to
+                        // do a read from the sr register followed by a read from the dr
+                        // register
+                        // NOTE(read_volatile) see `write_volatile` below
+                        unsafe {
+                            ptr::read_volatile(&(*$USARTX::ptr()).sr as *const _ as *const _);
+                            ptr::read_volatile(&(*$USARTX::ptr()).dr as *const _ as *const _);
+                        }
+                        Err(nb::Error::Other(err))
+                    } else {
+                        if sr.rxne().bit_is_set() {
+                            // Read the data register and return that error. This must be done
+                            // in order to clear the error bits
+                            // NOTE(read_volatile) see `write_volatile` below
+                            Ok(unsafe {
+                                ptr::read_volatile(&(*$USARTX::ptr()).dr as *const _ as *const _)
+                            })
+                        } else {
+                            Err(nb::Error::WouldBlock)
+                        }
+                    }
                 }
             }
 
