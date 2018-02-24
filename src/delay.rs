@@ -7,9 +7,6 @@ use cortex_m::peripheral::syst::SystClkSource;
 use hal::blocking::delay::{DelayMs, DelayUs};
 use rcc::Clocks;
 
-// The RVR register is 24 bits wide, as SysTick is based on a 24 bit counter
-const MAX_RVR: u32 = (1 << 24);
-
 /// System timer (SysTick) as a delay provider
 pub struct Delay {
     clocks: Clocks,
@@ -50,6 +47,9 @@ impl DelayMs<u8> for Delay {
 
 impl DelayUs<u32> for Delay {
     fn delay_us(&mut self, us: u32) {
+        // The RVR register is 24 bits wide, as SysTick is based on a 24 bit counter
+        const MAX_RVR: u32 = (1 << 24);
+        
         let mut total_rvr = us * (self.clocks.sysclk().0 / 1_000_000);
 
         while total_rvr != 0 {
