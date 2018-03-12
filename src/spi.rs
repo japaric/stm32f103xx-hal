@@ -1,6 +1,6 @@
 use core::ptr;
 
-use hal::spi::{Mode, Phase, Polarity};
+pub use hal::spi::{Mode, Phase, Polarity};
 use hal;
 use nb;
 use stm32f103xx::{SPI1, SPI2};
