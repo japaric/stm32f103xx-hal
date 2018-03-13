@@ -19,7 +19,7 @@
 #![feature(nll)]
 #![no_std]
 
-// #[macro_use]
+#[macro_use]
 extern crate cortex_m;
 extern crate enc28j60;
 extern crate heapless;
