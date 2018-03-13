@@ -19,12 +19,14 @@ version = "0.2.2"
 
 [dependencies.embedded-hal]
 features = ["unproven"]
-version = "0.1.0"
+version = "0.1.2"
 
 [dev-dependencies]
 cortex-m-semihosting = "0.2.0"
 
 cortex-m-rtfm = "0.3.1"
+enc28j60 = "0.1.0"
+heapless = "0.2.4"
 m = "0.1.1"
 
 [dev-dependencies.byteorder]
@@ -54,6 +56,10 @@ rev = "b1837d45a1acc3ccb024f11a7f0d8b9a02771462"
 [dev-dependencies.mpu9250]
 git = "https://github.com/japaric/mpu9250"
 rev = "4cd19cc74d71de6f3edf532d53537ab67c70d514"
+
+[dev-dependencies.jnet]
+git = "https://github.com/japaric/jnet"
+rev = "cdf60dd7a6f3cd48dd9f488021dabf1961632be8"
 
 [dev-dependencies.stm32f103xx]
 features = ["rt"]
