@@ -23,7 +23,6 @@ version = "0.1.2"
 
 [dev-dependencies]
 cortex-m-semihosting = "0.2.0"
-
 cortex-m-rtfm = "0.3.1"
 enc28j60 = "0.1.0"
 heapless = "0.2.4"
@@ -49,6 +48,10 @@ version = "0.3.4"
 default-features = false
 version = "1.4.0"
 
+[dev-dependencies.jnet]
+git = "https://github.com/japaric/jnet"
+rev = "cdf60dd7a6f3cd48dd9f488021dabf1961632be8"
+
 [dev-dependencies.motor-driver]
 git = "https://github.com/japaric/motor-driver"
 rev = "b1837d45a1acc3ccb024f11a7f0d8b9a02771462"
@@ -57,9 +60,16 @@ rev = "b1837d45a1acc3ccb024f11a7f0d8b9a02771462"
 git = "https://github.com/japaric/mpu9250"
 rev = "4cd19cc74d71de6f3edf532d53537ab67c70d514"
 
-[dev-dependencies.jnet]
-git = "https://github.com/japaric/jnet"
-rev = "cdf60dd7a6f3cd48dd9f488021dabf1961632be8"
+[dev-dependencies.serde]
+default-features = false
+version = "1.0.33"
+
+[dev-dependencies.serde_derive]
+version = "1.0.33"
+
+[dev-dependencies.serde-json-core]
+git = "https://github.com/japaric/serde-json-core"
+rev = "6f12b77c1ffeae167989fe06e0d8b15978bd6d18"
 
 [dev-dependencies.stm32f103xx]
 features = ["rt"]
