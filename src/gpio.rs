@@ -51,7 +51,7 @@ macro_rules! gpio {
         pub mod $gpiox {
             use core::marker::PhantomData;
 
-            use hal::digital::OutputPin;
+            use hal::digital::{InputPin, OutputPin};
             use stm32f103xx::{$gpioy, $GPIOX};
 
             use rcc::APB2;
@@ -153,6 +153,17 @@ macro_rules! gpio {
                 fn is_low(&self) -> bool {
                     // NOTE(unsafe) atomic read with no side effects
                     unsafe { (*$GPIOX::ptr()).idr.read().bits() & (1 << self.i) == 0 }
+                }
+            }
+          
+            impl<MODE> $PXx<Output<MODE>> {
+                /// Toggles the output of the pin
+                pub fn toggle(&mut self) {
+                    if self.is_low() {
+                        self.set_high()
+                    } else {
+                        self.set_low()
+                    }
                 }
             }
 
@@ -337,6 +348,23 @@ macro_rules! gpio {
                     fn is_low(&self) -> bool {
                         // NOTE(unsafe) atomic read with no side effects
                         unsafe { (*$GPIOX::ptr()).idr.read().bits() & (1 << $i) == 0 }
+                    }
+                }
+
+                impl<MODE> $PXi<Output<MODE>> {
+                    /// Toggles the output of the pin
+                    pub fn toggle(&mut self) {
+                        if self.is_low() {
+                            self.set_high()
+                        } else {
+                            self.set_low()
+                        }
+                    }
+                }
+
+                impl<MODE> InputPin for $PXi<Input<MODE>> {
+                    fn is_high(&self) -> bool {
+                        !self.is_low()
                     }
                 }
             )+

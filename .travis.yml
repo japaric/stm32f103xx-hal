@@ -37,9 +37,8 @@ before_cache:
 
 branches:
   only:
-    - auto
-    - master
-    - try
+    - staging
+    - trying
 
 notifications:
   email:
