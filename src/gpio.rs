@@ -366,6 +366,11 @@ macro_rules! gpio {
                     fn is_high(&self) -> bool {
                         !self.is_low()
                     }
+
+                    fn is_low(&self) -> bool {
+                        // NOTE(unsafe) atomic read with no side effects
+                        unsafe { (*$GPIOX::ptr()).idr.read().bits() & (1 << $i) == 0 }
+                    }
                 }
             )+
         }
