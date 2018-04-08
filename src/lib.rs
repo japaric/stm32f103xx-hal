@@ -18,7 +18,8 @@
 //! # flash and debug the "Hello, world" example
 //! # NOTE examples assume 64KB of Flash and 20KB of RAM; you can tweak layout in memory.x
 //! $ cd stm32f103xx-hal
-//! $ xargo run --example hello
+//! $ rustup target add thumbv7m-none-eabi
+//! $ cargo run --example hello
 //! ```
 //!
 //! - Building an application (binary crate)
