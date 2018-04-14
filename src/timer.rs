@@ -1,6 +1,6 @@
 use cast::{u16, u32};
-use cortex_m::peripheral::SYST;
 use cortex_m::peripheral::syst::SystClkSource;
+use cortex_m::peripheral::SYST;
 use hal::timer::{CountDown, Periodic};
 use nb;
 use stm32f103xx::{TIM2, TIM3, TIM4};

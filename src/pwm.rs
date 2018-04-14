@@ -28,7 +28,8 @@ impl Pins<TIM2>
         PA1<Alternate<PushPull>>,
         PA2<Alternate<PushPull>>,
         PA3<Alternate<PushPull>>,
-    ) {
+    )
+{
     const REMAP: u8 = 0b00;
     const C1: bool = true;
     const C2: bool = true;
@@ -52,7 +53,8 @@ impl Pins<TIM3>
         PA7<Alternate<PushPull>>,
         PB0<Alternate<PushPull>>,
         PB1<Alternate<PushPull>>,
-    ) {
+    )
+{
     const REMAP: u8 = 0b00;
     const C1: bool = true;
     const C2: bool = true;
@@ -76,7 +78,8 @@ impl Pins<TIM4>
         PB7<Alternate<PushPull>>,
         PB8<Alternate<PushPull>>,
         PB9<Alternate<PushPull>>,
-    ) {
+    )
+{
     const REMAP: u8 = 0b0;
     const C1: bool = true;
     const C2: bool = true;
