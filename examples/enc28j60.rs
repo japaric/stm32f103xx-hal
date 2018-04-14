@@ -24,6 +24,7 @@ extern crate cortex_m;
 extern crate enc28j60;
 extern crate heapless;
 extern crate jnet;
+extern crate panic_abort;
 extern crate stm32f103xx_hal as hal;
 
 use enc28j60::Enc28j60;
@@ -32,7 +33,7 @@ use hal::prelude::*;
 use hal::spi::Spi;
 use hal::stm32f103xx;
 use heapless::LinearMap;
-use jnet::{arp, ether, icmp, mac, udp, Buffer, ipv4};
+use jnet::{arp, ether, icmp, ipv4, mac, udp, Buffer};
 
 // uncomment to disable tracing
 // macro_rules! iprintln {

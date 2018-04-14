@@ -13,6 +13,7 @@ extern crate cortex_m_rtfm as rtfm;
 extern crate enc28j60;
 extern crate heapless;
 extern crate jnet;
+extern crate panic_abort;
 extern crate stm32f103xx_hal as hal;
 
 use cortex_m::peripheral::{DWT, ITM};
@@ -26,7 +27,7 @@ use hal::spi::Spi;
 use hal::stm32f103xx::{self, Interrupt, SPI1};
 use hal::timer::{self, Timer};
 use heapless::LinearMap;
-use jnet::{arp, ether, icmp, mac, udp, Buffer, ipv4};
+use jnet::{arp, ether, icmp, ipv4, mac, udp, Buffer};
 use rtfm::{app, Resource, Threshold};
 
 // uncomment to disable tracing
@@ -127,7 +128,9 @@ fn init(mut p: init::Peripherals, _r: init::Resources) -> init::LateResources {
     p.device.EXTI.imr.write(|w| w.mr0().set_bit()); // unmask the interrupt (EXTI)
     p.device.EXTI.ftsr.write(|w| w.tr0().set_bit()); // trigger interrupt on falling edge
     let mut delay = Delay::new(p.core.SYST, clocks);
-    let mut enc28j60 = Enc28j60::new(spi, ncs, int, reset, &mut delay, 7 * KB, MAC.0).ok().unwrap();
+    let mut enc28j60 = Enc28j60::new(spi, ncs, int, reset, &mut delay, 7 * KB, MAC.0)
+        .ok()
+        .unwrap();
 
     // LED on after initialization
     led.set_low();

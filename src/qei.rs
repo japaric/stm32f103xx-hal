@@ -44,7 +44,7 @@ impl<PINS> Qei<TIM2, PINS> {
 
 impl<PINS> Qei<TIM3, PINS> {
     pub fn tim3(tim: TIM3, pins: PINS, mapr: &mut MAPR, apb: &mut APB1) -> Self
-        where
+    where
         PINS: Pins<TIM3>,
     {
         mapr.mapr()
@@ -56,7 +56,7 @@ impl<PINS> Qei<TIM3, PINS> {
 
 impl<PINS> Qei<TIM4, PINS> {
     pub fn tim4(tim: TIM4, pins: PINS, mapr: &mut MAPR, apb: &mut APB1) -> Self
-        where
+    where
         PINS: Pins<TIM4>,
     {
         mapr.mapr()

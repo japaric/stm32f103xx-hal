@@ -8,7 +8,7 @@ use nb;
 use stm32f103xx::{USART1, USART2, USART3};
 
 use afio::MAPR;
-use dma::{CircBuffer, Static, Transfer, dma1, R, W};
+use dma::{dma1, CircBuffer, Static, Transfer, R, W};
 use gpio::gpioa::{PA10, PA2, PA3, PA9};
 use gpio::gpiob::{PB10, PB11, PB6, PB7};
 use gpio::{Alternate, Floating, Input, PushPull};
@@ -34,7 +34,8 @@ pub enum Error {
     Overrun,
     /// Parity check error
     Parity,
-    #[doc(hidden)] _Extensible,
+    #[doc(hidden)]
+    _Extensible,
 }
 
 pub trait Pins<USART> {

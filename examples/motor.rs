@@ -6,6 +6,7 @@
 
 extern crate cortex_m_semihosting as sh;
 extern crate motor_driver;
+extern crate panic_abort;
 #[macro_use(block)]
 extern crate nb;
 extern crate stm32f103xx_hal as hal;

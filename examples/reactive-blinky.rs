@@ -2,11 +2,12 @@
 
 #![feature(proc_macro)]
 #![deny(unsafe_code)]
-// #![deny(warnings)]
+#![deny(warnings)]
 #![no_std]
 
 extern crate cortex_m;
 extern crate cortex_m_rtfm as rtfm;
+extern crate panic_abort;
 extern crate stm32f103xx_hal as hal;
 
 use hal::gpio::gpioc::PC13;

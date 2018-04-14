@@ -1,7 +1,7 @@
 use core::ptr;
 
-pub use hal::spi::{Mode, Phase, Polarity};
 use hal;
+pub use hal::spi::{Mode, Phase, Polarity};
 use nb;
 use stm32f103xx::{SPI1, SPI2};
 
@@ -21,7 +21,8 @@ pub enum Error {
     ModeFault,
     /// CRC error
     Crc,
-    #[doc(hidden)] _Extensible,
+    #[doc(hidden)]
+    _Extensible,
 }
 
 pub trait Pins<SPI> {
@@ -33,7 +34,8 @@ impl Pins<SPI1>
         PA5<Alternate<PushPull>>,
         PA6<Input<Floating>>,
         PA7<Alternate<PushPull>>,
-    ) {
+    )
+{
     const REMAP: bool = false;
 }
 
@@ -42,7 +44,8 @@ impl Pins<SPI1>
         PB3<Alternate<PushPull>>,
         PB4<Input<Floating>>,
         PB5<Alternate<PushPull>>,
-    ) {
+    )
+{
     const REMAP: bool = true;
 }
 
@@ -51,7 +54,8 @@ impl Pins<SPI2>
         PB13<Alternate<PushPull>>,
         PB14<Input<Floating>>,
         PB15<Alternate<PushPull>>,
-    ) {
+    )
+{
     const REMAP: bool = false;
 }
 
