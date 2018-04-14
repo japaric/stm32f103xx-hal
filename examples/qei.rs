@@ -6,6 +6,7 @@
 
 extern crate cortex_m;
 extern crate cortex_m_semihosting as semihosting;
+extern crate panic_abort;
 extern crate stm32f103xx_hal as hal;
 
 use core::fmt::Write;

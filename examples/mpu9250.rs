@@ -6,6 +6,7 @@
 
 extern crate cortex_m;
 extern crate mpu9250;
+extern crate panic_abort;
 extern crate stm32f103xx_hal as hal;
 
 use cortex_m::asm;

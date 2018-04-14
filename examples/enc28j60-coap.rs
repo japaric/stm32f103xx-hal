@@ -21,6 +21,7 @@ extern crate cortex_m;
 extern crate enc28j60;
 extern crate heapless;
 extern crate jnet;
+extern crate panic_abort;
 #[macro_use]
 extern crate serde_derive;
 extern crate serde_json_core as json;
@@ -34,7 +35,7 @@ use hal::prelude::*;
 use hal::spi::Spi;
 use hal::stm32f103xx;
 use heapless::LinearMap;
-use jnet::{arp, coap, ether, icmp, mac, udp, Buffer, ipv4};
+use jnet::{arp, coap, ether, icmp, ipv4, mac, udp, Buffer};
 
 /* Constants */
 const KB: u16 = 1024;
@@ -235,10 +236,9 @@ fn main() {
                                                 }
                                                 Ok(coap::Method::Put) => {
                                                     if path_is_led {
-                                                        if let Ok(json) =
-                                                            json::de::from_slice::<Led>(
-                                                                coap.payload(),
-                                                            ) {
+                                                        if let Ok(json) = json::de::from_slice::<Led>(
+                                                            coap.payload(),
+                                                        ) {
                                                             if json.led {
                                                                 led.set_low();
                                                             } else {
