@@ -32,7 +32,8 @@ use hal::delay::Delay;
 use hal::prelude::*;
 use hal::spi::Spi;
 use hal::stm32f103xx;
-use heapless::LinearMap;
+use heapless::consts::*;
+use heapless::FnvIndexMap;
 use jnet::{arp, ether, icmp, ipv4, mac, udp, Buffer};
 
 // uncomment to disable tracing
@@ -105,7 +106,7 @@ fn main() {
     delay.delay_ms(100_u8);
 
     // ARP cache
-    let mut cache = LinearMap::<_, _, [_; 8]>::new();
+    let mut cache = FnvIndexMap::<_, _, U8>::new();
 
     let mut buf = [0; 256];
     loop {

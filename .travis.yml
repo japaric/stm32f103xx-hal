@@ -6,6 +6,7 @@ matrix:
       rust: nightly
     - env: TARGET=thumbv7m-none-eabi
       rust: nightly
+      if: branch != master
       addons:
         apt:
           sources:

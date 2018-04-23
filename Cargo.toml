@@ -25,7 +25,7 @@ version = "0.1.2"
 cortex-m-rtfm = "0.3.1"
 cortex-m-semihosting = "0.2.0"
 enc28j60 = "0.1.0"
-heapless = "0.2.4"
+heapless = "0.3.1"
 m = "0.1.1"
 mfrc522 = "0.1.0"
 panic-abort = "0.1.1"
@@ -48,7 +48,7 @@ version = "1.4.0"
 
 [dev-dependencies.jnet]
 git = "https://github.com/japaric/jnet"
-rev = "cdf60dd7a6f3cd48dd9f488021dabf1961632be8"
+rev = "df96b408049ca952ad7844d6552e87cf8fc18d2a"
 
 [dev-dependencies.motor-driver]
 git = "https://github.com/japaric/motor-driver"
