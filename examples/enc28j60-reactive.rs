@@ -26,7 +26,8 @@ use hal::prelude::*;
 use hal::spi::Spi;
 use hal::stm32f103xx::{self, Interrupt, SPI1};
 use hal::timer::{self, Timer};
-use heapless::LinearMap;
+use heapless::consts::*;
+use heapless::FnvIndexMap;
 use jnet::{arp, ether, icmp, ipv4, mac, udp, Buffer};
 use rtfm::{app, Resource, Threshold};
 
@@ -60,8 +61,7 @@ app! {
     device: stm32f103xx,
 
     resources: {
-        static ARP_CACHE: LinearMap<ipv4::Addr, mac::Addr, [(ipv4::Addr, mac::Addr); 8]> =
-            LinearMap::new();
+        static ARP_CACHE: FnvIndexMap<ipv4::Addr, mac::Addr, U8>;
         static SLEEP: u32 = 0;
 
         static ENC28J60: Enc28j60<Spi1, Ncs, Int, Reset>;
@@ -146,6 +146,7 @@ fn init(mut p: init::Peripherals, _r: init::Resources) -> init::LateResources {
     rtfm::set_pending(Interrupt::EXTI0);
 
     init::LateResources {
+        ARP_CACHE: FnvIndexMap::new(),
         ENC28J60: enc28j60,
         EXTI: p.device.EXTI,
         ITM: p.core.ITM,

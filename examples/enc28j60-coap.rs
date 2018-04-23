@@ -34,7 +34,8 @@ use hal::delay::Delay;
 use hal::prelude::*;
 use hal::spi::Spi;
 use hal::stm32f103xx;
-use heapless::LinearMap;
+use heapless::consts::*;
+use heapless::FnvIndexMap;
 use jnet::{arp, coap, ether, icmp, ipv4, mac, udp, Buffer};
 
 /* Constants */
@@ -110,7 +111,7 @@ fn main() {
     // FIXME some frames are lost when sending right after initialization
     delay.delay_ms(100_u8);
 
-    let mut cache = LinearMap::<_, _, [_; 8]>::new();
+    let mut cache = FnvIndexMap::<_, _, U8>::new();
 
     let mut buf = [0; 128];
     loop {
