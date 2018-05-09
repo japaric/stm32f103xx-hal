@@ -4,14 +4,15 @@ use afio::MAPR;
 use gpio::{Alternate, OpenDrain};
 use gpio::gpiob::{PB10, PB11, PB6, PB7, PB8, PB9};
 use hal::blocking::i2c::{Read, Write, WriteRead};
+use nb::{Error as NbError, Result as NbResult};
+use nb::Error::{Other, WouldBlock};
 use rcc::{APB1, Clocks};
 use stm32f103xx::{I2C1, I2C2};
+use stm32f103xx::DWT;
 
 /// I2C error
-#[derive(Debug)]
+#[derive(Debug, Eq, PartialEq)]
 pub enum Error {
-    /// Timed out busy waiting
-    Timeout,
     /// Bus error
     Bus,
     /// Arbitration loss
@@ -26,13 +27,13 @@ pub enum Error {
     #[doc(hidden)] _Extensible,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Eq, PartialEq)]
 pub enum DutyCycle {
     Ratio1to1,
     Ratio16to9,
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum Mode {
     Standard { frequency: u32 },
     Fast { frequency: u32, duty_cycle: DutyCycle },
@@ -80,9 +81,16 @@ for (
 pub struct I2c<I2C, PINS> {
     i2c: I2C,
     pins: PINS,
-    bus_timeout: u32,
     mode: Mode,
     pclk1: u32,
+}
+
+pub struct BlockingI2c<I2C, PINS> {
+    nb: I2c<I2C, PINS>,
+    start_timeout: u32,
+    start_retries: u8,
+    addr_timeout: u32,
+    data_timeout: u32,
 }
 
 impl<PINS> I2c<I2C1, PINS> {
@@ -102,6 +110,28 @@ impl<PINS> I2c<I2C1, PINS> {
     }
 }
 
+impl<PINS> BlockingI2c<I2C1, PINS> {
+    pub fn i2c1(
+        i2c: I2C1,
+        pins: PINS,
+        mapr: &mut MAPR,
+        mode: Mode,
+        clocks: Clocks,
+        apb: &mut APB1,
+        start_timeout_us: u32,
+        start_retries: u8,
+        addr_timeout_us: u32,
+        data_timeout_us: u32,
+    ) -> Self
+        where
+            PINS: Pins<I2C1>,
+    {
+        mapr.mapr().modify(|_, w| w.i2c1_remap().bit(PINS::REMAP));
+        BlockingI2c::_i2c1(i2c, pins, mode, clocks, apb,
+                           start_timeout_us, start_retries, addr_timeout_us, data_timeout_us)
+    }
+}
+
 impl<PINS> I2c<I2C2, PINS> {
     pub fn i2c2(
         i2c: I2C2,
@@ -117,34 +147,86 @@ impl<PINS> I2c<I2C2, PINS> {
     }
 }
 
+impl<PINS> BlockingI2c<I2C2, PINS> {
+    pub fn i2c2(
+        i2c: I2C2,
+        pins: PINS,
+        mode: Mode,
+        clocks: Clocks,
+        apb: &mut APB1,
+        start_timeout_us: u32,
+        start_retries: u8,
+        addr_timeout_us: u32,
+        data_timeout_us: u32,
+    ) -> Self
+        where
+            PINS: Pins<I2C2>,
+    {
+        BlockingI2c::_i2c2(i2c, pins, mode, clocks, apb,
+                           start_timeout_us, start_retries, addr_timeout_us, data_timeout_us)
+    }
+}
+
+pub fn blocking_i2c<I2C, PINS>(i2c: I2c<I2C, PINS>,
+                               clocks: Clocks,
+                               start_timeout_us: u32,
+                               start_retries: u8,
+                               addr_timeout_us: u32,
+                               data_timeout_us: u32) -> BlockingI2c<I2C, PINS> {
+    let sysclk_mhz = clocks.sysclk().0 / 1_000_000;
+    return BlockingI2c {
+        nb: i2c,
+        start_timeout: start_timeout_us * sysclk_mhz,
+        start_retries,
+        addr_timeout: addr_timeout_us * sysclk_mhz,
+        data_timeout: data_timeout_us * sysclk_mhz,
+    };
+}
+
+macro_rules! wait_for_flag {
+    ($i2c:expr, $flag:ident) => {
+        {
+            let sr1 = $i2c.sr1.read();
+
+            if sr1.berr().bit_is_set() {
+                Err(Other(Error::Bus))
+            } else if sr1.arlo().bit_is_set() {
+                Err(Other(Error::Arbitration))
+            } else if sr1.af().bit_is_set() {
+                Err(Other(Error::Acknowledge))
+            } else if sr1.ovr().bit_is_set() {
+                Err(Other(Error::Overrun))
+            } else if sr1.$flag().bit_is_set() {
+                Ok(())
+            } else {
+                Err(WouldBlock)
+            }
+        }
+    }
+}
 
 macro_rules! busy_wait {
-    ($cycles:expr, $i2c:expr, $flag:ident) => {
+    ($nb_expr:expr, $exit_cond:expr) => {
         {
-            let mut cycles_left = $cycles;
             loop {
-                if cycles_left == 0 {
-                    break Err(Error::Timeout)
-                } else {
-                    cycles_left -= 1;
+                let res = $nb_expr;
+                if res != Err(WouldBlock) {
+                    break res;
                 }
-
-                let sr1 = $i2c.sr1.read();
-
-                if sr1.berr().bit_is_set() {
-                    break Err(Error::Bus);
-                } else if sr1.arlo().bit_is_set() {
-                    break Err(Error::Arbitration);
-                } else if sr1.af().bit_is_set() {
-                    break Err(Error::Acknowledge);
-                } else if sr1.ovr().bit_is_set() {
-                    break Err(Error::Overrun);
-                } else if sr1.$flag().bit_is_set() {
-                    break Ok(());
-                } else {
-                    // try again
+                if $exit_cond {
+                    break res;
                 }
             }
+        }
+    }
+}
+
+macro_rules! busy_wait_cycles {
+    ($nb_expr:expr, $cycles:expr) => {
+        {
+            let started = DWT::get_cycle_count();
+            let cycles = $cycles;
+            busy_wait!($nb_expr, DWT::get_cycle_count().wrapping_sub(started) >= cycles)
         }
     }
 }
@@ -165,13 +247,11 @@ macro_rules! hal {
                     apb.rstr().modify(|_, w| w.$i2cXrst().set_bit());
                     apb.rstr().modify(|_, w| w.$i2cXrst().clear_bit());
 
-                    // 25 ms bus timeout @ ~10 clks per busy_wait cycle
-                    let bus_timeout = (clocks.sysclk().0 / 400).max(10);
                     let pclk1 = clocks.pclk1().0;
 
                     assert!(mode.get_frequency() <= 400_000);
 
-                    let mut i2c = I2c { i2c, pins, bus_timeout, mode, pclk1 };
+                    let mut i2c = I2c { i2c, pins, mode, pclk1 };
                     i2c.init();
                     i2c
                 }
@@ -221,16 +301,61 @@ macro_rules! hal {
                     self.init();
                 }
 
-                fn send_start_and_wait(&mut self) -> Result<(), Error> {
+                fn send_start(&mut self) {
+                    self.i2c.cr1.modify(|_, w| w.start().set_bit());
+                }
+
+                fn wait_after_sent_start(&mut self) -> NbResult<(), Error> {
+                    wait_for_flag!(self.i2c, sb)
+                }
+
+                fn send_addr(&self, addr: u8, read: bool) {
+                    self.i2c.dr.write(|w| unsafe { w.dr().bits(addr << 1 | (if read {1} else {0})) });
+                }
+
+                fn wait_after_sent_addr(&self) -> NbResult<(), Error> {
+                    wait_for_flag!(self.i2c, addr)?;
+                    self.i2c.sr2.read();
+                    Ok(())
+                }
+
+                fn send_stop(&self) {
+                    self.i2c.cr1.modify(|_, w| w.stop().set_bit());
+                }
+
+                /// Releases the I2C peripheral and associated pins
+                pub fn free(self) -> ($I2CX, PINS) {
+                    (self.i2c, self.pins)
+                }
+            }
+
+            impl<PINS> BlockingI2c<$I2CX, PINS> {
+                pub fn $i2cX(
+                    i2c: $I2CX,
+                    pins: PINS,
+                    mode: Mode,
+                    clocks: Clocks,
+                    apb: &mut APB1,
+                    start_timeout_us: u32,
+                    start_retries: u8,
+                    addr_timeout_us: u32,
+                    data_timeout_us: u32
+                ) -> Self {
+                    blocking_i2c(I2c::$i2cX(i2c, pins, mode, clocks, apb),
+                        clocks, start_timeout_us, start_retries,
+                        addr_timeout_us, data_timeout_us)
+                }
+
+                fn send_start_and_wait(&mut self) -> NbResult<(), Error> {
                     // According to http://www.st.com/content/ccc/resource/technical/document/errata_sheet/f5/50/c9/46/56/db/4a/f6/CD00197763.pdf/files/CD00197763.pdf/jcr:content/translations/en.CD00197763.pdf
                     // 2.14.4 Wrong behavior of I2C peripheral in master mode after a misplaced Stop
-                    let mut retries_left = 3;
-                    let mut last_ret: Result<(), Error> = Err(Error::Timeout);
+                    let mut retries_left = self.start_retries;
+                    let mut last_ret: NbResult<(), Error> = Err(WouldBlock);
                     while retries_left > 0 {
-                        self.i2c.cr1.modify(|_, w| w.start().set_bit());
-                        last_ret = busy_wait!(self.bus_timeout, self.i2c, sb);
+                        self.nb.send_start();
+                        last_ret = busy_wait_cycles!(self.nb.wait_after_sent_start(), self.start_timeout);
                         if let Err(_) = last_ret {
-                            self.reset();
+                            self.nb.reset();
                         } else {
                             break;
                         }
@@ -239,99 +364,81 @@ macro_rules! hal {
                     last_ret
                 }
 
-                fn send_addr(&self, addr: u8, read: bool) {
-                    self.i2c.dr.write(|w| unsafe { w.dr().bits(addr << 1 | (if read {1} else {0})) });
+                fn send_addr_and_wait(&self, addr: u8, read: bool) -> NbResult<(), Error> {
+                    self.nb.send_addr(addr, read);
+                    busy_wait_cycles!(self.nb.wait_after_sent_addr(), self.addr_timeout)
                 }
 
-                fn send_addr_and_wait(&self, addr: u8, read: bool) -> Result<(), Error> {
-                    self.send_addr(addr, read);
-                    busy_wait!(self.bus_timeout, self.i2c, addr)?;
-                    self.i2c.sr2.read();
-
-                    Ok(())
-                }
-
-                fn send_stop(&self) -> Result<(), Error> {
-                    self.i2c.cr1.modify(|_, w| w.stop().set_bit());
-
-                    Ok(())
-                }
-
-                /// Releases the I2C peripheral and associated pins
-                pub fn free(self) -> ($I2CX, PINS) {
-                    (self.i2c, self.pins)
-                }
-
-                fn write_without_stop(&mut self, addr: u8, bytes: &[u8]) -> Result<(), Error> {
+                fn write_without_stop(&mut self, addr: u8, bytes: &[u8]) -> NbResult<(), Error> {
                     self.send_start_and_wait()?;
                     self.send_addr_and_wait(addr, false)?;
 
                     for byte in bytes {
-                        busy_wait!(self.bus_timeout, self.i2c, tx_e)?;
-                        self.i2c.dr.write(|w| unsafe { w.dr().bits(*byte) });
+                        busy_wait_cycles!(wait_for_flag!(self.nb.i2c, tx_e), self.data_timeout)?;
+                        self.nb.i2c.dr.write(|w| unsafe { w.dr().bits(*byte) });
                     }
-                    busy_wait!(self.bus_timeout, self.i2c, tx_e)?;
+                    busy_wait_cycles!(wait_for_flag!(self.nb.i2c, tx_e), self.data_timeout)?;
 
                     Ok(())
                 }
             }
 
-            impl<PINS> Write for I2c<$I2CX, PINS> {
-                type Error = Error;
+            impl<PINS> Write for BlockingI2c<$I2CX, PINS> {
+                type Error = NbError<Error>;
 
-                fn write(&mut self, addr: u8, bytes: &[u8]) -> Result<(), Error> {
+                fn write(&mut self, addr: u8, bytes: &[u8]) -> Result<(), Self::Error> {
                     self.write_without_stop(addr, bytes)?;
-                    self.send_stop()?;
+                    self.nb.send_stop();
 
                     Ok(())
                 }
             }
 
-            impl<PINS> Read for I2c<$I2CX, PINS> {
-                type Error = Error;
+            impl<PINS> Read for BlockingI2c<$I2CX, PINS> {
+                type Error = NbError<Error>;
 
-                fn read(&mut self, addr: u8, buffer: &mut [u8]) -> Result<(), Error> {
+                fn read(&mut self, addr: u8, buffer: &mut [u8]) -> Result<(), Self::Error> {
                     self.send_start_and_wait()?;
 
                     match buffer.len() {
                         1 => {
-                            self.send_addr(addr, true);
-                            busy_wait!(self.bus_timeout, self.i2c, addr)?;
-                            self.i2c.cr1.modify(|_, w| w.ack().clear_bit());
-                            let _ = self.i2c.sr2.read();
-                            self.send_stop()?;
+                            self.nb.send_addr(addr, true);
+                            busy_wait_cycles!(wait_for_flag!(self.nb.i2c, addr), self.addr_timeout)?;
+                            self.nb.i2c.cr1.modify(|_, w| w.ack().clear_bit());
+                            let _ = self.nb.i2c.sr2.read();
+                            self.nb.send_stop();
 
-                            busy_wait!(self.bus_timeout, self.i2c, rx_ne)?;
-                            buffer[0] = self.i2c.dr.read().dr().bits();
-                        },
+                            busy_wait_cycles!(wait_for_flag!(self.nb.i2c, rx_ne), self.data_timeout)?;
+                            buffer[0] = self.nb.i2c.dr.read().dr().bits();
+                        }
                         2 => {
-                            self.i2c.cr1.modify(|_, w| w.pos().set_bit().ack().set_bit());
+                            self.nb.i2c.cr1.modify(|_, w| w.pos().set_bit().ack().set_bit());
                             self.send_addr_and_wait(addr, true)?;
-                            self.i2c.cr1.modify(|_, w| w.pos().clear_bit().ack().clear_bit());
+                            self.nb.i2c.cr1.modify(|_, w| w.pos().clear_bit().ack().clear_bit());
 
-                            busy_wait!(self.bus_timeout, self.i2c, btf)?;
-                            self.send_stop()?;
-                            buffer[0] = self.i2c.dr.read().dr().bits();
-                            buffer[1] = self.i2c.dr.read().dr().bits();
-                        },
+                            busy_wait_cycles!(wait_for_flag!(self.nb.i2c, btf), self.data_timeout)?;
+                            self.nb.send_stop();
+                            buffer[0] = self.nb.i2c.dr.read().dr().bits();
+                            buffer[1] = self.nb.i2c.dr.read().dr().bits();
+                        }
                         buffer_len => {
-                            self.i2c.cr1.modify(|_, w| w.ack().set_bit());
+                            self.nb.i2c.cr1.modify(|_, w| w.ack().set_bit());
                             self.send_addr_and_wait(addr, true)?;
 
                             let (mut first_bytes, mut last_two_bytes) = buffer.split_at_mut(buffer_len - 3);
                             for mut byte in first_bytes {
-                                self.i2c.cr1.modify(|_, w| w.ack().set_bit());
-                                busy_wait!(self.bus_timeout, self.i2c, rx_ne)?;
-                                *byte = self.i2c.dr.read().dr().bits();
+                                self.nb.i2c.cr1.modify(|_, w| w.ack().set_bit());
+                                busy_wait_cycles!(wait_for_flag!(self.nb.i2c, rx_ne), self.data_timeout)?;
+                                *byte = self.nb.i2c.dr.read().dr().bits();
                             }
 
-                            busy_wait!(self.bus_timeout, self.i2c, btf)?;
-                            self.i2c.cr1.modify(|_, w| w.ack().clear_bit());
-                            last_two_bytes[0] = self.i2c.dr.read().dr().bits();
-                            self.send_stop()?;
-                            last_two_bytes[1] = self.i2c.dr.read().dr().bits();
-                            busy_wait!(self.bus_timeout, self.i2c, rx_ne)?;
-                            last_two_bytes[2] = self.i2c.dr.read().dr().bits();
+                            busy_wait_cycles!(wait_for_flag!(self.nb.i2c, btf), self.data_timeout)?;
+                            self.nb.i2c.cr1.modify(|_, w| w.ack().clear_bit());
+                            last_two_bytes[0] = self.nb.i2c.dr.read().dr().bits();
+                            self.nb.send_stop();
+                            last_two_bytes[1] = self.nb.i2c.dr.read().dr().bits();
+                            busy_wait_cycles!(wait_for_flag!(self.nb.i2c, rx_ne), self.data_timeout)?;
+                            last_two_bytes[2] = self.nb.i2c.dr.read().dr().bits();
                         }
                     }
 
@@ -339,15 +446,15 @@ macro_rules! hal {
                 }
             }
 
-            impl<PINS> WriteRead for I2c<$I2CX, PINS> {
-                type Error = Error;
+            impl<PINS> WriteRead for BlockingI2c<$I2CX, PINS> {
+                type Error = NbError<Error>;
 
                 fn write_read(
                     &mut self,
                     addr: u8,
                     bytes: &[u8],
                     buffer: &mut [u8],
-                ) -> Result<(), Error> {
+                ) -> Result<(), Self::Error> {
                     assert!(buffer.len() > 0);
 
                     if bytes.len() != 0 {
