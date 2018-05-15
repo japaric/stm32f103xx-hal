@@ -51,7 +51,7 @@ macro_rules! gpio {
         pub mod $gpiox {
             use core::marker::PhantomData;
 
-            use hal::digital::{InputPin, OutputPin};
+            use hal::digital::{InputPin, OutputPin, StatefulOutputPin};
             use stm32f103xx::{$gpioy, $GPIOX};
 
             use rcc::APB2;
@@ -133,6 +133,18 @@ macro_rules! gpio {
                     // NOTE(unsafe) atomic write to a stateless register
                     unsafe { (*$GPIOX::ptr()).bsrr.write(|w| w.bits(1 << (16 + self.i))) }
                 }
+            }
+
+            impl <MODE> StatefulOutputPin for $PXx<Output<MODE>> {
+                fn is_set_high(&self) -> bool {
+                    !self.is_set_low()
+                }
+
+                fn is_set_low(&self) -> bool {
+                    // NOTE(unsafe) atomic read with no side effects
+                    unsafe { (*$GPIOX::ptr()).odr.read().bits() & (1 << self.i) == 0 }
+                }
+
             }
 
             $(
@@ -294,6 +306,17 @@ macro_rules! gpio {
                     fn set_low(&mut self) {
                         // NOTE(unsafe) atomic write to a stateless register
                         unsafe { (*$GPIOX::ptr()).bsrr.write(|w| w.bits(1 << (16 + $i))) }
+                    }
+                }
+
+                impl<MODE> StatefulOutputPin for $PXi<Output<MODE>> {
+                    fn is_set_high(&self) -> bool {
+                        !self.is_set_low()
+                    }
+
+                    fn is_set_low(&self) -> bool {
+                        // NOTE(unsafe) atomic read with no side effects
+                        unsafe { (*$GPIOX::ptr()).odr.read().bits() & (1 << $i) == 0 }
                     }
                 }
 
