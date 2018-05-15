@@ -6,6 +6,7 @@ matrix:
       rust: nightly
     - env: TARGET=thumbv7m-none-eabi
       rust: nightly
+      if: branch != master
       addons:
         apt:
           sources:
@@ -26,10 +27,7 @@ after_script: set +e
 after_success:
   - bash ci/after_success.sh
 
-cache:
-  cargo: true
-  directories:
-    - $HOME/.xargo
+cache: cargo
 
 before_cache:
   # Travis can't cache files that are not readable by "others"
@@ -37,9 +35,8 @@ before_cache:
 
 branches:
   only:
-    - auto
-    - master
-    - try
+    - staging
+    - trying
 
 notifications:
   email:

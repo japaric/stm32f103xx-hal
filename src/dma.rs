@@ -8,7 +8,8 @@ use rcc::AHB;
 #[derive(Debug)]
 pub enum Error {
     Overrun,
-    #[doc(hidden)] _Extensible,
+    #[doc(hidden)]
+    _Extensible,
 }
 
 pub enum Event {

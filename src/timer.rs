@@ -1,6 +1,6 @@
 use cast::{u16, u32};
-use cortex_m::peripheral::SYST;
 use cortex_m::peripheral::syst::SystClkSource;
+use cortex_m::peripheral::SYST;
 use hal::timer::{CountDown, Periodic};
 use nb;
 use stm32f103xx::{TIM2, TIM3, TIM4};
@@ -115,8 +115,6 @@ macro_rules! hal {
                 {
                     // pause
                     self.tim.cr1.modify(|_, w| w.cen().clear_bit());
-                    // restart counter
-                    self.tim.cnt.reset();
 
                     let frequency = timeout.into().0;
 
@@ -128,6 +126,13 @@ macro_rules! hal {
 
                     let arr = u16(ticks / u32(psc + 1)).unwrap();
                     self.tim.arr.write(|w| unsafe { w.bits(u32(arr)) });
+
+                    // Trigger an update event to load the prescaler value to the clock
+                    self.tim.egr.write(|w| w.ug().set_bit());
+                    // The above line raises an update event which will indicate
+                    // that the timer is already finnished. Since this is not the case,
+                    // it should be cleared
+                    self.tim.sr.modify(|_, w| w.uif().clear_bit());
 
                     // start counter
                     self.tim.cr1.modify(|_, w| w.cen().set_bit());

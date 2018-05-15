@@ -7,10 +7,11 @@
 
 extern crate cortex_m;
 extern crate cortex_m_rtfm as rtfm;
+extern crate panic_abort;
 extern crate stm32f103xx_hal as hal;
 
 use cortex_m::asm;
-use hal::dma::{CircBuffer, Event, dma1};
+use hal::dma::{dma1, CircBuffer, Event};
 use hal::prelude::*;
 use hal::serial::Serial;
 use hal::stm32f103xx;

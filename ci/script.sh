@@ -1,13 +1,13 @@
 set -euxo pipefail
 
 main() {
-    if [ $TARGET = x86_64-unknown-linux-gnu ]; then
-        cargo check --target $TARGET
-        return
-    fi
+    cargo check --target $TARGET
 
-    xargo check --target $TARGET
-    xargo check --target $TARGET --examples
+    if [ $TARGET != x86_64-unknown-linux-gnu ]; then
+        cargo check --target $TARGET --examples
+    fi
 }
 
-main
+if [ $TRAVIS_BRANCH != master ]; then
+    main
+fi

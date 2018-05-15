@@ -5,6 +5,7 @@
 #![no_std]
 
 extern crate cortex_m;
+extern crate panic_abort;
 extern crate stm32f103xx_hal as hal;
 
 use cortex_m::asm;

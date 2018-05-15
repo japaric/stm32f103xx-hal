@@ -2,8 +2,11 @@
 //!
 //! ```
 //! 
+//! #![deny(unsafe_code)]
+//! #![deny(warnings)]
 //! #![no_std]
 //! 
+//! extern crate panic_abort;
 //! extern crate stm32f103xx_hal as hal;
 //! 
 //! use hal::prelude::*;
