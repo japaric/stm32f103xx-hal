@@ -29,7 +29,7 @@ pub enum Error {
 
 #[derive(Debug, Eq, PartialEq)]
 pub enum DutyCycle {
-    Ratio1to1,
+    Ratio2to1,
     Ratio16to9,
 }
 
@@ -281,7 +281,7 @@ macro_rules! hal {
 
                             self.i2c.ccr.write(|w| {
                                 let (freq, duty) = match duty_cycle {
-                                    &DutyCycle::Ratio1to1 => (((self.pclk1 / (freq * 3)) as u16).max(1), false),
+                                    &DutyCycle::Ratio2to1 => (((self.pclk1 / (freq * 3)) as u16).max(1), false),
                                     &DutyCycle::Ratio16to9 => (((self.pclk1 / (freq * 25)) as u16).max(1), true)
                                 };
 
