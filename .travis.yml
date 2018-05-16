@@ -9,10 +9,8 @@ matrix:
       if: branch != master
       addons:
         apt:
-          sources:
-            - debian-sid
           packages:
-            - binutils-arm-none-eabi
+            - gcc-arm-none-eabi
 
 before_install: set -e
 
