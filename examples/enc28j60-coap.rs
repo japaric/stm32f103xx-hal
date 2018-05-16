@@ -11,17 +11,19 @@
 
 #![deny(unsafe_code)]
 #![deny(warnings)]
-#![feature(lang_items)]
 #![feature(nll)]
 #![feature(try_from)]
+#![no_main]
 #![no_std]
 
 #[macro_use]
 extern crate cortex_m;
+#[macro_use]
+extern crate cortex_m_rt as rt;
 extern crate enc28j60;
 extern crate heapless;
 extern crate jnet;
-extern crate panic_abort;
+extern crate panic_itm;
 #[macro_use]
 extern crate serde_derive;
 extern crate serde_json_core as json;
@@ -37,6 +39,7 @@ use hal::stm32f103xx;
 use heapless::consts::*;
 use heapless::FnvIndexMap;
 use jnet::{arp, coap, ether, icmp, ipv4, mac, udp, Buffer};
+use rt::ExceptionFrame;
 
 /* Constants */
 const KB: u16 = 1024;
@@ -56,7 +59,9 @@ struct Led {
     led: bool,
 }
 
-fn main() {
+entry!(main);
+
+fn main() -> ! {
     let mut cp = cortex_m::Peripherals::take().unwrap();
     let dp = stm32f103xx::Peripherals::take().unwrap();
 
@@ -179,7 +184,7 @@ fn main() {
 
                         match ip.get_protocol() {
                             ipv4::Protocol::Icmp => {
-                                if let Ok(mut icmp) = icmp::Packet::parse(ip.payload_mut()) {
+                                if let Ok(icmp) = icmp::Packet::parse(ip.payload_mut()) {
                                     iprintln!(_stim, "*** {:?}", icmp);
 
                                     if icmp.get_type() == icmp::Type::EchoRequest
@@ -208,13 +213,13 @@ fn main() {
                                 }
                             }
                             ipv4::Protocol::Udp => {
-                                if let Ok(mut udp) = udp::Packet::parse(ip.payload()) {
+                                if let Ok(udp) = udp::Packet::parse(ip.payload()) {
                                     iprintln!(_stim, "*** {:?}", udp);
 
                                     let udp_src = udp.get_source();
 
                                     if udp.get_destination() == coap::PORT {
-                                        if let Ok(mut coap) = coap::Message::parse(udp.payload()) {
+                                        if let Ok(coap) = coap::Message::parse(udp.payload()) {
                                             iprintln!(_stim, "**** {:?}", coap);
 
                                             let path_is_led = coap.options()
@@ -272,7 +277,7 @@ fn main() {
                                                         if resp == coap::Response::Content {
                                                             coap.set_payload(
                                                                 &json::ser::to_vec::<[u8; 16], _>(
-                                                                    &Led { led: led.is_low() },
+                                                                    &Led { led: led.is_set_low() },
                                                                 ).unwrap(),
                                                             );
                                                         } else {
@@ -309,4 +314,16 @@ fn main() {
             iprintln!(_stim, "Err(E)");
         }
     }
+}
+
+exception!(HardFault, hard_fault);
+
+fn hard_fault(ef: &ExceptionFrame) -> ! {
+    panic!("{:#?}", ef);
+}
+
+exception!(*, default_handler);
+
+fn default_handler(irqn: i16) {
+    panic!("Unhandled exception (IRQn = {})", irqn);
 }

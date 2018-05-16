@@ -2,7 +2,6 @@
 
 #![deny(unsafe_code)]
 #![deny(warnings)]
-#![feature(lang_items)]
 #![feature(nll)]
 #![feature(proc_macro)]
 #![no_std]

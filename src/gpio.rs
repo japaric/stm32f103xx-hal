@@ -51,7 +51,7 @@ macro_rules! gpio {
         pub mod $gpiox {
             use core::marker::PhantomData;
 
-            use hal::digital::{InputPin, OutputPin};
+            use hal::digital::{InputPin, OutputPin, StatefulOutputPin, toggleable};
             use stm32f103xx::{$gpioy, $GPIOX};
 
             use rcc::APB2;
@@ -124,15 +124,6 @@ macro_rules! gpio {
             }
 
             impl<MODE> OutputPin for $PXx<Output<MODE>> {
-                fn is_high(&self) -> bool {
-                    !self.is_low()
-                }
-
-                fn is_low(&self) -> bool {
-                    // NOTE(unsafe) atomic read with no side effects
-                    unsafe { (*$GPIOX::ptr()).odr.read().bits() & (1 << self.i) == 0 }
-                }
-
                 fn set_high(&mut self) {
                     // NOTE(unsafe) atomic write to a stateless register
                     unsafe { (*$GPIOX::ptr()).bsrr.write(|w| w.bits(1 << self.i)) }
@@ -144,16 +135,18 @@ macro_rules! gpio {
                 }
             }
 
-            impl<MODE> $PXx<Output<MODE>> {
-                /// Toggles the output of the pin
-                pub fn toggle(&mut self) {
-                    if self.is_low() {
-                        self.set_high()
-                    } else {
-                        self.set_low()
-                    }
+            impl <MODE> StatefulOutputPin for $PXx<Output<MODE>> {
+                fn is_set_high(&self) -> bool {
+                    !self.is_set_low()
+                }
+
+                fn is_set_low(&self) -> bool {
+                    // NOTE(unsafe) atomic read with no side effects
+                    unsafe { (*$GPIOX::ptr()).odr.read().bits() & (1 << self.i) == 0 }
                 }
             }
+
+            impl <MODE> toggleable::Default for $PXx<Output<MODE>> {}
 
             $(
                 /// Pin
@@ -306,15 +299,6 @@ macro_rules! gpio {
                 }
 
                 impl<MODE> OutputPin for $PXi<Output<MODE>> {
-                    fn is_high(&self) -> bool {
-                        !self.is_low()
-                    }
-
-                    fn is_low(&self) -> bool {
-                        // NOTE(unsafe) atomic read with no side effects
-                        unsafe { (*$GPIOX::ptr()).odr.read().bits() & (1 << $i) == 0 }
-                    }
-
                     fn set_high(&mut self) {
                         // NOTE(unsafe) atomic write to a stateless register
                         unsafe { (*$GPIOX::ptr()).bsrr.write(|w| w.bits(1 << $i)) }
@@ -326,16 +310,18 @@ macro_rules! gpio {
                     }
                 }
 
-                impl<MODE> $PXi<Output<MODE>> {
-                    /// Toggles the output of the pin
-                    pub fn toggle(&mut self) {
-                        if self.is_low() {
-                            self.set_high()
-                        } else {
-                            self.set_low()
-                        }
+                impl<MODE> StatefulOutputPin for $PXi<Output<MODE>> {
+                    fn is_set_high(&self) -> bool {
+                        !self.is_set_low()
+                    }
+
+                    fn is_set_low(&self) -> bool {
+                        // NOTE(unsafe) atomic read with no side effects
+                        unsafe { (*$GPIOX::ptr()).odr.read().bits() & (1 << $i) == 0 }
                     }
                 }
+
+                impl <MODE> toggleable::Default for $PXi<Output<MODE>> {}
 
                 impl<MODE> InputPin for $PXi<Input<MODE>> {
                     fn is_high(&self) -> bool {
