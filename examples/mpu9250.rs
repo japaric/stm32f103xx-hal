@@ -2,11 +2,14 @@
 
 #![deny(unsafe_code)]
 #![deny(warnings)]
+#![no_main]
 #![no_std]
 
+#[macro_use]
+extern crate cortex_m_rt as rt;
 extern crate cortex_m;
 extern crate mpu9250;
-extern crate panic_abort;
+extern crate panic_semihosting;
 extern crate stm32f103xx_hal as hal;
 
 use cortex_m::asm;
@@ -15,8 +18,11 @@ use hal::prelude::*;
 use hal::spi::Spi;
 use hal::stm32f103xx;
 use mpu9250::Mpu9250;
+use rt::ExceptionFrame;
 
-fn main() {
+entry!(main);
+
+fn main() -> ! {
     let cp = cortex_m::Peripherals::take().unwrap();
     let dp = stm32f103xx::Peripherals::take().unwrap();
 
@@ -63,4 +69,18 @@ fn main() {
     let _a = mpu9250.all().unwrap();
 
     asm::bkpt();
+
+    loop {}
+}
+
+exception!(HardFault, hard_fault);
+
+fn hard_fault(ef: &ExceptionFrame) -> ! {
+    panic!("{:#?}", ef);
+}
+
+exception!(*, default_handler);
+
+fn default_handler(irqn: i16) {
+    panic!("Unhandled exception (IRQn = {})", irqn);
 }

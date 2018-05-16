@@ -1,20 +1,25 @@
 #![deny(unsafe_code)]
 #![deny(warnings)]
-#![feature(lang_items)]
+#![no_main]
 #![no_std]
 
 #[macro_use]
 extern crate cortex_m;
+#[macro_use]
+extern crate cortex_m_rt as rt;
 extern crate mfrc522;
-extern crate panic_abort;
+extern crate panic_itm;
 extern crate stm32f103xx_hal as hal;
 
 use hal::prelude::*;
 use hal::spi::Spi;
 use hal::stm32f103xx;
 use mfrc522::Mfrc522;
+use rt::ExceptionFrame;
 
-fn main() {
+entry!(main);
+
+fn main() -> ! {
     let mut cp = cortex_m::Peripherals::take().unwrap();
     let dp = stm32f103xx::Peripherals::take().unwrap();
 
@@ -53,4 +58,16 @@ fn main() {
             }
         }
     }
+}
+
+exception!(HardFault, hard_fault);
+
+fn hard_fault(ef: &ExceptionFrame) -> ! {
+    panic!("{:#?}", ef);
+}
+
+exception!(*, default_handler);
+
+fn default_handler(irqn: i16) {
+    panic!("Unhandled exception (IRQn = {})", irqn);
 }

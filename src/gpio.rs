@@ -51,7 +51,7 @@ macro_rules! gpio {
         pub mod $gpiox {
             use core::marker::PhantomData;
 
-            use hal::digital::{InputPin, OutputPin, StatefulOutputPin};
+            use hal::digital::{InputPin, OutputPin, StatefulOutputPin, toggleable};
             use stm32f103xx::{$gpioy, $GPIOX};
 
             use rcc::APB2;
@@ -144,8 +144,9 @@ macro_rules! gpio {
                     // NOTE(unsafe) atomic read with no side effects
                     unsafe { (*$GPIOX::ptr()).odr.read().bits() & (1 << self.i) == 0 }
                 }
-
             }
+
+            impl <MODE> toggleable::Default for $PXx<Output<MODE>> {}
 
             $(
                 /// Pin
@@ -319,6 +320,8 @@ macro_rules! gpio {
                         unsafe { (*$GPIOX::ptr()).odr.read().bits() & (1 << $i) == 0 }
                     }
                 }
+
+                impl <MODE> toggleable::Default for $PXi<Output<MODE>> {}
 
                 impl<MODE> InputPin for $PXi<Input<MODE>> {
                     fn is_high(&self) -> bool {
