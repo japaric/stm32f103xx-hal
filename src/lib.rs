@@ -35,16 +35,15 @@
 //!
 //! [examples]: examples/index.html
 
-#![feature(unsize)]
-#![feature(never_type)]
 #![no_std]
 
 extern crate cast;
 extern crate cortex_m;
 extern crate embedded_hal as hal;
 extern crate nb;
-extern crate void;
+extern crate stable_deref_trait;
 pub extern crate stm32f103xx;
+extern crate void;
 
 pub mod afio;
 pub mod bb;

@@ -1,14 +1,17 @@
-use core::marker::{PhantomData, Unsize};
+use core::marker::PhantomData;
+use core::ops::DerefMut;
 use core::ptr;
 use core::sync::atomic::{self, Ordering};
 
 use cast::u16;
 use hal;
 use nb;
+use stable_deref_trait::StableDeref;
 use stm32f103xx::{USART1, USART2, USART3};
+use void::Void;
 
 use afio::MAPR;
-use dma::{dma1, CircBuffer, Static, Transfer, R, W};
+use dma::{dma1, CircBuffer, Transfer, R, W};
 use gpio::gpioa::{PA10, PA2, PA3, PA9};
 use gpio::gpiob::{PB10, PB11, PB6, PB7};
 use gpio::{Alternate, Floating, Input, PushPull};
@@ -198,21 +201,21 @@ macro_rules! hal {
             }
 
             impl Rx<$USARTX> {
-                pub fn circ_read<B>(
+                pub fn circ_read<B, H>(
                     self,
                     mut chan: $rx_chan,
-                    buffer: &'static mut [B; 2],
+                    mut buffer: B,
                 ) -> CircBuffer<B, $rx_chan>
                 where
-                    B: Unsize<[u8]>,
+                    B: StableDeref<Target = [H; 2]> + DerefMut,
+                    H: AsMut<[u8]>,
                 {
                     {
-                        let buffer: &[u8] = &buffer[0];
                         chan.cmar().write(|w| unsafe {
-                            w.ma().bits(buffer.as_ptr() as usize as u32)
+                            w.ma().bits(buffer[0].as_mut().as_ptr() as usize as u32)
                         });
                         chan.cndtr().write(|w| unsafe{
-                            w.ndt().bits(u16(buffer.len() * 2).unwrap())
+                            w.ndt().bits(u16(buffer[0].as_mut().len() * 2).unwrap())
                         });
                         chan.cpar().write(|w| unsafe {
                             w.pa().bits(&(*$USARTX::ptr()).dr as *const _ as usize as u32)
@@ -251,111 +254,104 @@ macro_rules! hal {
                 pub fn read_exact<B>(
                     self,
                     mut chan: $rx_chan,
-                    buffer: &'static mut B,
-                ) -> Transfer<W, &'static mut B, $rx_chan, Self>
+                    mut buffer: B,
+                ) -> Transfer<W, B, $rx_chan, Self>
                 where
-                    B: Unsize<[u8]>,
+                    B: AsMut<[u8]> + StableDeref + 'static,
                 {
-                    {
-                        let buffer: &[u8] = buffer;
-                        chan.cmar().write(|w| unsafe {
-                            w.ma().bits(buffer.as_ptr() as usize as u32)
-                        });
-                        chan.cndtr().write(|w| unsafe{
-                            w.ndt().bits(u16(buffer.len()).unwrap())
-                        });
-                        chan.cpar().write(|w| unsafe {
-                            w.pa().bits(&(*$USARTX::ptr()).dr as *const _ as usize as u32)
-                        });
+                    chan.cmar().write(|w| unsafe {
+                        w.ma().bits(buffer.as_mut().as_ptr() as usize as u32)
+                    });
+                    chan.cndtr().write(|w| unsafe{
+                        w.ndt().bits(u16(buffer.as_mut().len()).unwrap())
+                    });
+                    chan.cpar().write(|w| unsafe {
+                        w.pa().bits(&(*$USARTX::ptr()).dr as *const _ as usize as u32)
+                    });
 
-                        // TODO can we weaken this compiler barrier?
-                        // NOTE(compiler_fence) operations on `buffer` should not be reordered after
-                        // the next statement, which starts the DMA transfer
-                        atomic::compiler_fence(Ordering::SeqCst);
+                    // TODO can we weaken this compiler barrier?
+                    // NOTE(compiler_fence) operations on `buffer` should not be reordered after
+                    // the next statement, which starts the DMA transfer
+                    atomic::compiler_fence(Ordering::SeqCst);
 
-                        chan.ccr().modify(|_, w| {
-                            w.mem2mem()
-                                .clear_bit()
-                                .pl()
-                                .medium()
-                                .msize()
-                                .bit8()
-                                .psize()
-                                .bit8()
-                                .minc()
-                                .set_bit()
-                                .pinc()
-                                .clear_bit()
-                                .circ()
-                                .clear_bit()
-                                .dir()
-                                .clear_bit()
-                                .en()
-                                .set_bit()
-                        });
-                    }
+                    chan.ccr().modify(|_, w| {
+                        w.mem2mem()
+                            .clear_bit()
+                            .pl()
+                            .medium()
+                            .msize()
+                            .bit8()
+                            .psize()
+                            .bit8()
+                            .minc()
+                            .set_bit()
+                            .pinc()
+                            .clear_bit()
+                            .circ()
+                            .clear_bit()
+                            .dir()
+                            .clear_bit()
+                            .en()
+                            .set_bit()
+                    });
 
                     Transfer::w(buffer, chan, self)
                 }
             }
 
             impl Tx<$USARTX> {
-                pub fn write_all<A, B>(
+                pub fn write_all<B>(
                     self,
                     mut chan: $tx_chan,
                     buffer: B,
                 ) -> Transfer<R, B, $tx_chan, Self>
                 where
-                    A: Unsize<[u8]>,
-                    B: Static<A>,
+                    B: AsRef<[u8]> + StableDeref + 'static,
                 {
-                    {
-                        let buffer: &[u8] = buffer.borrow();
-                        chan.cmar().write(|w| unsafe {
-                            w.ma().bits(buffer.as_ptr() as usize as u32)
-                        });
-                        chan.cndtr().write(|w| unsafe{
-                            w.ndt().bits(u16(buffer.len()).unwrap())
-                        });
-                        chan.cpar().write(|w| unsafe {
-                            w.pa().bits(&(*$USARTX::ptr()).dr as *const _ as usize as u32)
-                        });
+                    chan.cmar().write(|w| unsafe {
+                        w.ma().bits(buffer.as_ref().as_ptr() as usize as u32)
+                    });
+                    chan.cndtr().write(|w| unsafe{
+                        w.ndt().bits(u16(buffer.as_ref().len()).unwrap())
+                    });
+                    chan.cpar().write(|w| unsafe {
+                        w.pa().bits(&(*$USARTX::ptr()).dr as *const _ as usize as u32)
+                    });
 
-                        // TODO can we weaken this compiler barrier?
-                        // NOTE(compiler_fence) operations on `buffer` should not be reordered after
-                        // the next statement, which starts the DMA transfer
-                        atomic::compiler_fence(Ordering::SeqCst);
+                    // TODO can we weaken this compiler barrier?
+                    // NOTE(compiler_fence) operations on `buffer` should not be reordered after
+                    // the next statement, which starts the DMA transfer
+                    atomic::compiler_fence(Ordering::SeqCst);
 
-                        chan.ccr().modify(|_, w| {
-                            w.mem2mem()
-                                .clear_bit()
-                                .pl()
-                                .medium()
-                                .msize()
-                                .bit8()
-                                .psize()
-                                .bit8()
-                                .minc()
-                                .set_bit()
-                                .pinc()
-                                .clear_bit()
-                                .circ()
-                                .clear_bit()
-                                .dir()
-                                .set_bit()
-                                .en()
-                                .set_bit()
-                        });
-                    }
+                    chan.ccr().modify(|_, w| {
+                        w.mem2mem()
+                            .clear_bit()
+                            .pl()
+                            .medium()
+                            .msize()
+                            .bit8()
+                            .psize()
+                            .bit8()
+                            .minc()
+                            .set_bit()
+                            .pinc()
+                            .clear_bit()
+                            .circ()
+                            .clear_bit()
+                            .dir()
+                            .set_bit()
+                            .en()
+                            .set_bit()
+                    });
 
                     Transfer::r(buffer, chan, self)
                 }
             }
 
             impl hal::serial::Write<u8> for Tx<$USARTX> {
-                type Error = !;
+                type Error = Void;
 
-                fn flush(&mut self) -> nb::Result<(), !> {
+                fn flush(&mut self) -> nb::Result<(), Void> {
                     // NOTE(unsafe) atomic read with no side effects
                     let sr = unsafe { (*$USARTX::ptr()).sr.read() };
 
@@ -366,7 +362,7 @@ macro_rules! hal {
                     }
                 }
 
-                fn write(&mut self, byte: u8) -> nb::Result<(), !> {
+                fn write(&mut self, byte: u8) -> nb::Result<(), Void> {
                     // NOTE(unsafe) atomic read with no side effects
                     let sr = unsafe { (*$USARTX::ptr()).sr.read() };
 
