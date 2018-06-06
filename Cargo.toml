@@ -13,8 +13,8 @@ cortex-m = "0.5.0"
 nb = "0.1.1"
 stm32f103xx = "0.10.0"
 cortex-m-rt = "0.5.1"
-panic-semihosting = "0.2.0"
-panic-itm = "0.1.1"
+panic-semihosting = "0.3.0"
+panic-itm = "0.2.0"
 
 [dependencies.void]
 default-features = false
