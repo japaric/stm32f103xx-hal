@@ -48,6 +48,7 @@ pub extern crate stm32f103xx;
 
 pub mod afio;
 pub mod bb;
+pub mod can;
 pub mod delay;
 pub mod dma;
 #[cfg(feature = "doc")]
