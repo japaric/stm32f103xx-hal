@@ -1,0 +1,161 @@
+//! Read the temperature from DS18B20 1-wire temperature sensors connected to B6 GPIO
+#![feature(proc_macro)]
+#![deny(unsafe_code)]
+//#![deny(warnings)]
+#![feature(proc_macro)]
+#![no_std]
+
+extern crate cortex_m;
+extern crate cortex_m_rtfm as rtfm;
+extern crate panic_abort;
+extern crate stm32f103xx_hal as hal;
+
+extern crate cortex_m_semihosting as sh;
+extern crate embedded_hal;
+extern crate nb;
+extern crate onewire;
+
+use hal::prelude::*;
+//use embedded_hal::digital::{InputPin, OutputPin};
+//use embedded_hal::blocking::delay::{DelayUs};
+
+use core::fmt::Write;
+use hal::delay::Delay;
+use hal::gpio::gpiob::PB6;
+use hal::gpio::gpioc::PC13;
+use hal::gpio::{OpenDrain, Output, PushPull};
+use hal::stm32f103xx;
+use hal::timer::{Event, Timer};
+use onewire::ds18x20::*;
+use onewire::*;
+use rtfm::{app, Resource, Threshold};
+use sh::hio;
+
+#[derive(Default)]
+pub struct TempMeter {
+    rom: onewire::Rom,
+    temperature: i16,
+}
+
+#[derive(Default)]
+pub struct TempMeters {
+    n: usize,
+    devices: [TempMeter; 2],
+}
+
+app! {
+    device: stm32f103xx,
+
+    resources: {
+        static TEMPMETERS: TempMeters;
+
+        static TIMER2: Timer<hal::stm32f103xx::TIM2>;
+        static LED: PC13<Output<PushPull>>;
+        static ONEWIRE: OneWirePort<PB6<Output<OpenDrain>>, Delay>;
+    },
+
+    idle: {
+        resources: [TEMPMETERS, LED],
+    },
+
+    tasks: {
+        TIM2: {
+            path: tim2_irq,
+            resources: [LED, ONEWIRE, TEMPMETERS, TIMER2],
+        },
+    }
+}
+
+fn init(p: init::Peripherals) -> init::LateResources {
+    let mut rcc = p.device.RCC.constrain();
+    let mut gpioc = p.device.GPIOC.split(&mut rcc.apb2);
+    let mut led = gpioc.pc13.into_push_pull_output(&mut gpioc.crh);
+    led.set_low(); //turn on the led at the start of init
+
+    let mut gpiob = p.device.GPIOB.split(&mut rcc.apb2);
+
+    let mut flash = p.device.FLASH.constrain();
+    let clocks = rcc.cfgr.freeze(&mut flash.acr);
+    let delay = Delay::new(p.core.SYST, clocks);
+    let iopin = gpiob.pb6.into_open_drain_output(&mut gpiob.crl);
+    let mut one_wire = OneWirePort::new(iopin, delay);
+
+    let mut tempmeters = TempMeters::default();
+
+    let mut it = RomIterator::new(0);
+    loop {
+        match one_wire.iterate_next(true, &mut it) {
+            Ok(Some(rom)) => {
+                if let Some(_device_type) = detect_18x20_devices(rom[0]) {
+                    //writeln!(hstdout, "rom: {:?}", &rom).unwrap();
+                    if let Ok(_required_delay) = one_wire.start_temperature_measurement(&rom) {
+                        if tempmeters.n >= tempmeters.devices.len() {
+                            break;
+                        };
+                        tempmeters.devices[tempmeters.n].rom = *rom;
+                        tempmeters.n += 1;
+                    }
+                } else {
+                    let mut hstdout = hio::hstdout().unwrap();
+                    writeln!(hstdout, "Unknown one wire device.").unwrap();
+                }
+                continue;
+            }
+
+            Err(e) => {
+                let mut hstdout = hio::hstdout().unwrap();
+                writeln!(hstdout, "{:?}", &e).unwrap();
+            }
+
+            _ => {
+                break;
+            }
+        }
+    }
+
+    let mut timer2 = Timer::tim2(p.device.TIM2, 1.hz(), clocks, &mut rcc.apb1);
+    timer2.listen(Event::Update);
+
+    led.set_high(); //turn off the led at the end of init
+
+    init::LateResources {
+        LED: led,
+        ONEWIRE: one_wire,
+        TEMPMETERS: tempmeters,
+        TIMER2: timer2,
+    }
+}
+
+fn idle(t: &mut Threshold, mut r: idle::Resources) -> ! {
+    let mut hstdout = hio::hstdout().unwrap();
+
+    loop {
+        {
+            let tempmeters = r.TEMPMETERS.borrow(t);
+            for i in 0..tempmeters.n {
+                let temp = tempmeters.devices[i].temperature;
+                writeln!(hstdout, "{}: T = {} + {}/16 C", i, temp >> 4, temp & 0xF).unwrap();
+                //r.LED.borrow_mut(t).toggle();
+            }
+        }
+        rtfm::wfi();
+    }
+}
+
+fn tim2_irq(t: &mut Threshold, mut r: TIM2::Resources) {
+    r.TIMER2.borrow_mut(t).clear_interrupt_pending();
+
+    r.LED.borrow_mut(t).toggle();
+
+    let tempmeters = r.TEMPMETERS.borrow_mut(t);
+    for i in 0..tempmeters.n {
+        if let Ok(t) = r.ONEWIRE
+            .read_temperature_measurement_result(&tempmeters.devices[i].rom)
+        {
+            tempmeters.devices[i].temperature = t;
+        }
+        if let Ok(_required_delay) = r.ONEWIRE
+            .start_temperature_measurement(&tempmeters.devices[i].rom)
+        {}
+    }
+}
