@@ -77,7 +77,7 @@ rev = "6f12b77c1ffeae167989fe06e0d8b15978bd6d18"
 
 [dev-dependencies.stm32f103xx]
 features = ["rt"]
-version = "0.9.0"
+version = "0.10.0"
 
 [features]
 doc = []
