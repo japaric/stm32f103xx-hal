@@ -35,7 +35,6 @@
 //!
 //! [examples]: examples/index.html
 
-#![feature(specialization)]
 #![feature(unsize)]
 #![feature(never_type)]
 #![no_std]
