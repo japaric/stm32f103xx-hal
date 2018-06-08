@@ -2,10 +2,14 @@
 
 #![deny(unsafe_code)]
 #![deny(warnings)]
+#![no_main]
 #![no_std]
 
+#[macro_use]
+extern crate cortex_m_rt as rt;
 extern crate cortex_m_semihosting as sh;
 extern crate motor_driver;
+extern crate panic_semihosting;
 #[macro_use(block)]
 extern crate nb;
 extern crate stm32f103xx_hal as hal;
@@ -17,8 +21,11 @@ use hal::serial::Serial;
 use hal::stm32f103xx;
 use motor_driver::Motor;
 use sh::hio;
+use rt::ExceptionFrame;
 
-fn main() {
+entry!(main);
+
+fn main() -> ! {
     let p = stm32f103xx::Peripherals::take().unwrap();
 
     let mut flash = p.FLASH.constrain();
@@ -95,4 +102,16 @@ fn main() {
 
         writeln!(hstdout, "{} {}", duty, brake).unwrap();
     }
+}
+
+exception!(HardFault, hard_fault);
+
+fn hard_fault(ef: &ExceptionFrame) -> ! {
+    panic!("{:#?}", ef);
+}
+
+exception!(*, default_handler);
+
+fn default_handler(irqn: i16) {
+    panic!("Unhandled exception (IRQn = {})", irqn);
 }

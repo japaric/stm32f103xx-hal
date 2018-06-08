@@ -13,6 +13,7 @@ extern crate crc16;
 extern crate either;
 extern crate m;
 extern crate mpu9250;
+extern crate panic_abort;
 extern crate stm32f103xx_hal as hal;
 
 use core::f32::consts::PI;
@@ -21,7 +22,7 @@ use byteorder::{ByteOrder, LE};
 use crc16::{State, ARC};
 use either::Either;
 use hal::delay::Delay;
-use hal::dma::{Transfer, dma1, R};
+use hal::dma::{dma1, Transfer, R};
 use hal::gpio::gpioa::{PA4, PA5, PA6, PA7};
 use hal::gpio::{Alternate, Floating, Input, Output, PushPull};
 use hal::prelude::*;

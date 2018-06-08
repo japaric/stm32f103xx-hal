@@ -51,7 +51,7 @@ macro_rules! gpio {
         pub mod $gpiox {
             use core::marker::PhantomData;
 
-            use hal::digital::{InputPin, OutputPin};
+            use hal::digital::{InputPin, OutputPin, StatefulOutputPin, toggleable};
             use stm32f103xx::{$gpioy, $GPIOX};
 
             use rcc::APB2;
@@ -123,47 +123,39 @@ macro_rules! gpio {
                 _mode: PhantomData<MODE>,
             }
 
-
             impl<MODE> OutputPin for $PXx<Output<MODE>> {
-                default fn is_high(&self) -> bool {
-                    !self.is_low()
-                }
-
-                default fn is_low(&self) -> bool {
-                    // NOTE(unsafe) atomic read with no side effects
-                    unsafe { (*$GPIOX::ptr()).odr.read().bits() & (1 << self.i) == 0 }
-                }
-
-                default fn set_high(&mut self) {
+                fn set_high(&mut self) {
                     // NOTE(unsafe) atomic write to a stateless register
                     unsafe { (*$GPIOX::ptr()).bsrr.write(|w| w.bits(1 << self.i)) }
                 }
 
-                default fn set_low(&mut self) {
+                fn set_low(&mut self) {
                     // NOTE(unsafe) atomic write to a stateless register
                     unsafe { (*$GPIOX::ptr()).bsrr.write(|w| w.bits(1 << (16 + self.i))) }
                 }
             }
 
-            /// In OpenDrain mode writing a high to the output causes
-            /// it to float. Therefore whether the pin is high or low
-            /// depends on other periphery connected to that pin. Therefore
-            /// one needs to read from IDR instead from ODR in this mode.
-            impl OutputPin for $PXx<Output<OpenDrain>> {
+            impl <MODE> StatefulOutputPin for $PXx<Output<MODE>> {
+                fn is_set_high(&self) -> bool {
+                    !self.is_set_low()
+                }
+
+                fn is_set_low(&self) -> bool {
+                    // NOTE(unsafe) atomic read with no side effects
+                    unsafe { (*$GPIOX::ptr()).odr.read().bits() & (1 << self.i) == 0 }
+                }
+            }
+
+            impl <MODE> toggleable::Default for $PXx<Output<MODE>> {}
+
+            impl InputPin for $PXx<Output<OpenDrain>> {
+                fn is_high(&self) -> bool {
+                    !self.is_low()
+                }
+
                 fn is_low(&self) -> bool {
                     // NOTE(unsafe) atomic read with no side effects
                     unsafe { (*$GPIOX::ptr()).idr.read().bits() & (1 << self.i) == 0 }
-                }
-            }
-          
-            impl<MODE> $PXx<Output<MODE>> {
-                /// Toggles the output of the pin
-                pub fn toggle(&mut self) {
-                    if self.is_low() {
-                        self.set_high()
-                    } else {
-                        self.set_low()
-                    }
                 }
             }
 
@@ -261,9 +253,6 @@ macro_rules! gpio {
                     // }
 
                     /// Configures the pin to operate as an open drain output pin
-                    /// The Output implementation for [Output#is_low(&self)] and
-                    /// [Output#is_high(&self)] read from the IDR instead from the ODR
-                    /// since a written high does not need to mean the pin is actually high
                     pub fn into_open_drain_output(
                         self,
                         cr: &mut $CR,
@@ -320,49 +309,42 @@ macro_rules! gpio {
                 }
 
                 impl<MODE> OutputPin for $PXi<Output<MODE>> {
-                    default fn is_high(&self) -> bool {
-                        !self.is_low()
-                    }
-
-                    default fn is_low(&self) -> bool {
-                        // NOTE(unsafe) atomic read with no side effects
-                        unsafe { (*$GPIOX::ptr()).odr.read().bits() & (1 << $i) == 0 }
-                    }
-
-                    default fn set_high(&mut self) {
+                    fn set_high(&mut self) {
                         // NOTE(unsafe) atomic write to a stateless register
                         unsafe { (*$GPIOX::ptr()).bsrr.write(|w| w.bits(1 << $i)) }
                     }
 
-                    default fn set_low(&mut self) {
+                    fn set_low(&mut self) {
                         // NOTE(unsafe) atomic write to a stateless register
                         unsafe { (*$GPIOX::ptr()).bsrr.write(|w| w.bits(1 << (16 + $i))) }
                     }
                 }
 
-                /// In OpenDrain mode writing a high to the output causes
-                /// it to float. Therefore whether the pin is high or low
-                /// depends on other periphery connected to that pin. Therefore
-                /// one needs to read from IDR instead from ODR in this mode.
-                impl OutputPin for $PXi<Output<OpenDrain>> {
+                impl<MODE> StatefulOutputPin for $PXi<Output<MODE>> {
+                    fn is_set_high(&self) -> bool {
+                        !self.is_set_low()
+                    }
+
+                    fn is_set_low(&self) -> bool {
+                        // NOTE(unsafe) atomic read with no side effects
+                        unsafe { (*$GPIOX::ptr()).odr.read().bits() & (1 << $i) == 0 }
+                    }
+                }
+
+                impl <MODE> toggleable::Default for $PXi<Output<MODE>> {}
+
+                impl<MODE> InputPin for $PXi<Input<MODE>> {
+                    fn is_high(&self) -> bool {
+                        !self.is_low()
+                    }
+
                     fn is_low(&self) -> bool {
                         // NOTE(unsafe) atomic read with no side effects
                         unsafe { (*$GPIOX::ptr()).idr.read().bits() & (1 << $i) == 0 }
                     }
                 }
 
-                impl<MODE> $PXi<Output<MODE>> {
-                    /// Toggles the output of the pin
-                    pub fn toggle(&mut self) {
-                        if self.is_low() {
-                            self.set_high()
-                        } else {
-                            self.set_low()
-                        }
-                    }
-                }
-
-                impl<MODE> InputPin for $PXi<Input<MODE>> {
+                impl InputPin for $PXi<Output<OpenDrain>> {
                     fn is_high(&self) -> bool {
                         !self.is_low()
                     }

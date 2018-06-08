@@ -11,16 +11,22 @@
 
 #![deny(unsafe_code)]
 #![deny(warnings)]
-#![feature(lang_items)]
 #![feature(nll)]
 #![feature(try_from)]
+#![no_main]
 #![no_std]
 
 #[macro_use]
 extern crate cortex_m;
+#[macro_use]
+extern crate cortex_m_rt as rt;
 extern crate enc28j60;
 extern crate heapless;
 extern crate jnet;
+extern crate panic_itm;
+#[macro_use]
+extern crate serde_derive;
+extern crate serde_json_core as json;
 extern crate stm32f103xx_hal as hal;
 
 use core::convert::TryInto;
@@ -30,8 +36,10 @@ use hal::delay::Delay;
 use hal::prelude::*;
 use hal::spi::Spi;
 use hal::stm32f103xx;
-use heapless::LinearMap;
-use jnet::{arp, coap, ether, icmp, mac, udp, Buffer, ipv4};
+use heapless::consts::*;
+use heapless::FnvIndexMap;
+use jnet::{arp, coap, ether, icmp, ipv4, mac, udp, Buffer};
+use rt::ExceptionFrame;
 
 /* Constants */
 const KB: u16 = 1024;
@@ -45,7 +53,15 @@ const IP: ipv4::Addr = ipv4::Addr([192, 168, 1, 33]);
 //     ($($tt: tt)*) => {};
 // }
 
-fn main() {
+// LED resource
+#[derive(Deserialize, Serialize)]
+struct Led {
+    led: bool,
+}
+
+entry!(main);
+
+fn main() -> ! {
     let mut cp = cortex_m::Peripherals::take().unwrap();
     let dp = stm32f103xx::Peripherals::take().unwrap();
 
@@ -53,7 +69,7 @@ fn main() {
     let mut afio = dp.AFIO.constrain(&mut rcc.apb2);
     let mut flash = dp.FLASH.constrain();
     let mut gpioa = dp.GPIOA.split(&mut rcc.apb2);
-    let stim = &mut cp.ITM.stim[0];
+    let _stim = &mut cp.ITM.stim[0];
 
     let clocks = rcc.cfgr.freeze(&mut flash.acr);
 
@@ -100,7 +116,7 @@ fn main() {
     // FIXME some frames are lost when sending right after initialization
     delay.delay_ms(100_u8);
 
-    let mut cache = LinearMap::<_, _, [_; 8]>::new();
+    let mut cache = FnvIndexMap::<_, _, U8>::new();
 
     let mut buf = [0; 128];
     loop {
@@ -109,8 +125,8 @@ fn main() {
         buf.truncate(len);
 
         if let Ok(mut eth) = ether::Frame::parse(buf) {
-            iprintln!(stim, "\nRx({})", eth.as_bytes().len());
-            iprintln!(stim, "* {:?}", eth);
+            iprintln!(_stim, "\nRx({})", eth.as_bytes().len());
+            iprintln!(_stim, "* {:?}", eth);
 
             let mac_src = eth.get_source();
 
@@ -119,7 +135,7 @@ fn main() {
                     if let Ok(arp) = arp::Packet::parse(eth.payload_mut()) {
                         match arp.downcast() {
                             Ok(mut arp) => {
-                                iprintln!(stim, "** {:?}", arp);
+                                iprintln!(_stim, "** {:?}", arp);
 
                                 if !arp.is_a_probe() {
                                     cache.insert(arp.get_spa(), arp.get_sha()).ok();
@@ -137,28 +153,28 @@ fn main() {
                                     arp.set_spa(IP);
                                     arp.set_tha(tha);
                                     arp.set_tpa(tpa);
-                                    iprintln!(stim, "\n** {:?}", arp);
+                                    iprintln!(_stim, "\n** {:?}", arp);
 
                                     // update the Ethernet header
                                     eth.set_destination(tha);
                                     eth.set_source(MAC);
-                                    iprintln!(stim, "* {:?}", eth);
+                                    iprintln!(_stim, "* {:?}", eth);
 
-                                    iprintln!(stim, "Tx({})", eth.as_bytes().len());
+                                    iprintln!(_stim, "Tx({})", eth.as_bytes().len());
                                     enc28j60.transmit(eth.as_bytes()).ok().unwrap();
                                 }
                             }
-                            Err(arp) => {
-                                iprintln!(stim, "** {:?}", arp);
+                            Err(_arp) => {
+                                iprintln!(_stim, "** {:?}", _arp);
                             }
                         }
                     } else {
-                        iprintln!(stim, "Err(B)");
+                        iprintln!(_stim, "Err(B)");
                     }
                 }
                 ether::Type::Ipv4 => {
                     if let Ok(mut ip) = ipv4::Packet::parse(eth.payload_mut()) {
-                        iprintln!(stim, "** {:?}", ip);
+                        iprintln!(_stim, "** {:?}", ip);
 
                         let ip_src = ip.get_source();
 
@@ -168,43 +184,43 @@ fn main() {
 
                         match ip.get_protocol() {
                             ipv4::Protocol::Icmp => {
-                                if let Ok(mut icmp) = icmp::Packet::parse(ip.payload_mut()) {
-                                    iprintln!(stim, "*** {:?}", icmp);
+                                if let Ok(icmp) = icmp::Packet::parse(ip.payload_mut()) {
+                                    iprintln!(_stim, "*** {:?}", icmp);
 
                                     if icmp.get_type() == icmp::Type::EchoRequest
                                         && icmp.get_code() == 0
                                     {
-                                        let icmp =
+                                        let _icmp =
                                             icmp.set_type(icmp::Type::EchoReply).update_checksum();
-                                        iprintln!(stim, "\n*** {:?}", icmp);
+                                        iprintln!(_stim, "\n*** {:?}", _icmp);
 
                                         // update the IP header
                                         let mut ip = ip.set_source(IP);
                                         ip.set_destination(ip_src);
-                                        let ip = ip.update_checksum();
-                                        iprintln!(stim, "** {:?}", ip);
+                                        let _ip = ip.update_checksum();
+                                        iprintln!(_stim, "** {:?}", _ip);
 
                                         // update the Ethernet header
                                         eth.set_destination(*cache.get(&ip_src).unwrap());
                                         eth.set_source(MAC);
-                                        iprintln!(stim, "* {:?}", eth);
+                                        iprintln!(_stim, "* {:?}", eth);
 
-                                        iprintln!(stim, "Tx({})", eth.as_bytes().len());
+                                        iprintln!(_stim, "Tx({})", eth.as_bytes().len());
                                         enc28j60.transmit(eth.as_bytes()).ok().unwrap();
                                     }
                                 } else {
-                                    iprintln!(stim, "Err(C)");
+                                    iprintln!(_stim, "Err(C)");
                                 }
                             }
                             ipv4::Protocol::Udp => {
-                                if let Ok(mut udp) = udp::Packet::parse(ip.payload_mut()) {
-                                    iprintln!(stim, "*** {:?}", udp);
+                                if let Ok(udp) = udp::Packet::parse(ip.payload()) {
+                                    iprintln!(_stim, "*** {:?}", udp);
+
+                                    let udp_src = udp.get_source();
 
                                     if udp.get_destination() == coap::PORT {
-                                        if let Ok(mut coap) =
-                                            coap::Message::parse(udp.payload_mut())
-                                        {
-                                            iprintln!(stim, "**** {:?}", coap);
+                                        if let Ok(coap) = coap::Message::parse(udp.payload()) {
+                                            iprintln!(_stim, "**** {:?}", coap);
 
                                             let path_is_led = coap.options()
                                                 .filter_map(|opt| {
@@ -216,79 +232,71 @@ fn main() {
                                                 })
                                                 .eq([b"led"].iter().cloned());
 
-                                            // update the CoAP message
-                                            coap.set_type(coap::Type::Acknowledgement);
+                                            let mut resp = coap::Response::BadRequest;
 
                                             match coap.get_code().try_into() {
                                                 Ok(coap::Method::Get) => {
                                                     if path_is_led {
-                                                        coap.set_code(coap::Response::Content);
-
-                                                        coap.clear_options();
-                                                        coap.set_payload(if led.is_low() {
-                                                            b"on"
-                                                        } else {
-                                                            b"off"
-                                                        });
-                                                    } else {
-                                                        coap.set_code(coap::Response::BadRequest);
+                                                        resp = coap::Response::Content;
                                                     }
                                                 }
                                                 Ok(coap::Method::Put) => {
-                                                    let mut ok = false;
                                                     if path_is_led {
-                                                        match coap.payload() {
-                                                            b"on" => {
+                                                        if let Ok(json) = json::de::from_slice::<Led>(
+                                                            coap.payload(),
+                                                        ) {
+                                                            if json.led {
                                                                 led.set_low();
-                                                                ok = true;
-                                                            }
-                                                            b"off" => {
+                                                            } else {
                                                                 led.set_high();
-                                                                ok = true;
                                                             }
-                                                            _ => {}
+                                                            resp = coap::Response::Changed;
                                                         }
                                                     }
-
-                                                    coap.clear_options();
-                                                    if ok {
-                                                        coap.set_code(coap::Response::Changed);
-                                                    } else {
-                                                        coap.set_code(coap::Response::BadRequest);
-                                                    }
-                                                    coap.set_payload(&[]);
                                                 }
                                                 _ => {}
                                             }
 
-                                            iprintln!(stim, "\n**** {:?}", coap);
-
-                                            // update the UDP header
-                                            let coap_len = coap.len();
-                                            let udp_src = udp.get_source();
-                                            udp.truncate(coap_len);
-                                            udp.set_source(coap::PORT);
-                                            udp.set_destination(udp_src);
-                                            udp.zero_checksum();
-                                            iprintln!(stim, "*** {:?}", udp);
-
-                                            // update the IP header
-                                            let udp_len = udp.len();
-                                            let mut ip = ip.set_source(IP);
-                                            ip.set_destination(ip_src);
-                                            ip.truncate(udp_len);
-                                            let ip = ip.update_checksum();
-                                            iprintln!(stim, "** {:?}", ip);
-
-                                            // update the Ethernet header
-                                            let ip_len = ip.len();
+                                            let mut buf = eth.free();
+                                            buf.reset();
+                                            let mut eth = ether::Frame::new(buf);
                                             eth.set_destination(*cache.get(&ip_src).unwrap());
                                             eth.set_source(MAC);
-                                            eth.truncate(ip_len);
-                                            iprintln!(stim, "* {:?}", eth);
+
+                                            eth.ipv4(|ip| {
+                                                ip.set_source(IP);
+                                                ip.set_destination(ip_src);
+
+                                                ip.udp(|udp| {
+                                                    udp.set_destination(udp_src);
+                                                    udp.set_source(coap::PORT);
+                                                    udp.coap(0, |coap| {
+                                                        coap.set_type(coap::Type::Acknowledgement);
+                                                        coap.set_code(resp);
+
+                                                        if resp == coap::Response::Content {
+                                                            coap.set_payload(
+                                                                &json::ser::to_vec::<[u8; 16], _>(
+                                                                    &Led { led: led.is_set_low() },
+                                                                ).unwrap(),
+                                                            );
+                                                        } else {
+                                                            coap.set_payload(&[]);
+                                                        }
+
+                                                        iprintln!(_stim, "\n**** {:?}", coap);
+                                                    });
+
+                                                    iprintln!(_stim, "*** {:?}", udp);
+                                                });
+
+                                                iprintln!(_stim, "** {:?}", ip);
+                                            });
+
+                                            iprintln!(_stim, "* {:?}", eth);
 
                                             let bytes = eth.as_bytes();
-                                            iprintln!(stim, "Tx({})", bytes.len());
+                                            iprintln!(_stim, "Tx({})", bytes.len());
                                             enc28j60.transmit(bytes).ok().unwrap();
                                         }
                                     }
@@ -297,13 +305,25 @@ fn main() {
                             _ => {}
                         }
                     } else {
-                        iprintln!(stim, "Err(D)");
+                        iprintln!(_stim, "Err(D)");
                     }
                 }
                 _ => {}
             }
         } else {
-            iprintln!(stim, "Err(E)");
+            iprintln!(_stim, "Err(E)");
         }
     }
+}
+
+exception!(HardFault, hard_fault);
+
+fn hard_fault(ef: &ExceptionFrame) -> ! {
+    panic!("{:#?}", ef);
+}
+
+exception!(*, default_handler);
+
+fn default_handler(irqn: i16) {
+    panic!("Unhandled exception (IRQn = {})", irqn);
 }

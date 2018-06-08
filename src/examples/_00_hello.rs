@@ -2,9 +2,12 @@
 //!
 //! ```
 //! 
+//! #![deny(unsafe_code)]
+//! #![deny(warnings)]
 //! #![no_std]
 //! 
 //! extern crate cortex_m_semihosting as sh;
+//! extern crate panic_abort;
 //! extern crate stm32f103xx_hal;
 //! 
 //! use core::fmt::Write;

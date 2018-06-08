@@ -3,9 +3,13 @@
 #![deny(unsafe_code)]
 #![deny(warnings)]
 #![no_std]
+#![no_main]
 
+#[macro_use]
+extern crate cortex_m_rt as rt;
 #[macro_use(singleton)]
 extern crate cortex_m;
+extern crate panic_semihosting;
 extern crate stm32f103xx_hal as hal;
 
 use cortex_m::asm;
@@ -14,7 +18,11 @@ use hal::prelude::*;
 use hal::serial::Serial;
 use hal::stm32f103xx;
 
-fn main() {
+use rt::ExceptionFrame;
+
+entry!(main);
+
+fn main() -> ! {
     let p = stm32f103xx::Peripherals::take().unwrap();
 
     let mut flash = p.FLASH.constrain();
@@ -67,4 +75,18 @@ fn main() {
     let _second_half = circ_buffer.peek(|half, _| *half).unwrap();
 
     asm::bkpt();
+
+    loop {}
+}
+
+exception!(HardFault, hard_fault);
+
+fn hard_fault(ef: &ExceptionFrame) -> ! {
+    panic!("{:#?}", ef);
+}
+
+exception!(*, default_handler);
+
+fn default_handler(irqn: i16) {
+    panic!("Unhandled exception (IRQn = {})", irqn);
 }

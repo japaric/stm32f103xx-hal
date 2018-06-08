@@ -175,7 +175,7 @@ impl CFGR {
         let ppre1 = 1 << (ppre1_bits - 0b011);
         let pclk1 = hclk / u32(ppre1);
 
-        assert!(pclk1 < 36_000_000);
+        assert!(pclk1 <= 36_000_000);
 
         let ppre2_bits = self.pclk2
             .map(|pclk2| match hclk / pclk2 {

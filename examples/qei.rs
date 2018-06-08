@@ -2,10 +2,14 @@
 
 #![deny(unsafe_code)]
 #![deny(warnings)]
+#![no_main]
 #![no_std]
 
+#[macro_use]
+extern crate cortex_m_rt as rt;
 extern crate cortex_m;
 extern crate cortex_m_semihosting as semihosting;
+extern crate panic_semihosting;
 extern crate stm32f103xx_hal as hal;
 
 use core::fmt::Write;
@@ -14,9 +18,12 @@ use hal::delay::Delay;
 use hal::prelude::*;
 use hal::qei::Qei;
 use hal::stm32f103xx;
+use rt::ExceptionFrame;
 use semihosting::hio;
 
-fn main() {
+entry!(main);
+
+fn main() -> ! {
     let dp = stm32f103xx::Peripherals::take().unwrap();
     let cp = cortex_m::Peripherals::take().unwrap();
 
@@ -55,4 +62,16 @@ fn main() {
 
         writeln!(hstdout, "{}", elapsed).unwrap();
     }
+}
+
+exception!(HardFault, hard_fault);
+
+fn hard_fault(ef: &ExceptionFrame) -> ! {
+    panic!("{:#?}", ef);
+}
+
+exception!(*, default_handler);
+
+fn default_handler(irqn: i16) {
+    panic!("Unhandled exception (IRQn = {})", irqn);
 }

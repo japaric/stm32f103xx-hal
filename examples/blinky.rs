@@ -3,8 +3,12 @@
 #![deny(unsafe_code)]
 #![deny(warnings)]
 #![no_std]
+#![no_main]
 
 extern crate cortex_m;
+#[macro_use]
+extern crate cortex_m_rt as rt;
+extern crate panic_semihosting;
 extern crate stm32f103xx_hal as hal;
 #[macro_use(block)]
 extern crate nb;
@@ -12,8 +16,11 @@ extern crate nb;
 use hal::prelude::*;
 use hal::stm32f103xx;
 use hal::timer::Timer;
+use rt::ExceptionFrame;
 
-fn main() {
+entry!(main);
+
+fn main() -> ! {
     let cp = cortex_m::Peripherals::take().unwrap();
     let dp = stm32f103xx::Peripherals::take().unwrap();
 
@@ -38,4 +45,16 @@ fn main() {
         block!(timer.wait()).unwrap();
         led.set_low();
     }
+}
+
+exception!(HardFault, hard_fault);
+
+fn hard_fault(ef: &ExceptionFrame) -> ! {
+    panic!("{:#?}", ef);
+}
+
+exception!(*, default_handler);
+
+fn default_handler(irqn: i16) {
+    panic!("Unhandled exception (IRQn = {})", irqn);
 }

@@ -1,76 +1,63 @@
-//! Interfacing the MPU9250
-
 #![deny(unsafe_code)]
 #![deny(warnings)]
 #![no_main]
 #![no_std]
 
 #[macro_use]
-extern crate cortex_m_rt as rt;
 extern crate cortex_m;
-extern crate mpu9250;
-extern crate panic_semihosting;
+#[macro_use]
+extern crate cortex_m_rt as rt;
+extern crate mfrc522;
+extern crate panic_itm;
 extern crate stm32f103xx_hal as hal;
 
-use cortex_m::asm;
-use hal::delay::Delay;
 use hal::prelude::*;
 use hal::spi::Spi;
 use hal::stm32f103xx;
-use mpu9250::Mpu9250;
+use mfrc522::Mfrc522;
 use rt::ExceptionFrame;
 
 entry!(main);
 
 fn main() -> ! {
-    let cp = cortex_m::Peripherals::take().unwrap();
+    let mut cp = cortex_m::Peripherals::take().unwrap();
     let dp = stm32f103xx::Peripherals::take().unwrap();
 
-    let mut flash = dp.FLASH.constrain();
+    let _stim = &mut cp.ITM.stim[0];
     let mut rcc = dp.RCC.constrain();
+    let mut afio = dp.AFIO.constrain(&mut rcc.apb2);
+    let mut flash = dp.FLASH.constrain();
+    let mut gpioa = dp.GPIOA.split(&mut rcc.apb2);
+    let mut gpioc = dp.GPIOC.split(&mut rcc.apb2);
 
     let clocks = rcc.cfgr.freeze(&mut flash.acr);
 
-    let mut afio = dp.AFIO.constrain(&mut rcc.apb2);
-
-    let mut gpioa = dp.GPIOA.split(&mut rcc.apb2);
-    // let mut gpiob = dp.GPIOB.split(&mut rcc.apb2);
-
-    let nss = gpioa.pa4.into_push_pull_output(&mut gpioa.crl);
-
-    // SPI1
     let sck = gpioa.pa5.into_alternate_push_pull(&mut gpioa.crl);
     let miso = gpioa.pa6;
     let mosi = gpioa.pa7.into_alternate_push_pull(&mut gpioa.crl);
-
-    // SPI2
-    // let sck = gpiob.pb13.into_alternate_push_pull(&mut gpiob.crh);
-    // let miso = gpiob.pb14;
-    // let mosi = gpiob.pb15.into_alternate_push_pull(&mut gpiob.crh);
-
     let spi = Spi::spi1(
         dp.SPI1,
         (sck, miso, mosi),
         &mut afio.mapr,
-        mpu9250::MODE,
+        mfrc522::MODE,
         1.mhz(),
         clocks,
         &mut rcc.apb2,
     );
 
-    let mut delay = Delay::new(cp.SYST, clocks);
+    let nss = gpioa.pa4.into_push_pull_output(&mut gpioa.crl);
+    let mut mfrc522 = Mfrc522::new(spi, nss).unwrap();
 
-    let mut mpu9250 = Mpu9250::marg(spi, nss, &mut delay).unwrap();
+    let mut led = gpioc.pc13.into_push_pull_output(&mut gpioc.crh);
+    led.set_high();
 
-    // sanity checks
-    assert_eq!(mpu9250.who_am_i().unwrap(), 0x71);
-    assert_eq!(mpu9250.ak8963_who_am_i().unwrap(), 0x48);
-
-    let _a = mpu9250.all().unwrap();
-
-    asm::bkpt();
-
-    loop {}
+    loop {
+        if let Ok(atqa) = mfrc522.reqa() {
+            if let Ok(uid) = mfrc522.select(&atqa) {
+                iprintln!(_stim, "* {:?}", uid);
+            }
+        }
+    }
 }
 
 exception!(HardFault, hard_fault);
