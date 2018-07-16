@@ -110,14 +110,7 @@ pub struct W;
 macro_rules! dma {
     ($($DMAX:ident: ($dmaX:ident, $dmaXen:ident, $dmaXrst:ident, {
         $($CX:ident: (
-            $ccrX:ident,
-            $CCRX:ident,
-            $cndtrX:ident,
-            $CNDTRX:ident,
-            $cparX:ident,
-            $CPARX:ident,
-            $cmarX:ident,
-            $CMARX:ident,
+            $chX:ident,
             $htifX:ident,
             $tcifX:ident,
             $chtifX:ident,
@@ -160,35 +153,38 @@ macro_rules! dma {
                                 }
                             }
                         }
+                        
+                        fn ch(&self) -> &dma1::CH {
+                            unsafe { &(*$DMAX::ptr()).$chX }
+                        }
 
-                        pub(crate) fn isr(&self) -> dma1::isr::R {
+                        pub fn isr(&self) -> dma1::isr::R {
                             // NOTE(unsafe) atomic read with no side effects
                             unsafe { (*$DMAX::ptr()).isr.read() }
                         }
 
-                        pub(crate) fn ifcr(&self) -> &dma1::IFCR {
+                        pub fn ifcr(&self) -> &dma1::IFCR {
                             unsafe { &(*$DMAX::ptr()).ifcr }
                         }
-
-                        pub(crate) fn ccr(&mut self) -> &dma1::$CCRX {
-                            unsafe { &(*$DMAX::ptr()).$ccrX }
+                        pub fn ccr(&mut self) -> &dma1::ch::CCR {
+                            &self.ch().ccr
                         }
 
-                        pub(crate) fn cndtr(&mut self) -> &dma1::$CNDTRX {
-                            unsafe { &(*$DMAX::ptr()).$cndtrX }
+                        pub fn cndtr(&mut self) -> &dma1::ch::CNDTR {
+                            &self.ch().cndtr
                         }
 
-                        pub(crate) fn cpar(&mut self) -> &dma1::$CPARX {
-                            unsafe { &(*$DMAX::ptr()).$cparX }
+                        pub fn cpar(&mut self) -> &dma1::ch::CPAR {
+                            &self.ch().cpar
                         }
 
-                        pub(crate) fn cmar(&mut self) -> &dma1::$CMARX {
-                            unsafe { &(*$DMAX::ptr()).$cmarX }
+                        pub fn cmar(&mut self) -> &dma1::ch::CMAR {
+                            &self.ch().cmar
                         }
 
-                        pub(crate) fn get_cndtr(&self) -> u32 {
+                        pub fn get_cndtr(&self) -> u32 {
                             // NOTE(unsafe) atomic read with no side effects
-                            unsafe { (*$DMAX::ptr()).$cndtrX.read().bits() }
+                            self.ch().cndtr.read().bits()
                         }
 
                     }
@@ -321,58 +317,37 @@ macro_rules! dma {
 dma! {
     DMA1: (dma1, dma1en, dma1rst, {
         C1: (
-            ccr1, CCR1,
-            cndtr1, CNDTR1,
-            cpar1, CPAR1,
-            cmar1, CMAR1,
+            ch1,
             htif1, tcif1,
             chtif1, ctcif1, cgif1
         ),
         C2: (
-            ccr2, CCR2,
-            cndtr2, CNDTR2,
-            cpar2, CPAR2,
-            cmar2, CMAR2,
+            ch2,
             htif2, tcif2,
             chtif2, ctcif2, cgif2
         ),
         C3: (
-            ccr3, CCR3,
-            cndtr3, CNDTR3,
-            cpar3, CPAR3,
-            cmar3, CMAR3,
+            ch3,
             htif3, tcif3,
             chtif3, ctcif3, cgif3
         ),
         C4: (
-            ccr4, CCR4,
-            cndtr4, CNDTR4,
-            cpar4, CPAR4,
-            cmar4, CMAR4,
+            ch4,
             htif4, tcif4,
             chtif4, ctcif4, cgif4
         ),
         C5: (
-            ccr5, CCR5,
-            cndtr5, CNDTR5,
-            cpar5, CPAR5,
-            cmar5, CMAR5,
+            ch5,
             htif5, tcif5,
             chtif5, ctcif5, cgif5
         ),
         C6: (
-            ccr6, CCR6,
-            cndtr6, CNDTR6,
-            cpar6, CPAR6,
-            cmar6, CMAR6,
+            ch6,
             htif6, tcif6,
             chtif6, ctcif6, cgif6
         ),
         C7: (
-            ccr7, CCR7,
-            cndtr7, CNDTR7,
-            cpar7, CPAR7,
-            cmar7, CMAR7,
+            ch7,
             htif7, tcif7,
             chtif7, ctcif7, cgif7
         ),
@@ -380,42 +355,27 @@ dma! {
 
     DMA2: (dma2, dma2en, dma2rst, {
         C1: (
-            ccr1, CCR1,
-            cndtr1, CNDTR1,
-            cpar1, CPAR1,
-            cmar1, CMAR1,
+            ch1,
             htif1, tcif1,
             chtif1, ctcif1, cgif1
         ),
         C2: (
-            ccr2, CCR2,
-            cndtr2, CNDTR2,
-            cpar2, CPAR2,
-            cmar2, CMAR2,
+            ch2,
             htif2, tcif2,
             chtif2, ctcif2, cgif2
         ),
         C3: (
-            ccr3, CCR3,
-            cndtr3, CNDTR3,
-            cpar3, CPAR3,
-            cmar3, CMAR3,
+            ch3,
             htif3, tcif3,
             chtif3, ctcif3, cgif3
         ),
         C4: (
-            ccr4, CCR4,
-            cndtr4, CNDTR4,
-            cpar4, CPAR4,
-            cmar4, CMAR4,
+            ch4,
             htif4, tcif4,
             chtif4, ctcif4, cgif4
         ),
         C5: (
-            ccr5, CCR5,
-            cndtr5, CNDTR5,
-            cpar5, CPAR5,
-            cmar5, CMAR5,
+            ch5,
             htif5, tcif5,
             chtif5, ctcif5, cgif5
         ),
