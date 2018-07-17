@@ -303,7 +303,7 @@ macro_rules! dma {
 
                         // reset the DMA control registers (stops all on-going transfers)
                         $(
-                            self.$ccrX.reset();
+                            self.$chX.ccr.reset();
                         )+
 
                         Channels((), $($CX { _0: () }),+)

@@ -10,7 +10,6 @@
 
 use afio::MAPR;
 use core::marker::PhantomData;
-use core::ptr;
 use gpio::gpioa::{PA11, PA12};
 use gpio::gpiob::{PB8, PB9};
 use gpio::{Alternate, Floating, Input, PushPull};
@@ -357,11 +356,11 @@ impl<PINS> Can<CAN, PINS> {
 
     /// moves from Sleep or Normal to Initialization mode
     fn to_initialization(&mut self) -> nb::Result<(), !> {
-        let msr = self.can.can_msr.read();
+        let msr = self.can.msr.read();
         if msr.slak().bit_is_set() || msr.inak().bit_is_clear() {
             // request exit from sleep and enter initialization modes
             self.can
-                .can_mcr
+                .mcr
                 .write(|w| w.sleep().clear_bit().inrq().set_bit());
             Err(nb::Error::WouldBlock)
         } else {
@@ -379,7 +378,7 @@ impl<PINS> Can<CAN, PINS> {
         while let Err(nb::Error::WouldBlock) = self.to_initialization() {}
 
         // Update register MCR
-        self.can.can_mcr.modify(|_, w| {
+        self.can.mcr.modify(|_, w| {
             w.ttcm()
                 .bit(config.time_triggered_communication_mode)
                 .abom()
@@ -395,7 +394,7 @@ impl<PINS> Can<CAN, PINS> {
         });
 
         //Set the bit timing register
-        self.can.can_btr.modify(|_, w| unsafe {
+        self.can.btr.modify(|_, w| unsafe {
             w.silm()
                 .bit(config.silent_mode)
                 .lbkm()
@@ -431,16 +430,16 @@ impl<PINS> Can<CAN, PINS> {
     }
 
     pub fn is_sleeping(&self) -> bool {
-        self.can.can_msr.read().slak().bit_is_set()
+        self.can.msr.read().slak().bit_is_set()
     }
 
     /// moves from Sleep to Normal mode
     pub fn to_normal(&mut self) -> nb::Result<(), !> {
-        let msr = self.can.can_msr.read();
+        let msr = self.can.msr.read();
         if msr.slak().bit_is_set() || msr.inak().bit_is_set() {
             // request exit from both sleep and initialization modes
             self.can
-                .can_mcr
+                .mcr
                 .write(|w| w.sleep().clear_bit().inrq().clear_bit());
             Err(nb::Error::WouldBlock)
         } else {
@@ -450,11 +449,11 @@ impl<PINS> Can<CAN, PINS> {
 
     /// moves from Normal to Sleep mode
     pub fn to_sleep(&mut self) -> nb::Result<(), !> {
-        let msr = self.can.can_msr.read();
+        let msr = self.can.msr.read();
         if msr.slak().bit_is_clear() || msr.inak().bit_is_set() {
             // request exit from both sleep and initialization modes
             self.can
-                .can_mcr
+                .mcr
                 .write(|w| w.sleep().set_bit().inrq().clear_bit());
             Err(nb::Error::WouldBlock)
         } else {
@@ -478,11 +477,11 @@ impl<PINS> Can<CAN, PINS> {
 
         if activate {
             self.can
-                .can_fa1r
+                .fa1r
                 .modify(|r, w| unsafe { w.bits(r.bits() | bit) });
         } else {
             self.can
-                .can_fa1r
+                .fa1r
                 .modify(|r, w| unsafe { w.bits(r.bits() & (!bit)) });
         }
     }
@@ -506,11 +505,11 @@ impl<PINS> Can<CAN, PINS> {
         let nbit = !bit;
 
         // Initialization mode for the filter
-        self.can.can_fmr.write(|w| w.finit().bit(true));
+        self.can.fmr.write(|w| w.finit().bit(true));
 
         //Filter deactivation
         self.can
-            .can_fa1r
+            .fa1r
             .modify(|r, w| unsafe { w.bits(r.bits() & nbit) });
 
         //Filter Mode
@@ -518,13 +517,13 @@ impl<PINS> Can<CAN, PINS> {
             FilterMode::Mask => {
                 //Id/Mask mode for the filter
                 self.can
-                    .can_fm1r
+                    .fm1r
                     .modify(|r, w| unsafe { w.bits(r.bits() & nbit) });
             }
             FilterMode::List => {
                 //Identifier list mode for the filter
                 self.can
-                    .can_fm1r
+                    .fm1r
                     .modify(|r, w| unsafe { w.bits(r.bits() | bit) });
             }
         };
@@ -533,12 +532,12 @@ impl<PINS> Can<CAN, PINS> {
         match config.fifo_assignment {
             0 => {
                 self.can
-                    .can_ffa1r
+                    .ffa1r
                     .modify(|r, w| unsafe { w.bits(r.bits() & nbit) });
             }
             1 => {
                 self.can
-                    .can_ffa1r
+                    .ffa1r
                     .modify(|r, w| unsafe { w.bits(r.bits() | bit) });
             }
             _ => {
@@ -551,7 +550,7 @@ impl<PINS> Can<CAN, PINS> {
             FilterInfo::Halves((ref low, ref high)) => {
                 // 16-bit scale for the filter
                 self.can
-                    .can_fs1r
+                    .fs1r
                     .modify(|r, w| unsafe { w.bits(r.bits() & nbit) });
 
                 // First 16-bit identifier and First 16-bit mask
@@ -567,7 +566,7 @@ impl<PINS> Can<CAN, PINS> {
             FilterInfo::Whole(ref whole) => {
                 // 32-bit scale for the filter
                 self.can
-                    .can_fs1r
+                    .fs1r
                     .modify(|r, w| unsafe { w.bits(r.bits() | bit) });
 
                 //32-bit identifier or First 32-bit identifier,
@@ -583,24 +582,22 @@ impl<PINS> Can<CAN, PINS> {
         // Filter activation
         if config.active {
             self.can
-                .can_fa1r
+                .fa1r
                 .modify(|r, w| unsafe { w.bits(r.bits() | bit) });
         }
 
         // Leave the initialisation mode for the filter
-        self.can.can_fmr.write(|w| w.finit().bit(false));
+        self.can.fmr.write(|w| w.finit().bit(false));
     }
 
     //private helper function to get indexed access to the filter registers
     fn fill_filter_registers(&self, index: FilterBankIndex, r1: u32, r2: u32) {
-        let offset = (index as u32)
-            * (((&self.can.f1r1 as *const _) as u32) - ((&self.can.f0r1 as *const _) as u32));
-        let addr1 = ((&self.can.f0r1 as *const _) as u32) + offset; //f0r1..f13r1
-        let addr2 = ((&self.can.f0r2 as *const _) as u32) + offset; //f0r2..f13r2
-        unsafe {
-            ptr::write_volatile(addr1 as *mut u32, r1);
-            ptr::write_volatile(addr2 as *mut u32, r2);
-        }
+        self.can.fb[index as usize].fr1 .write(|w| unsafe { w
+            .bits(r1)
+        });
+        self.can.fb[index as usize].fr1 .write(|w| unsafe { w
+            .bits(r2)
+        });
     }
 
     //TODO a join function may be needed also (which is the reverse of this one)...
@@ -722,7 +719,7 @@ pub fn recommend_transmitter() -> TxMailBoxIndex {
     //TODO return error in sleep, init mode?
 
     // NOTE(unsafe) atomic read with no side effects?
-    let tsr = unsafe { (*CAN::ptr()).can_tsr.read() };
+    let tsr = unsafe { &*CAN::ptr() }.tsr.read();
     let autoidx = tsr.code().bits();
 
     autoidx
@@ -731,8 +728,7 @@ pub fn recommend_transmitter() -> TxMailBoxIndex {
 macro_rules! TxMailBox {
     ($CANX:ident, [
         $($TxMailBoxi:ident: ($i:expr, $tmei:ident, $lowi:ident, $terri:ident, 
-        $alsti:ident, $txoki:ident, $rqcpi:ident, $abrqi:ident, $can_tiir:ident, 
-        $can_tdtir:ident, $can_tdlir:ident, $can_tdhir:ident),)+
+        $alsti:ident, $txoki:ident, $rqcpi:ident, $abrqi:ident),)+
     ]) => {
         $(
             //type state
@@ -744,30 +740,30 @@ macro_rules! TxMailBox {
 
                 fn is_empty(&self) -> bool {
                     // NOTE(unsafe) atomic read with no side effects
-                    let tsr = unsafe { (*$CANX::ptr()).can_tsr.read() };
+                    let tsr = unsafe { &*$CANX::ptr() }.tsr.read();
                     tsr.$tmei().bit_is_set()
                 }
 
                 fn has_the_lowest_priority(&self) -> bool {
                     // NOTE(unsafe) atomic read with no side effects
-                    let tsr = unsafe { (*$CANX::ptr()).can_tsr.read() };
+                    let tsr = unsafe { &*$CANX::ptr() }.tsr.read();
                     tsr.$lowi().bit_is_set()
                 }
 
                 fn was_transmission_error(&self) -> bool {
                     // NOTE(unsafe) atomic read with no side effects
-                    let tsr = unsafe { (*$CANX::ptr()).can_tsr.read() };
+                    let tsr = unsafe { &*$CANX::ptr() }.tsr.read();
                     tsr.$terri().bit_is_set()
                 }
                 fn was_arbitration_lost(&self) -> bool {
                     // NOTE(unsafe) atomic read with no side effects
-                    let tsr = unsafe { (*$CANX::ptr()).can_tsr.read() };
+                    let tsr = unsafe { &*$CANX::ptr() }.tsr.read();
                     tsr.$alsti().bit_is_set()
                 }
 
                 fn has_transmission_succeeded(&self) -> bool {
                     // NOTE(unsafe) atomic read with no side effects
-                    let tsr = unsafe { (*$CANX::ptr()).can_tsr.read() };
+                    let tsr = unsafe { &*$CANX::ptr() }.tsr.read();
                     tsr.$txoki().bit_is_set()
                 }
 
@@ -778,12 +774,12 @@ macro_rules! TxMailBox {
 
                 fn has_last_request_completed(&self) -> bool {
                     // NOTE(unsafe) atomic read with no side effects
-                    let tsr = unsafe { (*$CANX::ptr()).can_tsr.read() };
+                    let tsr = unsafe { &*$CANX::ptr() }.tsr.read();
                     tsr.$rqcpi().bit_is_set()
                 }
 
                 fn request_abort_transmit(&mut self) { 
-                    unsafe { (*$CANX::ptr()).can_tsr.write(|w| w.$abrqi().set_bit()); }
+                    unsafe { &*$CANX::ptr() }.tsr.write(|w| w.$abrqi().set_bit());
                 }
 
                 //TODO non blocking on the top of this:
@@ -793,15 +789,14 @@ macro_rules! TxMailBox {
                         if frame.data.dlc > 8 {
                             return Err(Error::TooLongPayload);
                         }
+                        
+                        let tx = &(unsafe { &*$CANX::ptr() }.tx[$i]);
 
                         //fill message length [0..8]
-                        unsafe { (*$CANX::ptr()).$can_tdtir.write(|w| 
-                            w
-                            .dlc().bits(frame.data.dlc)); 
-                        }
+                        tx.tdtr.write(|w| unsafe { w.dlc().bits(frame.data.dlc) });
 
-                        unsafe { (*$CANX::ptr()).$can_tdlir.write(|w| w.bits(frame.data.data_low)); }
-                        unsafe { (*$CANX::ptr()).$can_tdhir.write(|w| w.bits(frame.data.data_high)); }
+                        tx.tdlr.write(|w| unsafe { w.bits(frame.data.data_low) });
+                        tx.tdhr.write(|w| unsafe { w.bits(frame.data.data_high) });
                         
                         // Bits 31:21 STID[10:0]: Standard Identifier
                         //             The standard part of the identifier.
@@ -818,14 +813,13 @@ macro_rules! TxMailBox {
                         //             Set by software to request the transmission for the corresponding mailbox.
                         //             Cleared by hardware when the mailbox becomes empty.
                         let id = &frame.id;
-                        unsafe { (*$CANX::ptr()).$can_tiir.write(|w| 
-                            w
+                        tx.tir.write(|w| unsafe { w
                             .stid().bits(id.standard())
                             .exid().bits(id.extended_part())
                             .ide().bit(id.is_extended())
                             .rtr().bit(id.is_rtr())
-                            .txrq().set_bit()); //request transmit
-                        }
+                            .txrq().set_bit() //request transmit
+                        });
                         Ok(())
                     } else {
                         //this mailbox is not empty, so return the index of the less  
@@ -839,9 +833,9 @@ macro_rules! TxMailBox {
 }
 
 TxMailBox!(CAN, [
-    TxMailBox0: (0, tme0, low0, terr0, alst0, txok0, rqcp0, abrq0, can_ti0r, can_tdt0r, can_tdl0r, can_tdh0r),
-    TxMailBox1: (1, tme1, low1, terr1, alst1, txok1, rqcp1, abrq1, can_ti1r, can_tdt1r, can_tdl1r, can_tdh1r),
-    TxMailBox2: (2, tme2, low2, terr2, alst2, txok2, rqcp2, abrq2, can_ti2r, can_tdt2r, can_tdl2r, can_tdh2r),
+    TxMailBox0: (0, tme0, low0, terr0, alst0, txok0, rqcp0, abrq0),
+    TxMailBox1: (1, tme1, low1, terr1, alst1, txok1, rqcp1, abrq1),
+    TxMailBox2: (2, tme2, low2, terr2, alst2, txok2, rqcp2, abrq2),
 ]);
 
 pub type RxFifoIndex = u8; //[0..1] is valid
@@ -864,9 +858,7 @@ pub struct RxFifo<CAN, IDX> {
 
 macro_rules! RxFifo {
     ($CANX:ident, [
-        $($RxFifoi:ident: ($i:expr, 
-        $can_rfir:ident, $rfomi:ident, $fovri:ident, $fulli:ident, $fmpi:ident,
-        $can_riir:ident, $can_rdtir:ident, $can_rdlir:ident, $can_rdhir:ident),)+
+        $($RxFifoi:ident: ($i:expr, ),)+
     ]) => {
         $(
             //type state
@@ -876,15 +868,15 @@ macro_rules! RxFifo {
                 const INDEX: RxFifoIndex = $i;
 
                 fn has_overun(&self) -> bool {
-                    unsafe { (*$CANX::ptr()).$can_rfir.read().$fovri().bit() }
+                    unsafe { &*$CANX::ptr() }.rfr[$i].read().fovr().bit()
                 }
 
                 fn is_full(&self) -> bool {
-                    unsafe { (*$CANX::ptr()).$can_rfir.read().$fulli().bit() }
+                    unsafe { &*$CANX::ptr() }.rfr[$i].read().full().bit()
                 }
 
                 fn pending_count(&self) -> u8 {
-                     unsafe { (*$CANX::ptr()).$can_rfir.read().$fmpi().bits() } 
+                     unsafe { &*$CANX::ptr() }.rfr[$i].read().fmp().bits()
                 }
             
                 fn read(&mut self) -> nb::Result<(FilterMatchIndex, TimeStamp, Frame), !> {
@@ -893,21 +885,22 @@ macro_rules! RxFifo {
                         //there are no messages in the fifo
                         Err(nb::Error::WouldBlock)
                     } else {
-                        let rdtir = unsafe { (*$CANX::ptr()).$can_rdtir.read() };
+                        let rx = &(unsafe { &*$CANX::ptr() }.rx[$i]);
+                        let rdtir = rx.rdtr.read();
                         let filter_match_index = rdtir.fmi().bits();
                         let time = rdtir.time().bits();
 
                         let frame = Frame { 
-                            id: Id::from_received_register(unsafe { (*$CANX::ptr()).$can_riir.read().bits() }),
+                            id: Id::from_received_register(rx.rir.read().bits()),
                             data: Payload {
                                 dlc: rdtir.dlc().bits(),
-                                data_low: unsafe { (*$CANX::ptr()).$can_rdlir.read().bits() },
-                                data_high: unsafe { (*$CANX::ptr()).$can_rdhir.read().bits() },
+                                data_low: rx.rdlr.read().bits(),
+                                data_high: rx.rdhr.read().bits(),
                             },
                         };
                         
                         //after every info captured release fifo output mailbox:
-                        unsafe { (*$CANX::ptr()).$can_rfir.write(|w| w.$rfomi().set_bit()) };
+                        unsafe { &*$CANX::ptr() }.rfr[$i].write(|w| w.rfom().set_bit());
 
                         Ok((filter_match_index, time, frame))
                     }
@@ -919,6 +912,6 @@ macro_rules! RxFifo {
 }
 
 RxFifo!(CAN, [
-    RxFifo0: (0, can_rf0r, rfom0, fovr0, full0, fmp0, can_ri0r, can_rdt0r, can_rdl0r, can_rdh0r),
-    RxFifo1: (1, can_rf1r, rfom1, fovr1, full1, fmp1, can_ri1r, can_rdt1r, can_rdl1r, can_rdh1r),
+    RxFifo0: (0,),
+    RxFifo1: (1,),
 ]);
