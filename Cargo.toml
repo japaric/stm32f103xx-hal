@@ -29,12 +29,16 @@ features = ["unproven"]
 version = "0.2.1"
 
 [dev-dependencies]
-# cortex-m-rtfm = "0.3.1"
+# cortex-m-rtfm = "0.3.2"
 cortex-m-semihosting = "0.3.0"
 enc28j60 = "0.2.0"
 heapless = "0.3.1"
 m = "0.1.1"
 mfrc522 = "0.2.0"
+
+[dev-dependencies.onewire]
+git = "https://github.com/tib888/onewire"
+version = "0.3.0"
 
 [dev-dependencies.byteorder]
 default-features = false

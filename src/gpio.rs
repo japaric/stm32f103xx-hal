@@ -57,9 +57,10 @@ macro_rules! gpio {
             use rcc::APB2;
             use super::{
                 Alternate, Floating, GpioExt, Input,
-                // OpenDrain,
+                OpenDrain,
                 Output,
-                // PullDown, PullUp,
+                PullDown, 
+                PullUp,
                 PushPull,
             };
 
@@ -199,69 +200,78 @@ macro_rules! gpio {
                         $PXi { _mode: PhantomData }
                     }
 
-                    // /// Configures the pin to operate as a pulled down input pin
-                    // pub fn into_pull_down_input(
-                    //     self,
-                    //     moder: &mut MODER,
-                    //     pupdr: &mut PUPDR,
-                    // ) -> $PXi<Input<PullDown>> {
-                    //     let offset = 2 * $i;
+                    /// Configures the pin to operate as a pulled down input pin
+                    pub fn into_pull_down_input(
+                        self,
+                        cr: &mut $CR,
+                    ) -> $PXi<Input<PullDown>> {
+                        let offset = (4 * $i) % 32;
+                        // Pull up/down input
+                        let cnf = 0b10;
+                        // Input mode
+                        let mode = 0b00;
+                        let bits = (cnf << 2) | mode;
 
-                    //     // input mode
-                    //     moder
-                    //         .moder()
-                    //         .modify(|r, w| unsafe { w.bits(r.bits() & !(0b11 << offset)) });
+                        //pull down:
+                        // NOTE(unsafe) atomic write to a stateless register
+                        unsafe { (*$GPIOX::ptr()).bsrr.write(|w| w.bits(1 << (16 + $i))) }
 
-                    //     // pull-down
-                    //     pupdr.pupdr().modify(|r, w| unsafe {
-                    //         w.bits((r.bits() & !(0b11 << offset)) | (0b10 << offset))
-                    //     });
+                        // input mode
+                        cr
+                            .cr()
+                            .modify(|r, w| unsafe {
+                                w.bits((r.bits() & !(0b1111 << offset)) | (bits << offset))
+                            });
 
-                    //     $PXi { _mode: PhantomData }
-                    // }
+                        $PXi { _mode: PhantomData }
+                    }
 
-                    // /// Configures the pin to operate as a pulled up input pin
-                    // pub fn into_pull_up_input(
-                    //     self,
-                    //     moder: &mut MODER,
-                    //     pupdr: &mut PUPDR,
-                    // ) -> $PXi<Input<PullUp>> {
-                    //     let offset = 2 * $i;
+                    /// Configures the pin to operate as a pulled up input pin
+                    pub fn into_pull_up_input(
+                        self,
+                        cr: &mut $CR,
+                    ) -> $PXi<Input<PullUp>> {
+                        let offset = (4 * $i) % 32;
+                        // Pull up/down input
+                        let cnf = 0b10;
+                        // Input mode
+                        let mode = 0b00;
+                        let bits = (cnf << 2) | mode;
 
-                    //     // input mode
-                    //     moder
-                    //         .moder()
-                    //         .modify(|r, w| unsafe { w.bits(r.bits() & !(0b11 << offset)) });
+                        //pull up:
+                        // NOTE(unsafe) atomic write to a stateless register
+                        unsafe { (*$GPIOX::ptr()).bsrr.write(|w| w.bits(1 << $i)) }
 
-                    //     // pull-up
-                    //     pupdr.pupdr().modify(|r, w| unsafe {
-                    //         w.bits((r.bits() & !(0b11 << offset)) | (0b01 << offset))
-                    //     });
+                        // input mode
+                        cr
+                            .cr()
+                            .modify(|r, w| unsafe {
+                                w.bits((r.bits() & !(0b1111 << offset)) | (bits << offset))
+                            });
 
-                    //     $PXi { _mode: PhantomData }
-                    // }
+                        $PXi { _mode: PhantomData }
+                    }
 
-                    // /// Configures the pin to operate as an open drain output pin
-                    // pub fn into_open_drain_output(
-                    //     self,
-                    //     moder: &mut MODER,
-                    //     otyper: &mut OTYPER,
-                    // ) -> $PXi<Output<OpenDrain>> {
-                    //     let offset = 2 * $i;
+                    /// Configures the pin to operate as an open drain output pin
+                    pub fn into_open_drain_output(
+                        self,
+                        cr: &mut $CR,
+                    ) -> $PXi<Output<OpenDrain>> {
+                        let offset = (4 * $i) % 32;
+                        // General purpose output push-pull
+                        let cnf = 0b01;
+                        // Output mode, max speed 50 MHz
+                        let mode = 0b11;
+                        let bits = (cnf << 2) | mode;
 
-                    //     // general purpose output mode
-                    //     let mode = 0b01;
-                    //     moder.moder().modify(|r, w| unsafe {
-                    //         w.bits((r.bits() & !(0b11 << offset)) | (mode << offset))
-                    //     });
+                        cr
+                            .cr()
+                            .modify(|r, w| unsafe {
+                                w.bits((r.bits() & !(0b1111 << offset)) | (bits << offset))
+                            });
 
-                    //     // open drain output
-                    //     otyper
-                    //         .otyper()
-                    //         .modify(|r, w| unsafe { w.bits(r.bits() | (0b1 << $i)) });
-
-                    //     $PXi { _mode: PhantomData }
-                    // }
+                        $PXi { _mode: PhantomData }
+                    }
 
                     /// Configures the pin to operate as an push pull output pin
                     pub fn into_push_pull_output(
@@ -321,9 +331,20 @@ macro_rules! gpio {
                     }
                 }
 
-                impl <MODE> toggleable::Default for $PXi<Output<MODE>> {}
+                impl<MODE> toggleable::Default for $PXi<Output<MODE>> {}
 
                 impl<MODE> InputPin for $PXi<Input<MODE>> {
+                    fn is_high(&self) -> bool {
+                        !self.is_low()
+                    }
+
+                    fn is_low(&self) -> bool {
+                        // NOTE(unsafe) atomic read with no side effects
+                        unsafe { (*$GPIOX::ptr()).idr.read().bits() & (1 << $i) == 0 }
+                    }
+                }
+
+                impl InputPin for $PXi<Output<OpenDrain>> {
                     fn is_high(&self) -> bool {
                         !self.is_low()
                     }
