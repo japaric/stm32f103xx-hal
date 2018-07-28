@@ -64,6 +64,25 @@ pub trait DmaExt {
     fn split(self, ahb: &mut AHB) -> Self::Channels;
 }
 
+use stm32f103xx::dma1 as dma1_reg;
+pub trait DmaChannel {
+
+    type CCRX;
+    type CNDTRX;
+    type CPARX;
+    type CMARX;
+
+    fn listen(&mut self, event: Event);
+    fn unlisten(&mut self, event: Event);
+    fn isr(&self) -> dma1_reg::isr::R;
+    fn ifcr(&self) -> &dma1_reg::IFCR;
+    fn ccr(&mut self) -> &Self::CCRX;
+    fn cndtr(&mut self) -> &Self::CNDTRX;
+    fn cpar(&mut self) -> &Self::CPARX;
+    fn cmar(&mut self) -> &Self::CMARX;
+    fn get_cndtr(&self) -> u32;
+}
+
 pub struct Transfer<MODE, BUFFER, CHANNEL, PAYLOAD> {
     _mode: PhantomData<MODE>,
     buffer: BUFFER,
@@ -132,7 +151,7 @@ macro_rules! dma {
 
                 use stm32f103xx::{$DMAX, dma1};
 
-                use dma::{CircBuffer, DmaExt, Error, Event, Half, Transfer, W};
+                use dma::{CircBuffer, DmaChannel, DmaExt, Error, Event, Half, Transfer, W};
                 use rcc::AHB;
 
                 pub struct Channels((), $(pub $CX),+);
@@ -140,8 +159,13 @@ macro_rules! dma {
                 $(
                     pub struct $CX { _0: () }
 
-                    impl $CX {
-                        pub fn listen(&mut self, event: Event) {
+                    impl super::DmaChannel for $CX {
+                        type CCRX = dma1::$CCRX;
+                        type CNDTRX = dma1::$CNDTRX;
+                        type CPARX = dma1::$CPARX;
+                        type CMARX = dma1::$CMARX;
+
+                        fn listen(&mut self, event: Event) {
                             match event {
                                 Event::HalfTransfer => self.ccr().modify(|_, w| w.htie().set_bit()),
                                 Event::TransferComplete => {
@@ -150,7 +174,7 @@ macro_rules! dma {
                             }
                         }
 
-                        pub fn unlisten(&mut self, event: Event) {
+                        fn unlisten(&mut self, event: Event) {
                             match event {
                                 Event::HalfTransfer => {
                                     self.ccr().modify(|_, w| w.htie().clear_bit())
@@ -161,32 +185,32 @@ macro_rules! dma {
                             }
                         }
 
-                        pub(crate) fn isr(&self) -> dma1::isr::R {
+                        fn isr(&self) -> dma1::isr::R {
                             // NOTE(unsafe) atomic read with no side effects
                             unsafe { (*$DMAX::ptr()).isr.read() }
                         }
 
-                        pub(crate) fn ifcr(&self) -> &dma1::IFCR {
+                        fn ifcr(&self) -> &dma1::IFCR {
                             unsafe { &(*$DMAX::ptr()).ifcr }
                         }
 
-                        pub(crate) fn ccr(&mut self) -> &dma1::$CCRX {
+                        fn ccr(&mut self) -> &dma1::$CCRX {
                             unsafe { &(*$DMAX::ptr()).$ccrX }
                         }
 
-                        pub(crate) fn cndtr(&mut self) -> &dma1::$CNDTRX {
+                        fn cndtr(&mut self) -> &dma1::$CNDTRX {
                             unsafe { &(*$DMAX::ptr()).$cndtrX }
                         }
 
-                        pub(crate) fn cpar(&mut self) -> &dma1::$CPARX {
+                        fn cpar(&mut self) -> &dma1::$CPARX {
                             unsafe { &(*$DMAX::ptr()).$cparX }
                         }
 
-                        pub(crate) fn cmar(&mut self) -> &dma1::$CMARX {
+                        fn cmar(&mut self) -> &dma1::$CMARX {
                             unsafe { &(*$DMAX::ptr()).$cmarX }
                         }
 
-                        pub(crate) fn get_cndtr(&self) -> u32 {
+                        fn get_cndtr(&self) -> u32 {
                             // NOTE(unsafe) atomic read with no side effects
                             unsafe { (*$DMAX::ptr()).$cndtrX.read().bits() }
                         }
