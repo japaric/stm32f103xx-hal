@@ -86,6 +86,7 @@ impl MonoTimer {
 
         // now the CYCCNT counter can't be stopped or resetted
         drop(dwt);
+        drop(dcb);
 
         MonoTimer {
             frequency: clocks.sysclk(),
