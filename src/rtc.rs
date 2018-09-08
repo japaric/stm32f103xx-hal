@@ -51,9 +51,6 @@ impl Rtc {
 
     pub fn set_alarm(&mut self, time_seconds: u32) {
         self.perform_write(|s| {
-            // Enable alarm interrupt
-            s.regs.crh.modify(|_, w| w.alrie().set_bit());
-
             // Reset counter
             s.regs.cnth.write(|w| unsafe{w.bits(0)});
             s.regs.cntl.write(|w| unsafe{w.bits(0)});
@@ -61,6 +58,9 @@ impl Rtc {
             // Set alarm time
             s.regs.alrh.write(|w| unsafe{w.alrh().bits((time_seconds >> 16) as u16)});
             s.regs.alrl.write(|w| unsafe{w.alrl().bits((time_seconds & 0x0000ffff) as u16)});
+
+            // Enable alarm interrupt
+            s.regs.crh.modify(|_, w| w.alrie().set_bit());
         })
     }
 
