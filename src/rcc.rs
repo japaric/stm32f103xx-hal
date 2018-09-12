@@ -19,6 +19,7 @@ impl RccExt for RCC {
             ahb: AHB { _0: () },
             apb1: APB1 { _0: () },
             apb2: APB2 { _0: () },
+            bdcr: BDCR { _0: () },
             cfgr: CFGR {
                 hse: None,
                 hclk: None,
@@ -38,6 +39,8 @@ pub struct Rcc {
     pub apb1: APB1,
     /// Advanced Peripheral Bus 2 (APB2) registers
     pub apb2: APB2,
+    /// Backup domain control register (BDCR)
+    pub bdcr: BDCR,
     pub cfgr: CFGR,
 }
 
@@ -293,6 +296,18 @@ impl CFGR {
     }
 }
 
+
+/// Backup domain control (BDCR) register
+pub struct BDCR {
+    _0: ()
+}
+
+impl BDCR {
+    pub(crate) fn bdcr(&mut self) -> &rcc::BDCR {
+        // NOTE(unsafe) should be safe for the same reason as APB2 (TODO: verify this)
+        unsafe{ &(*RCC::ptr()).bdcr}
+    }
+}
 /// Frozen clock frequencies
 ///
 /// The existence of this value indicates that the clock configuration can no longer be changed
