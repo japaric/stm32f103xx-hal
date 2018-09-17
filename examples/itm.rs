@@ -3,17 +3,15 @@
 #![no_main]
 #![no_std]
 
-#[macro_use]
 extern crate cortex_m_rt as rt;
 #[macro_use]
 extern crate cortex_m;
 extern crate panic_itm;
 extern crate stm32f103xx_hal;
 
-use rt::ExceptionFrame;
+use rt::{entry, exception, ExceptionFrame};
 
-entry!(main);
-
+#[entry]
 fn main() -> ! {
     let p = cortex_m::Peripherals::take().unwrap();
     let mut itm = p.ITM;
@@ -23,14 +21,12 @@ fn main() -> ! {
     loop {}
 }
 
-exception!(HardFault, hard_fault);
-
-fn hard_fault(ef: &ExceptionFrame) -> ! {
+#[exception]
+fn HardFault(ef: &ExceptionFrame) -> ! {
     panic!("{:#?}", ef);
 }
 
-exception!(*, default_handler);
-
-fn default_handler(irqn: i16) {
+#[exception]
+fn DefaultHandler(irqn: i16) {
     panic!("Unhandled exception (IRQn = {})", irqn);
 }
