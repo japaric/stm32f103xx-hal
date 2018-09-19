@@ -6,6 +6,7 @@ use cast::u16;
 use hal;
 use nb;
 use stm32f103xx::{USART1, USART2, USART3};
+use void::Void;
 
 use afio::MAPR;
 use dma::{dma1, CircBuffer, Static, Transfer, R, W};
@@ -353,9 +354,9 @@ macro_rules! hal {
             }
 
             impl hal::serial::Write<u8> for Tx<$USARTX> {
-                type Error = !;
+                type Error = Void;
 
-                fn flush(&mut self) -> nb::Result<(), !> {
+                fn flush(&mut self) -> nb::Result<(), Self::Error> {
                     // NOTE(unsafe) atomic read with no side effects
                     let sr = unsafe { (*$USARTX::ptr()).sr.read() };
 
@@ -366,7 +367,7 @@ macro_rules! hal {
                     }
                 }
 
-                fn write(&mut self, byte: u8) -> nb::Result<(), !> {
+                fn write(&mut self, byte: u8) -> nb::Result<(), Self::Error> {
                     // NOTE(unsafe) atomic read with no side effects
                     let sr = unsafe { (*$USARTX::ptr()).sr.read() };
 
