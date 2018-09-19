@@ -35,7 +35,6 @@
 //!
 //! [examples]: examples/index.html
 
-#![feature(unsize)]
 #![no_std]
 
 extern crate cast;

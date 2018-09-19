@@ -1,4 +1,4 @@
-use core::marker::{PhantomData, Unsize};
+use core::marker::PhantomData;
 use core::ptr;
 use core::sync::atomic::{self, Ordering};
 
@@ -205,10 +205,10 @@ macro_rules! hal {
                     buffer: &'static mut [B; 2],
                 ) -> CircBuffer<B, $rx_chan>
                 where
-                    B: Unsize<[u8]>,
+                    B: AsMut<[u8]>,
                 {
                     {
-                        let buffer: &[u8] = &buffer[0];
+                        let buffer = buffer[0].as_mut();
                         chan.cmar().write(|w| unsafe {
                             w.ma().bits(buffer.as_ptr() as usize as u32)
                         });
@@ -255,10 +255,10 @@ macro_rules! hal {
                     buffer: &'static mut B,
                 ) -> Transfer<W, &'static mut B, $rx_chan, Self>
                 where
-                    B: Unsize<[u8]>,
+                    B: AsMut<[u8]>,
                 {
                     {
-                        let buffer: &[u8] = buffer;
+                        let buffer = buffer.as_mut();
                         chan.cmar().write(|w| unsafe {
                             w.ma().bits(buffer.as_ptr() as usize as u32)
                         });
@@ -307,11 +307,11 @@ macro_rules! hal {
                     buffer: B,
                 ) -> Transfer<R, B, $tx_chan, Self>
                 where
-                    A: Unsize<[u8]>,
+                    A: AsRef<[u8]>,
                     B: Static<A>,
                 {
                     {
-                        let buffer: &[u8] = buffer.borrow();
+                        let buffer = buffer.borrow().as_ref();
                         chan.cmar().write(|w| unsafe {
                             w.ma().bits(buffer.as_ptr() as usize as u32)
                         });

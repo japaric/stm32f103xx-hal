@@ -127,7 +127,6 @@ macro_rules! dma {
     }),)+) => {
         $(
             pub mod $dmaX {
-                use core::marker::Unsize;
                 use core::sync::atomic::{self, Ordering};
 
                 use stm32f103xx::{$DMAX, dma1};
@@ -287,11 +286,11 @@ macro_rules! dma {
                     impl<BUFFER, PAYLOAD> Transfer<W, &'static mut BUFFER, $CX, PAYLOAD> {
                         pub fn peek<T>(&self) -> &[T]
                         where
-                            BUFFER: Unsize<[T]>,
+                            BUFFER: AsRef<[T]>,
                         {
                             let pending = self.channel.get_cndtr() as usize;
 
-                            let slice: &[T] = self.buffer;
+                            let slice = self.buffer.as_ref();
                             let capacity = slice.len();
 
                             &slice[..(capacity - pending)]
