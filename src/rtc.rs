@@ -63,16 +63,26 @@ impl Rtc {
     }
 
     pub fn set_alarm(&mut self, time_seconds: u32) {
+        // Reset counter
         self.perform_write(|s| {
-            // Reset counter
             s.regs.cnth.write(|w| unsafe{w.bits(0)});
+        });
+        self.perform_write(|s| {
             s.regs.cntl.write(|w| unsafe{w.bits(0)});
+        });
 
-            // Set alarm time
-            s.regs.alrh.write(|w| unsafe{w.alrh().bits((time_seconds >> 16) as u16)});
-            s.regs.alrl.write(|w| unsafe{w.alrl().bits((time_seconds & 0x0000ffff) as u16)});
+        // Set alarm time
+        // See section 18.3.5 for explanation
+        let alarm_value = time_seconds - 1;
+        self.perform_write(|s| {
+            s.regs.alrh.write(|w| unsafe{w.alrh().bits((alarm_value >> 16) as u16)});
+        });
+        self.perform_write(|s| {
+            s.regs.alrl.write(|w| unsafe{w.alrl().bits((alarm_value & 0x0000ffff) as u16)});
+        });
 
-            // Enable alarm interrupt
+        // Enable alarm interrupt
+        self.perform_write(|s| {
             s.regs.crh.modify(|_, w| w.alrie().set_bit());
         })
     }
@@ -82,6 +92,40 @@ impl Rtc {
         while self.regs.crl.read().rsf().bit() == false {}
 
         ((self.regs.cnth.read().bits() << 16) as u32) + (self.regs.cntl.read().bits() as u32)
+    }
+
+    /**
+      Enables the RTC second interrupt
+    */
+    pub fn listen_seconds(&mut self) {
+        self.perform_write(|s| {
+            s.regs.crh.modify(|_, w| w.secie().set_bit())
+        })
+    }
+    /**
+      Disables the RTC second interrupt
+    */
+    pub fn unlisten_seconds(&mut self) {
+        self.perform_write(|s| {
+            s.regs.crh.modify(|_, w| w.secie().clear_bit())
+        })
+    }
+    /**
+      Clears the RTC second interrupt flag
+    */
+    pub fn clear_second_flag(&mut self) {
+        self.perform_write(|s| {
+            s.regs.crl.modify(|_, w| w.secf().clear_bit())
+        })
+    }
+
+    /**
+      Clears the RTC alarm interrupt flag
+    */
+    pub fn clear_alarm_flag(&mut self) {
+        self.perform_write(|s| {
+            s.regs.crl.modify(|_, w| w.alrf().clear_bit())
+        })
     }
 
 
@@ -99,9 +143,5 @@ impl Rtc {
         self.regs.crl.modify(|_, w| w.cnf().clear_bit());
         // Wait for the write to be done
         while self.regs.crl.read().rtoff().bit() == false {}
-    }
-
-    fn clear_alarm_flag(&mut self) {
-        self.perform_write(|s| s.regs.crl.modify(|_, w| w.alrf().clear_bit()))
     }
 }
