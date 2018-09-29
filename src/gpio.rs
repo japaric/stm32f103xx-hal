@@ -155,16 +155,7 @@ macro_rules! gpio {
                 }
             }
 
-            impl<MODE> $PXx<Output<MODE>> {
-                /// Toggles the output of the pin
-                pub fn toggle(&mut self) {
-                    if self.is_low() {
-                        self.set_high()
-                    } else {
-                        self.set_low()
-                    }
-                }
-            }
+            impl <MODE> toggleable::Default for $PXx<Output<MODE>> {}
 
             $(
                 /// Pin
@@ -303,12 +294,12 @@ macro_rules! gpio {
                     }
                 }
 
-                impl<MODE> $PXi<Output<MODE>> {
+                impl<MODE> $PXi<MODE> {
                     /// Erases the pin number from the type
                     ///
                     /// This is useful when you want to collect the pins into an array where you
                     /// need all the elements to have the same type
-                    pub fn downgrade(self) -> $PXx<Output<MODE>> {
+                    pub fn downgrade(self) -> $PXx<MODE> {
                         $PXx {
                             i: $i,
                             _mode: self._mode,
