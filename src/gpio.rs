@@ -144,6 +144,17 @@ macro_rules! gpio {
                 }
             }
 
+            impl<MODE> InputPin for $PXx<Input<MODE>> {
+                fn is_high(&self) -> bool {
+                    !self.is_low()
+                }
+
+                fn is_low(&self) -> bool {
+                    // NOTE(unsafe) atomic read with no side effects
+                    unsafe { (*$GPIOX::ptr()).idr.read().bits() & (1 << self.i) == 0 }
+                }
+            }
+
             impl<MODE> $PXx<Output<MODE>> {
                 /// Toggles the output of the pin
                 pub fn toggle(&mut self) {
