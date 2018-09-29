@@ -15,16 +15,18 @@
 
 #![deny(unsafe_code)]
 #![deny(warnings)]
-#![feature(lang_items)]
 #![feature(nll)]
 #![no_std]
+#![no_main]
 
+#[macro_use]
+extern crate cortex_m_rt as rt;
 #[macro_use]
 extern crate cortex_m;
 extern crate enc28j60;
 extern crate heapless;
 extern crate jnet;
-extern crate panic_abort;
+extern crate panic_itm;
 extern crate stm32f103xx_hal as hal;
 
 use enc28j60::Enc28j60;
@@ -35,6 +37,7 @@ use hal::stm32f103xx;
 use heapless::consts::*;
 use heapless::FnvIndexMap;
 use jnet::{arp, ether, icmp, ipv4, mac, udp, Buffer};
+use rt::ExceptionFrame;
 
 // uncomment to disable tracing
 // macro_rules! iprintln {
@@ -48,7 +51,9 @@ const IP: ipv4::Addr = ipv4::Addr([192, 168, 1, 33]);
 /* Constants */
 const KB: u16 = 1024; // bytes
 
-fn main() {
+entry!(main);
+
+fn main() -> ! {
     let mut cp = cortex_m::Peripherals::take().unwrap();
     let dp = stm32f103xx::Peripherals::take().unwrap();
 
@@ -178,9 +183,9 @@ fn main() {
 
                         match ip.get_protocol() {
                             ipv4::Protocol::Icmp => {
-                                if let Ok(mut icmp) = icmp::Packet::parse(ip.payload_mut()) {
+                                if let Ok(icmp) = icmp::Packet::parse(ip.payload_mut()) {
                                     match icmp.downcast::<icmp::EchoRequest>() {
-                                        Ok(mut request) => {
+                                        Ok(request) => {
                                             // is an echo request
                                             iprintln!(_stim, "*** {:?}", request);
 
@@ -266,4 +271,16 @@ fn main() {
             iprintln!(_stim, "Err(E)");
         }
     }
+}
+
+exception!(HardFault, hard_fault);
+
+fn hard_fault(ef: &ExceptionFrame) -> ! {
+    panic!("{:#?}", ef);
+}
+
+exception!(*, default_handler);
+
+fn default_handler(irqn: i16) {
+    panic!("Unhandled exception (IRQn = {})", irqn);
 }
