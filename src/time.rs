@@ -72,6 +72,18 @@ impl Into<KiloHertz> for MegaHertz {
     }
 }
 
+/// A token that can be passed around and guarantees
+/// that trace is enabled
+#[derive(Copy, Clone)]
+pub struct TraceEnabled {
+    _0: (),
+}
+
+pub fn enable_trace(mut dcb: DCB) -> TraceEnabled {
+    dcb.enable_trace();
+    TraceEnabled { _0: () }
+}
+
 /// A monotonic nondecreasing timer
 #[derive(Clone, Copy)]
 pub struct MonoTimer {
@@ -80,13 +92,11 @@ pub struct MonoTimer {
 
 impl MonoTimer {
     /// Creates a new `Monotonic` timer
-    pub fn new(mut dwt: DWT, mut dcb: DCB, clocks: Clocks) -> Self {
-        dcb.enable_trace();
+    pub fn new(mut dwt: DWT, _trace_enabled: TraceEnabled, clocks: Clocks) -> Self {
         dwt.enable_cycle_counter();
 
         // now the CYCCNT counter can't be stopped or resetted
         drop(dwt);
-        drop(dcb);
 
         MonoTimer {
             frequency: clocks.sysclk(),
