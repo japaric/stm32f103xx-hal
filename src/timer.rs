@@ -3,10 +3,10 @@ use cortex_m::peripheral::syst::SystClkSource;
 use cortex_m::peripheral::SYST;
 use hal::timer::{CountDown, Periodic};
 use nb;
-use stm32f103xx::{TIM2, TIM3, TIM4};
+use stm32f103xx::{TIM1, TIM2, TIM3, TIM4};
 use void::Void;
 
-use rcc::{APB1, Clocks};
+use rcc::{APB1, APB2, Clocks};
 use time::Hertz;
 
 /// Interrupt events
@@ -74,10 +74,10 @@ impl CountDown for Timer<SYST> {
 impl Periodic for Timer<SYST> {}
 
 macro_rules! hal {
-    ($($TIMX:ident: ($timX:ident, $timXen:ident, $timXrst:ident),)+) => {
+    ($($TIMX:ident: ($timX:ident, $timXen:ident, $timXrst:ident, $apbX:ident),)+) => {
         $(
             impl Timer<$TIMX> {
-                pub fn $timX<T>(tim: $TIMX, timeout: T, clocks: Clocks, apb1: &mut APB1) -> Self
+                pub fn $timX<T>(tim: $TIMX, timeout: T, clocks: Clocks, apb1: &mut $apbX) -> Self
                 where
                     T: Into<Hertz>,
                 {
@@ -155,7 +155,8 @@ macro_rules! hal {
 }
 
 hal! {
-    TIM2: (tim2, tim2en, tim2rst),
-    TIM3: (tim3, tim3en, tim3rst),
-    TIM4: (tim4, tim4en, tim3rst),
+    TIM1: (tim1, tim1en, tim1rst, APB2),
+    TIM2: (tim2, tim2en, tim2rst, APB1),
+    TIM3: (tim3, tim3en, tim3rst, APB1),
+    TIM4: (tim4, tim4en, tim3rst, APB1),
 }
