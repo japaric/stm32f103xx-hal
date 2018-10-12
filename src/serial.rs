@@ -201,9 +201,9 @@ macro_rules! hal {
                         }
                         Err(nb::Error::Other(err))
                     } else {
+                        // Check if a byte is available
                         if sr.rxne().bit_is_set() {
-                            // Read the data register and return that error. This must be done
-                            // in order to clear the error bits
+                            // Read the received byte
                             // NOTE(read_volatile) see `write_volatile` below
                             Ok(unsafe {
                                 ptr::read_volatile(&(*$USARTX::ptr()).dr as *const _ as *const _)
