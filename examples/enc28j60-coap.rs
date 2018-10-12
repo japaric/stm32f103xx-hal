@@ -18,7 +18,6 @@
 
 #[macro_use]
 extern crate cortex_m;
-#[macro_use]
 extern crate cortex_m_rt as rt;
 extern crate enc28j60;
 extern crate heapless;
@@ -39,7 +38,7 @@ use hal::stm32f103xx;
 use heapless::consts::*;
 use heapless::FnvIndexMap;
 use jnet::{arp, coap, ether, icmp, ipv4, mac, udp, Buffer};
-use rt::ExceptionFrame;
+use rt::{entry, exception, ExceptionFrame};
 
 /* Constants */
 const KB: u16 = 1024;
@@ -59,8 +58,7 @@ struct Led {
     led: bool,
 }
 
-entry!(main);
-
+#[entry]
 fn main() -> ! {
     let mut cp = cortex_m::Peripherals::take().unwrap();
     let dp = stm32f103xx::Peripherals::take().unwrap();
@@ -316,14 +314,12 @@ fn main() -> ! {
     }
 }
 
-exception!(HardFault, hard_fault);
-
-fn hard_fault(ef: &ExceptionFrame) -> ! {
+#[exception]
+fn HardFault(ef: &ExceptionFrame) -> ! {
     panic!("{:#?}", ef);
 }
 
-exception!(*, default_handler);
-
-fn default_handler(irqn: i16) {
+#[exception]
+fn DefaultHandler(irqn: i16) {
     panic!("Unhandled exception (IRQn = {})", irqn);
 }

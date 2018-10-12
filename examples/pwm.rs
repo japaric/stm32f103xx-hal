@@ -5,7 +5,6 @@
 #![no_main]
 #![no_std]
 
-#[macro_use]
 extern crate cortex_m_rt as rt;
 extern crate cortex_m;
 extern crate panic_semihosting;
@@ -14,10 +13,9 @@ extern crate stm32f103xx_hal as hal;
 use cortex_m::asm;
 use hal::prelude::*;
 use hal::stm32f103xx;
-use rt::ExceptionFrame;
+use rt::{entry, exception, ExceptionFrame};
 
-entry!(main);
-
+#[entry]
 fn main() -> ! {
     let p = stm32f103xx::Peripherals::take().unwrap();
 
@@ -81,14 +79,12 @@ fn main() -> ! {
     loop {}
 }
 
-exception!(HardFault, hard_fault);
-
-fn hard_fault(ef: &ExceptionFrame) -> ! {
+#[exception]
+fn HardFault(ef: &ExceptionFrame) -> ! {
     panic!("{:#?}", ef);
 }
 
-exception!(*, default_handler);
-
-fn default_handler(irqn: i16) {
+#[exception]
+fn DefaultHandler(irqn: i16) {
     panic!("Unhandled exception (IRQn = {})", irqn);
 }

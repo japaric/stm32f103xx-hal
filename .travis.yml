@@ -7,10 +7,9 @@ matrix:
     - env: TARGET=thumbv7m-none-eabi
       rust: nightly
       if: branch != master
-      addons:
-        apt:
-          packages:
-            - gcc-arm-none-eabi
+    - env: TARGET=thumbv7m-none-eabi
+      rust: beta
+      if: branch != master
 
 before_install: set -e
 

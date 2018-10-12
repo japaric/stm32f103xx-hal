@@ -1,4 +1,4 @@
-use core::marker::{PhantomData, Unsize};
+use core::marker::PhantomData;
 use core::ptr;
 use core::sync::atomic::{self, Ordering};
 
@@ -6,6 +6,7 @@ use cast::u16;
 use hal;
 use nb;
 use stm32f103xx::{USART1, USART2, USART3};
+use void::Void;
 
 use afio::MAPR;
 use dma::{dma1, CircBuffer, Static, Transfer, R, W};
@@ -204,10 +205,10 @@ macro_rules! hal {
                     buffer: &'static mut [B; 2],
                 ) -> CircBuffer<B, $rx_chan>
                 where
-                    B: Unsize<[u8]>,
+                    B: AsMut<[u8]>,
                 {
                     {
-                        let buffer: &[u8] = &buffer[0];
+                        let buffer = buffer[0].as_mut();
                         chan.cmar().write(|w| unsafe {
                             w.ma().bits(buffer.as_ptr() as usize as u32)
                         });
@@ -254,10 +255,10 @@ macro_rules! hal {
                     buffer: &'static mut B,
                 ) -> Transfer<W, &'static mut B, $rx_chan, Self>
                 where
-                    B: Unsize<[u8]>,
+                    B: AsMut<[u8]>,
                 {
                     {
-                        let buffer: &[u8] = buffer;
+                        let buffer = buffer.as_mut();
                         chan.cmar().write(|w| unsafe {
                             w.ma().bits(buffer.as_ptr() as usize as u32)
                         });
@@ -306,11 +307,11 @@ macro_rules! hal {
                     buffer: B,
                 ) -> Transfer<R, B, $tx_chan, Self>
                 where
-                    A: Unsize<[u8]>,
+                    A: AsRef<[u8]>,
                     B: Static<A>,
                 {
                     {
-                        let buffer: &[u8] = buffer.borrow();
+                        let buffer = buffer.borrow().as_ref();
                         chan.cmar().write(|w| unsafe {
                             w.ma().bits(buffer.as_ptr() as usize as u32)
                         });
@@ -353,9 +354,9 @@ macro_rules! hal {
             }
 
             impl hal::serial::Write<u8> for Tx<$USARTX> {
-                type Error = !;
+                type Error = Void;
 
-                fn flush(&mut self) -> nb::Result<(), !> {
+                fn flush(&mut self) -> nb::Result<(), Self::Error> {
                     // NOTE(unsafe) atomic read with no side effects
                     let sr = unsafe { (*$USARTX::ptr()).sr.read() };
 
@@ -366,7 +367,7 @@ macro_rules! hal {
                     }
                 }
 
-                fn write(&mut self, byte: u8) -> nb::Result<(), !> {
+                fn write(&mut self, byte: u8) -> nb::Result<(), Self::Error> {
                     // NOTE(unsafe) atomic read with no side effects
                     let sr = unsafe { (*$USARTX::ptr()).sr.read() };
 
