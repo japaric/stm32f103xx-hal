@@ -96,9 +96,7 @@ macro_rules! hal {
             $usartX_remap:ident,
             $bit:ident,
             $closure:expr,
-            $APB:ident,
-            rx: $rx_chan:path,
-            tx: $tx_chan:path
+            $APB:ident
         ),
     )+) => {
         $(
@@ -217,14 +215,9 @@ macro_rules! hal {
                 }
             }
 
-            impl Rx<$USARTX> {
-                pub fn circ_read<B>(
-                    self,
-                    mut chan: $rx_chan,
-                    buffer: &'static mut [B; 2],
-                ) -> CircBuffer<B, $rx_chan>
-                where
-                    B: AsMut<[u8]>,
+            impl<B> ReadDma<B> for Rx<$USARTX> where B: AsMut<[u8]> {
+                fn circ_read(self, mut chan: Self::Dma, buffer: &'static mut [B; 2],
+                ) -> CircBuffer<B, Self::Dma>
                 {
                     {
                         let buffer = buffer[0].as_mut();
@@ -268,13 +261,8 @@ macro_rules! hal {
                     CircBuffer::new(buffer, chan)
                 }
 
-                pub fn read_exact<B>(
-                    self,
-                    mut chan: $rx_chan,
-                    buffer: &'static mut B,
-                ) -> Transfer<W, &'static mut B, $rx_chan, Self>
-                where
-                    B: AsMut<[u8]>,
+                fn read_exact(self, mut chan: Self::Dma, buffer: &'static mut B,
+                ) -> Transfer<W, &'static mut B, Self::Dma, Self>
                 {
                     {
                         let buffer = buffer.as_mut();
@@ -319,15 +307,9 @@ macro_rules! hal {
                 }
             }
 
-            impl Tx<$USARTX> {
-                pub fn write_all<A, B>(
-                    self,
-                    mut chan: $tx_chan,
-                    buffer: B,
-                ) -> Transfer<R, B, $tx_chan, Self>
-                where
-                    A: AsRef<[u8]>,
-                    B: Static<A>,
+            impl<A, B> WriteDma<A, B> for Tx<$USARTX> where A: AsRef<[u8]>, B: Static<A> {
+                fn write_all(self, mut chan: Self::Dma, buffer: B
+                ) -> Transfer<R, B, Self::Dma, Self>
                 {
                     {
                         let buffer = buffer.borrow().as_ref();
@@ -414,9 +396,7 @@ hal! {
         usart1_remap,
         bit,
         |remap| remap == 1,
-        APB2,
-        rx: dma1::C5,
-        tx: dma1::C4
+        APB2
     ),
     USART2: (
         usart2,
@@ -425,9 +405,7 @@ hal! {
         usart2_remap,
         bit,
         |remap| remap == 1,
-        APB1,
-        rx: dma1::C6,
-        tx: dma1::C7
+        APB1
     ),
     USART3: (
         usart3,
@@ -436,8 +414,54 @@ hal! {
         usart3_remap,
         bits,
         |remap| remap,
-        APB1,
-        rx: dma1::C3,
-        tx: dma1::C2
+        APB1
     ),
+}
+
+use dma::DmaChannel;
+
+impl DmaChannel for Rx<USART1> {
+    type Dma = dma1::C5;
+}
+
+impl DmaChannel for Tx<USART1> {
+    type Dma = dma1::C4;
+}
+
+impl DmaChannel for Rx<USART2> {
+    type Dma = dma1::C6;
+}
+
+impl DmaChannel for Tx<USART2> {
+    type Dma = dma1::C7;
+}
+
+impl DmaChannel for Rx<USART3> {
+    type Dma = dma1::C3;
+}
+
+impl DmaChannel for Tx<USART3> {
+    type Dma = dma1::C2;
+}
+
+pub trait ReadDma<B>: DmaChannel
+where
+    B: AsMut<[u8]>,
+    Self: core::marker::Sized,
+{
+    fn circ_read(self, chan: Self::Dma, buffer: &'static mut [B; 2]) -> CircBuffer<B, Self::Dma>;
+    fn read_exact(
+        self,
+        chan: Self::Dma,
+        buffer: &'static mut B,
+    ) -> Transfer<W, &'static mut B, Self::Dma, Self>;
+}
+
+pub trait WriteDma<A, B>: DmaChannel
+where
+    A: AsRef<[u8]>,
+    B: Static<A>,
+    Self: core::marker::Sized,
+{
+    fn write_all(self, chan: Self::Dma, buffer: B) -> Transfer<R, B, Self::Dma, Self>;
 }
