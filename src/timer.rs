@@ -15,6 +15,11 @@ pub enum Event {
     Update,
 }
 
+enum Bus {
+    PCLK1,
+    PCLK2
+}
+
 pub struct Timer<TIM> {
     tim: TIM,
     clocks: Clocks,
@@ -74,7 +79,7 @@ impl CountDown for Timer<SYST> {
 impl Periodic for Timer<SYST> {}
 
 macro_rules! hal {
-    ($($TIMX:ident: ($timX:ident, $timXen:ident, $timXrst:ident, $apbX:ident),)+) => {
+    ($($TIMX:ident: ($timX:ident, $timXen:ident, $timXrst:ident, $apbX:ident, $bus:expr),)+) => {
         $(
             impl Timer<$TIMX> {
                 pub fn $timX<T>(tim: $TIMX, timeout: T, clocks: Clocks, apb1: &mut $apbX) -> Self
@@ -119,8 +124,14 @@ macro_rules! hal {
 
                     let frequency = timeout.into().0;
 
-                    let ticks = self.clocks.pclk1().0 * if self.clocks.ppre1() == 1 { 1 } else { 2 }
-                    / frequency;
+                    let (timer_clock, multiplier) = match $bus {
+                        Bus::PCLK1 => (self.clocks.pclk1().0, if self.clocks.ppre1() == 1 {1}
+                        else {2}),
+                        Bus::PCLK2 => (self.clocks.pclk2().0,if self.clocks.ppre2() == 1 {1}
+                        else {2})
+                    };
+
+                    let ticks = timer_clock * multiplier / frequency;
 
                     let psc = u16((ticks - 1) / (1 << 16)).unwrap();
                     self.tim.psc.write(|w| w.psc().bits(psc));
@@ -131,7 +142,7 @@ macro_rules! hal {
                     // Trigger an update event to load the prescaler value to the clock
                     self.tim.egr.write(|w| w.ug().set_bit());
                     // The above line raises an update event which will indicate
-                    // that the timer is already finnished. Since this is not the case,
+                    // that the timer is already finished. Since this is not the case,
                     // it should be cleared
                     self.tim.sr.modify(|_, w| w.uif().clear_bit());
 
@@ -155,8 +166,8 @@ macro_rules! hal {
 }
 
 hal! {
-    TIM1: (tim1, tim1en, tim1rst, APB2),
-    TIM2: (tim2, tim2en, tim2rst, APB1),
-    TIM3: (tim3, tim3en, tim3rst, APB1),
-    TIM4: (tim4, tim4en, tim3rst, APB1),
+    TIM1: (tim1, tim1en, tim1rst, APB2, Bus::PCLK2),
+    TIM2: (tim2, tim2en, tim2rst, APB1, Bus::PCLK1),
+    TIM3: (tim3, tim3en, tim3rst, APB1, Bus::PCLK1),
+    TIM4: (tim4, tim4en, tim3rst, APB1, Bus::PCLK1),
 }
