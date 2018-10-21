@@ -6,6 +6,8 @@ use nb;
 use stm32f103xx::{TIM1, TIM2, TIM3, TIM4};
 use void::Void;
 
+use core::any::TypeId;
+
 use rcc::{APB1, APB2, Clocks};
 use time::Hertz;
 
@@ -13,11 +15,6 @@ use time::Hertz;
 pub enum Event {
     /// Timer timed out / count down ended
     Update,
-}
-
-enum Bus {
-    PCLK1,
-    PCLK2
 }
 
 pub struct Timer<TIM> {
@@ -79,8 +76,11 @@ impl CountDown for Timer<SYST> {
 impl Periodic for Timer<SYST> {}
 
 macro_rules! hal {
-    ($($TIMX:ident: ($timX:ident, $timXen:ident, $timXrst:ident, $apbX:ident, $bus:expr),)+) => {
+    ($($TIMX:ident: ($timX:ident, $timXen:ident, $timXrst:ident, $apbX:ident),)+) => {
         $(
+
+
+
             impl Timer<$TIMX> {
                 pub fn $timX<T>(tim: $TIMX, timeout: T, clocks: Clocks, apb1: &mut $apbX) -> Self
                 where
@@ -110,6 +110,38 @@ macro_rules! hal {
                         Event::Update => self.tim.dier.write(|w| w.uie().clear_bit()),
                     }
                 }
+
+                /// Return the bus clock frequency in hertz.
+                fn get_bus_clock(&self) -> Hertz {
+                    if TypeId::of::<$apbX>() == TypeId::of::<APB1>() {
+                            Hertz(self.clocks.pclk1().0 * self.get_bus_frequency_multiplier())
+                    }
+                    else if TypeId::of::<$apbX>() == TypeId::of::<APB2>() {
+                        Hertz(self.clocks.pclk2().0 * self.get_bus_frequency_multiplier())
+                    }
+                    else {
+                        unreachable!()
+                    }
+                }
+
+                /// Return the bus frequency multiplier.
+                fn get_bus_frequency_multiplier(&self) -> u32 {
+                    if TypeId::of::<$apbX>() == TypeId::of::<APB1>() {
+                        if self.clocks.ppre1() == 1
+                            {1}
+                        else
+                            {2}
+                    }
+                    else if TypeId::of::<$apbX>() == TypeId::of::<APB2>() {
+                         if self.clocks.ppre2() == 1
+                            {1}
+                         else
+                            {2}
+                    }
+                    else {
+                        unreachable!()
+                    }
+                }
             }
 
             impl CountDown for Timer<$TIMX> {
@@ -124,14 +156,10 @@ macro_rules! hal {
 
                     let frequency = timeout.into().0;
 
-                    let (timer_clock, multiplier) = match $bus {
-                        Bus::PCLK1 => (self.clocks.pclk1().0, if self.clocks.ppre1() == 1 {1}
-                        else {2}),
-                        Bus::PCLK2 => (self.clocks.pclk2().0,if self.clocks.ppre2() == 1 {1}
-                        else {2})
-                    };
+                    let timer_clock = self.get_bus_clock();
 
-                    let ticks = timer_clock * multiplier / frequency;
+
+                    let ticks = timer_clock.0 / frequency;
 
                     let psc = u16((ticks - 1) / (1 << 16)).unwrap();
                     self.tim.psc.write(|w| w.psc().bits(psc));
@@ -166,8 +194,8 @@ macro_rules! hal {
 }
 
 hal! {
-    TIM1: (tim1, tim1en, tim1rst, APB2, Bus::PCLK2),
-    TIM2: (tim2, tim2en, tim2rst, APB1, Bus::PCLK1),
-    TIM3: (tim3, tim3en, tim3rst, APB1, Bus::PCLK1),
-    TIM4: (tim4, tim4en, tim3rst, APB1, Bus::PCLK1),
+    TIM1: (tim1, tim1en, tim1rst, APB2),
+    TIM2: (tim2, tim2en, tim2rst, APB1),
+    TIM3: (tim3, tim3en, tim3rst, APB1),
+    TIM4: (tim4, tim4en, tim4rst, APB1),
 }
