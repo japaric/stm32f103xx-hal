@@ -420,3 +420,7 @@ dma! {
         ),
     }),
 }
+
+pub trait DmaChannel {
+    type Dma;
+}
