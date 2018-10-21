@@ -150,16 +150,14 @@ macro_rules! hal {
                     self.tim.cr1.modify(|_, w| w.cen().clear_bit());
 
                     let frequency = timeout.into().0;
-
                     let timer_clock = self.get_bus_clock();
-
-
                     let ticks = timer_clock.0 / frequency;
-
                     let psc = u16((ticks - 1) / (1 << 16)).unwrap();
-                    self.tim.psc.write(|w| w.psc().bits(psc));
 
+                    self.tim.psc.write(|w| w.psc().bits(psc));
+                    
                     let arr = u16(ticks / u32(psc + 1)).unwrap();
+
                     self.tim.arr.write(|w| unsafe { w.bits(u32(arr)) });
 
                     // Trigger an update event to load the prescaler value to the clock
