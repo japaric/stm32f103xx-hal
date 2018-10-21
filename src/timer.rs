@@ -78,9 +78,6 @@ impl Periodic for Timer<SYST> {}
 macro_rules! hal {
     ($($TIMX:ident: ($timX:ident, $timXen:ident, $timXrst:ident, $apbX:ident),)+) => {
         $(
-
-
-
             impl Timer<$TIMX> {
                 pub fn $timX<T>(tim: $TIMX, timeout: T, clocks: Clocks, apb1: &mut $apbX) -> Self
                 where
@@ -115,11 +112,9 @@ macro_rules! hal {
                 fn get_bus_clock(&self) -> Hertz {
                     if TypeId::of::<$apbX>() == TypeId::of::<APB1>() {
                             Hertz(self.clocks.pclk1().0 * self.get_bus_frequency_multiplier())
-                    }
-                    else if TypeId::of::<$apbX>() == TypeId::of::<APB2>() {
+                    } else if TypeId::of::<$apbX>() == TypeId::of::<APB2>() {
                         Hertz(self.clocks.pclk2().0 * self.get_bus_frequency_multiplier())
-                    }
-                    else {
+                    } else {
                         unreachable!()
                     }
                 }
@@ -127,18 +122,18 @@ macro_rules! hal {
                 /// Return the bus frequency multiplier.
                 fn get_bus_frequency_multiplier(&self) -> u32 {
                     if TypeId::of::<$apbX>() == TypeId::of::<APB1>() {
-                        if self.clocks.ppre1() == 1
-                            {1}
-                        else
-                            {2}
-                    }
-                    else if TypeId::of::<$apbX>() == TypeId::of::<APB2>() {
-                         if self.clocks.ppre2() == 1
-                            {1}
-                         else
-                            {2}
-                    }
-                    else {
+                        if self.clocks.ppre1() == 1 {
+                            1
+                        } else {
+                            2
+                        }
+                    } else if TypeId::of::<$apbX>() == TypeId::of::<APB2>() {
+                         if self.clocks.ppre2() == 1 {
+                            1
+                         } else {
+                            2
+                         }
+                    } else {
                         unreachable!()
                     }
                 }
