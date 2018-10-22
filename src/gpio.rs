@@ -27,6 +27,8 @@ pub struct Floating;
 pub struct PullDown;
 /// Pulled up input (type state)
 pub struct PullUp;
+/// Analog input (type state)
+pub struct Analog;
 
 /// Output mode (type state)
 pub struct Output<MODE> {
@@ -340,7 +342,6 @@ macro_rules! gpio {
 
                         $PXi { _mode: PhantomData }
                     }
-                    
                     /// Configures the pin to operate as an analog input pin
                     pub fn into_analog(self, cr: &mut $CR) -> $PXi<Analog> {
                         let offset = (4 * $i) % 32;

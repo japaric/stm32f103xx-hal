@@ -280,6 +280,8 @@ impl CFGR {
                     SWW::HSI
                 })
         });
+        // TODO: This has to be done properly
+        rcc.cfgr.modify(|_, w| w.adcpre().div6());
 
         Clocks {
             hclk: Hertz(hclk),
