@@ -13,7 +13,7 @@ pub struct Adc<ADC> {
 }
 
 pub trait AnalogPin<ADC> {
-    fn read(&self, adc: &mut ADC) -> u16;
+    fn analog_read(&self, adc: &mut ADC) -> u16;
 }
 
 // trait AdcPin <ADC, T> {
@@ -96,7 +96,7 @@ macro_rules! analog_pin_impls {
         $(
             $(
                 impl AnalogPin<$adc> for $pin<Analog> {
-                    fn read(&self, adc: &mut $adc) -> u16 {
+                    fn analog_read(&self, adc: &mut $adc) -> u16 {
                         adc.read($channel)
                     }
                 }

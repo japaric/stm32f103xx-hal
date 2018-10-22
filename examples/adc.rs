@@ -40,7 +40,7 @@ fn main() -> ! {
         // Aquire stdout and print the result of an analog reading
         // NOTE: This will probably freeze when running without a debugger connected.
         hio::hstdout().map(|mut hio| {
-            writeln!(hio, "reading: {}", pb1.read(&mut adc))
+            writeln!(hio, "reading: {}", pb1.analog_read(&mut adc))
         });
     }
 }
