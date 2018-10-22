@@ -18,6 +18,7 @@ impl AfioExt for AFIO {
             exticr1:  EXTICR1 { _0: () },
             exticr2:  EXTICR2 { _0: () },
             exticr3:  EXTICR3 { _0: () },
+            exticr4:  EXTICR4 { _0: () },
             mapr2: MAPR2 { _0: () },
         }
     }
@@ -29,6 +30,7 @@ pub struct Parts {
     pub exticr1: EXTICR1,
     pub exticr2: EXTICR2,
     pub exticr3: EXTICR3,
+    pub exticr4: EXTICR4,
     pub mapr2: MAPR2,
 }
 
@@ -79,6 +81,16 @@ pub struct EXTICR3 {
 impl EXTICR3 {
     pub fn exticr3(&mut self) -> &afio::EXTICR3 {
         unsafe { &(*AFIO::ptr()).exticr3 }
+    }
+}
+
+pub struct EXTICR4 {
+    _0: (),
+}
+
+impl EXTICR4 {
+    pub fn exticr4(&mut self) -> &afio::EXTICR4 {
+        unsafe { &(*AFIO::ptr()).exticr4 }
     }
 }
 
