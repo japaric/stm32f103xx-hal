@@ -1,10 +1,19 @@
 use stm32f103xx::{ADC1, ADC2, ADC3};
 // TODO: Clear TODO comments
 
+
+use gpio::Analog;
+use gpio::gpioa::*;
+use gpio::gpiob::*;
+
 use rcc::APB2;
 
 pub struct Adc<ADC> {
     adc: ADC
+}
+
+pub trait AnalogPin<ADC> {
+    fn read(&self, adc: &mut ADC) -> u16;
 }
 
 // trait AdcPin <ADC, T> {
@@ -62,7 +71,7 @@ macro_rules! hal {
                 /**
                   Make a single reading of the specified channel
                 */
-                pub fn read(&mut self, channel: u8) -> u16 {
+                fn read(&mut self, channel: u8) -> u16 {
                     // Select the channel to be converted
                     // NOTE: Unsafe write of u8 to 4 bit register. Will this cause issues?
                     unsafe{self.adc.sqr3.modify(|_, w| w.sq1().bits(channel))};
@@ -72,18 +81,29 @@ macro_rules! hal {
                     // Wait for end of conversion
                     while self.adc.sr.read().eoc().bit() == false
                         {}
-
-                    // TODO: Check if we need to clear the EOC bit
-
                     // Read the data in the ADC_DR reg
                     self.adc.dr.read().data().bits()
                 }
             }
         )+
     }
-
 }
 
+
+macro_rules! analog_pin_impls {
+    ($($adc:ty: ($($pin:ident: $channel:expr),+)),+) =>
+    {
+        $(
+            $(
+                impl AnalogPin<$adc> for $pin<Analog> {
+                    fn read(&self, adc: &mut $adc) -> u16 {
+                        adc.read($channel)
+                    }
+                }
+            )+
+        )+
+    }
+}
 
 
 hal! {
@@ -102,4 +122,31 @@ hal! {
         adc3en,
         adc3rst
     ),
+}
+
+analog_pin_impls!{
+    Adc<ADC1>: (
+        PA0: 0,
+        PA1: 1,
+        PA2: 2,
+        PA3: 3,
+        PA4: 4,
+        PA5: 5,
+        PA6: 6,
+        PA7: 7,
+        PB0: 8,
+        PB1: 9
+    ),
+    Adc<ADC2>: (
+        PA0: 0,
+        PA1: 1,
+        PA2: 2,
+        PA3: 3,
+        PA4: 4,
+        PA5: 5,
+        PA6: 6,
+        PA7: 7,
+        PB0: 8,
+        PB1: 9
+    )
 }
