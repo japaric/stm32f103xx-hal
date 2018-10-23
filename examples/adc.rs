@@ -21,8 +21,7 @@ use stm32f103xx_hal::prelude::*;
 use rt::ExceptionFrame;
 use stm32f103xx_hal::adc::{self, AnalogPin};
 
-entry!(main);
-
+#[entry]
 fn main() -> ! {
     // Aquire the peripherals
     let p = stm32f103xx_hal::stm32f103xx::Peripherals::take().unwrap();
@@ -45,14 +44,12 @@ fn main() -> ! {
     }
 }
 
-exception!(HardFault, hard_fault);
-
-fn hard_fault(ef: &ExceptionFrame) -> ! {
+#[exception]
+fn HardFault(ef: &ExceptionFrame) -> ! {
     panic!("{:#?}", ef);
 }
 
-exception!(*, default_handler);
-
-fn default_handler(irqn: i16) {
+#[exception]
+fn DefaultHandler(irqn: i16) {
     panic!("Unhandled exception (IRQn = {})", irqn);
 }
