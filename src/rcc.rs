@@ -280,7 +280,8 @@ impl CFGR {
                     SWW::HSI
                 })
         });
-        // TODO: This has to be done properly
+        // TODO: At some point, this should probably be set dynamically based
+        // on sysclock
         rcc.cfgr.modify(|_, w| w.adcpre().div6());
 
         Clocks {
