@@ -280,9 +280,20 @@ impl CFGR {
                     SWW::HSI
                 })
         });
-        // TODO: At some point, this should probably be set dynamically based
-        // on sysclock
-        rcc.cfgr.modify(|_, w| w.adcpre().div6());
+
+        // The ADC clock can not exceed 14 MHz (see the processor manual section 11.1)
+        // Since there is no lower bound, aim for a too high value rather than
+        // it being too low
+        let adc_prescaler = {
+            // Integer division +1 for ceil operation
+            let desired = sysclk / 14_000_000;
+
+            if desired >= 8 { 0x11 }
+            else if desired >= 6 { 0b10 }
+            else if desired >= 4 { 0b01 }
+            else { 0b00 }
+        };
+        rcc.cfgr.modify(|_, w| w.adcpre().bits(adc_prescaler));
 
         Clocks {
             hclk: Hertz(hclk),
