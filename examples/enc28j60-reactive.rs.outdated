@@ -17,14 +17,18 @@ extern crate stm32f103xx_hal as hal;
 
 use cortex_m::peripheral::{DWT, ITM};
 use enc28j60::{Enc28j60, Event};
-use hal::delay::Delay;
-use hal::gpio::gpioa::{PA0, PA3, PA4, PA5, PA6, PA7};
-use hal::gpio::gpioc::PC13;
-use hal::gpio::{Alternate, Floating, Input, Output, PushPull};
-use hal::prelude::*;
-use hal::spi::Spi;
-use hal::stm32f103xx::{self, Interrupt, SPI1};
-use hal::timer::{self, Timer};
+use crate::hal::{
+    prelude::*,
+    device::{self, Interrupt, SPI1},
+    delay::Delay,
+    gpio::{
+        gpioa::{PA0, PA3, PA4, PA5, PA6, PA7},
+        gpioc::PC13,
+        Alternate, Floating, Input, Output, PushPull,
+    },
+    spi::Spi,
+    timer::{self, Timer},
+};
 use heapless::consts::*;
 use heapless::FnvIndexMap;
 use jnet::{arp, ether, icmp, ipv4, mac, udp, Buffer};
@@ -57,14 +61,14 @@ type Reset = PA3<Output<PushPull>>;
 type Led = PC13<Output<PushPull>>;
 
 app! {
-    device: stm32f103xx,
+    device: device,
 
     resources: {
         static ARP_CACHE: FnvIndexMap<ipv4::Addr, mac::Addr, U8>;
         static SLEEP: u32 = 0;
 
         static ENC28J60: Enc28j60<Spi1, Ncs, Int, Reset>;
-        static EXTI: stm32f103xx::EXTI;
+        static EXTI: device::EXTI;
         static ITM: ITM;
         static LED: Led;
     },

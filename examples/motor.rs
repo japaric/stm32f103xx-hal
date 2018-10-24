@@ -15,16 +15,18 @@ extern crate stm32f103xx_hal as hal;
 
 use core::fmt::Write;
 
-use hal::prelude::*;
-use hal::serial::Serial;
-use hal::stm32f103xx;
+use crate::hal::{
+    prelude::*,
+    device,
+    serial::Serial,
+};
 use motor_driver::Motor;
-use sh::hio;
-use rt::{entry, exception, ExceptionFrame};
+use crate::sh::hio;
+use crate::rt::{entry, exception, ExceptionFrame};
 
 #[entry]
 fn main() -> ! {
-    let p = stm32f103xx::Peripherals::take().unwrap();
+    let p = device::Peripherals::take().unwrap();
 
     let mut flash = p.FLASH.constrain();
     let mut rcc = p.RCC.constrain();

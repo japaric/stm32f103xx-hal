@@ -11,14 +11,16 @@ extern crate panic_abort;
 extern crate stm32f103xx_hal as hal;
 
 use cortex_m::asm;
-use hal::dma::{dma1, CircBuffer, Event};
-use hal::prelude::*;
-use hal::serial::Serial;
-use hal::stm32f103xx;
-use rtfm::{app, Threshold};
+use crate::hal::{
+    prelude::*,
+    device,
+    dma::{dma1, CircBuffer, Event},
+    serial::Serial,
+};
+use crate::rtfm::{app, Threshold};
 
 app! {
-    device: stm32f103xx,
+    device: device,
 
     resources: {
         static BUFFER: [[u8; 8]; 2] = [[0; 8]; 2];

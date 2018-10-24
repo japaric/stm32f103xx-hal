@@ -12,15 +12,17 @@ extern crate stm32f103xx_hal as hal;
 #[macro_use(block)]
 extern crate nb;
 
-use hal::prelude::*;
-use hal::stm32f103xx;
-use hal::timer::Timer;
-use rt::{entry, exception, ExceptionFrame};
+use crate::hal::{
+    prelude::*,
+    device,
+    timer::Timer,
+};
+use crate::rt::{entry, exception, ExceptionFrame};
 
 #[entry]
 fn main() -> ! {
     let cp = cortex_m::Peripherals::take().unwrap();
-    let dp = stm32f103xx::Peripherals::take().unwrap();
+    let dp = device::Peripherals::take().unwrap();
 
     let mut flash = dp.FLASH.constrain();
     let mut rcc = dp.RCC.constrain();

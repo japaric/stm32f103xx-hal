@@ -10,15 +10,19 @@ extern crate cortex_m_rtfm as rtfm;
 extern crate panic_abort;
 extern crate stm32f103xx_hal as hal;
 
-use hal::gpio::gpioc::PC13;
-use hal::gpio::{Output, PushPull};
-use hal::prelude::*;
-use hal::stm32f103xx;
-use hal::timer::{Event, Timer};
-use rtfm::{app, Threshold};
+use crate::hal::{
+    prelude::*,
+    device,
+    gpio::{
+        gpioc::PC13;
+        Output, PushPull,
+    },
+    timer::{Event, Timer},
+};
+use crate::rtfm::{app, Threshold};
 
 app! {
-    device: stm32f103xx,
+    device: device,
 
     resources: {
         static LED: PC13<Output<PushPull>>;

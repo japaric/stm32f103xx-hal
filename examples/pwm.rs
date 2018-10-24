@@ -11,13 +11,15 @@ extern crate panic_semihosting;
 extern crate stm32f103xx_hal as hal;
 
 use cortex_m::asm;
-use hal::prelude::*;
-use hal::stm32f103xx;
-use rt::{entry, exception, ExceptionFrame};
+use crate::hal::{
+    prelude::*,
+    device,
+};
+use crate::rt::{entry, exception, ExceptionFrame};
 
 #[entry]
 fn main() -> ! {
-    let p = stm32f103xx::Peripherals::take().unwrap();
+    let p = device::Peripherals::take().unwrap();
 
     let mut flash = p.FLASH.constrain();
     let mut rcc = p.RCC.constrain();

@@ -9,7 +9,7 @@ extern crate cortex_m;
 extern crate panic_itm;
 extern crate stm32f103xx_hal;
 
-use rt::{entry, exception, ExceptionFrame};
+use crate::rt::{entry, exception, ExceptionFrame};
 
 #[entry]
 fn main() -> ! {

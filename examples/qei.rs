@@ -13,16 +13,18 @@ extern crate stm32f103xx_hal as hal;
 
 use core::fmt::Write;
 
-use hal::delay::Delay;
-use hal::prelude::*;
-use hal::qei::Qei;
-use hal::stm32f103xx;
-use rt::{entry, exception, ExceptionFrame};
-use semihosting::hio;
+use crate::hal::{
+    prelude::*,
+    device,
+    delay::Delay,
+    qei::Qei,
+};
+use crate::rt::{entry, exception, ExceptionFrame};
+use crate::semihosting::hio;
 
 #[entry]
 fn main() -> ! {
-    let dp = stm32f103xx::Peripherals::take().unwrap();
+    let dp = device::Peripherals::take().unwrap();
     let cp = cortex_m::Peripherals::take().unwrap();
 
     let mut flash = dp.FLASH.constrain();

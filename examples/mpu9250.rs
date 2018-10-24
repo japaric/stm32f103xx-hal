@@ -12,17 +12,19 @@ extern crate panic_semihosting;
 extern crate stm32f103xx_hal as hal;
 
 use cortex_m::asm;
-use hal::delay::Delay;
-use hal::prelude::*;
-use hal::spi::Spi;
-use hal::stm32f103xx;
+use crate::hal::{
+    prelude::*,
+    device,
+    delay::Delay,
+    spi::Spi,
+};
 use mpu9250::Mpu9250;
-use rt::{entry, exception, ExceptionFrame};
+use crate::rt::{entry, exception, ExceptionFrame};
 
 #[entry]
 fn main() -> ! {
     let cp = cortex_m::Peripherals::take().unwrap();
-    let dp = stm32f103xx::Peripherals::take().unwrap();
+    let dp = device::Peripherals::take().unwrap();
 
     let mut flash = dp.FLASH.constrain();
     let mut rcc = dp.RCC.constrain();

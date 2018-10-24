@@ -29,10 +29,12 @@ extern crate panic_itm;
 extern crate stm32f103xx_hal as hal;
 
 use enc28j60::Enc28j60;
-use hal::delay::Delay;
-use hal::prelude::*;
-use hal::spi::Spi;
-use hal::stm32f103xx;
+use crate::hal::{
+    prelude::*,
+    device,
+    delay::Delay,
+    spi::Spi,
+};
 use heapless::consts::*;
 use heapless::FnvIndexMap;
 use jnet::{arp, ether, icmp, ipv4, mac, udp, Buffer};
@@ -53,7 +55,7 @@ const KB: u16 = 1024; // bytes
 #[entry]
 fn main() -> ! {
     let mut cp = cortex_m::Peripherals::take().unwrap();
-    let dp = stm32f103xx::Peripherals::take().unwrap();
+    let dp = device::Peripherals::take().unwrap();
 
     let mut rcc = dp.RCC.constrain();
     let mut afio = dp.AFIO.constrain(&mut rcc.apb2);

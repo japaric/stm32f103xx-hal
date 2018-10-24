@@ -17,18 +17,22 @@ extern crate stm32f103xx_hal as hal;
 use byteorder::{ByteOrder, LE};
 use crc16::{State, ARC};
 use either::Either;
-use hal::delay::Delay;
-use hal::dma::{dma1, Transfer, R};
-use hal::gpio::gpioa::{PA4, PA5, PA6, PA7};
-use hal::gpio::{Alternate, Floating, Input, Output, PushPull};
-use hal::prelude::*;
-use hal::serial::{Serial, Tx};
-use hal::spi::Spi;
-use hal::stm32f103xx;
-use hal::timer::{self, Timer};
+use crate::hal::{
+    prelude::*,
+    device,
+    delay::Delay,
+    dma::{dma1, Transfer, R},
+    gpio::{
+        gpioa::{PA4, PA5, PA6, PA7},
+        Alternate, Floating, Input, Output, PushPull
+    }
+    serial::{Serial, Tx},
+    spi::Spi,
+    timer::{self, Timer},
+};
 use mpu9250::{Imu, Mpu9250};
-use rtfm::{app, Threshold};
-use stm32f103xx::{SPI1, USART1};
+use crate::rtfm::{app, Threshold};
+use crate::device::{SPI1, USART1};
 
 // CONNECTIONS
 #[allow(non_camel_case_types)]
@@ -55,7 +59,7 @@ const SAMPLES: u32 = FREQ * 10;
 
 // RESOURCES
 app! {
-    device: stm32f103xx,
+    device: device,
 
     resources: {
         static MPU9250: MPU9250;

@@ -31,14 +31,16 @@ extern crate stm32f103xx_hal as hal;
 use core::convert::TryInto;
 
 use enc28j60::Enc28j60;
-use hal::delay::Delay;
-use hal::prelude::*;
-use hal::spi::Spi;
-use hal::stm32f103xx;
+use crate::hal::{
+    prelude::*,
+    device,
+    delay::Delay,
+    spi::Spi,
+};
 use heapless::consts::*;
 use heapless::FnvIndexMap;
 use jnet::{arp, coap, ether, icmp, ipv4, mac, udp, Buffer};
-use rt::{entry, exception, ExceptionFrame};
+use crate::rt::{entry, exception, ExceptionFrame};
 
 /* Constants */
 const KB: u16 = 1024;
@@ -61,7 +63,7 @@ struct Led {
 #[entry]
 fn main() -> ! {
     let mut cp = cortex_m::Peripherals::take().unwrap();
-    let dp = stm32f103xx::Peripherals::take().unwrap();
+    let dp = device::Peripherals::take().unwrap();
 
     let mut rcc = dp.RCC.constrain();
     let mut afio = dp.AFIO.constrain(&mut rcc.apb2);

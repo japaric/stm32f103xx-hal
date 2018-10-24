@@ -1,16 +1,15 @@
 use core::ptr;
 
-use hal;
-pub use hal::spi::{Mode, Phase, Polarity};
+pub use crate::hal::spi::{Mode, Phase, Polarity};
 use nb;
-use stm32f103xx::{SPI1, SPI2};
+use crate::device::{SPI1, SPI2};
 
-use afio::MAPR;
-use gpio::gpioa::{PA5, PA6, PA7};
-use gpio::gpiob::{PB13, PB14, PB15, PB3, PB4, PB5};
-use gpio::{Alternate, Floating, Input, PushPull};
-use rcc::{APB1, APB2, Clocks};
-use time::Hertz;
+use crate::afio::MAPR;
+use crate::gpio::gpioa::{PA5, PA6, PA7};
+use crate::gpio::gpiob::{PB13, PB14, PB15, PB3, PB4, PB5};
+use crate::gpio::{Alternate, Floating, Input, PushPull};
+use crate::rcc::{APB1, APB2, Clocks};
+use crate::time::Hertz;
 
 /// SPI error
 #[derive(Debug)]
@@ -172,7 +171,7 @@ macro_rules! hal {
                 }
             }
 
-            impl<PINS> hal::spi::FullDuplex<u8> for Spi<$SPIX, PINS> {
+            impl<PINS> crate::hal::spi::FullDuplex<u8> for Spi<$SPIX, PINS> {
                 type Error = Error;
 
                 fn read(&mut self) -> nb::Result<u8, Error> {
@@ -215,9 +214,9 @@ macro_rules! hal {
 
             }
 
-            impl<PINS> ::hal::blocking::spi::transfer::Default<u8> for Spi<$SPIX, PINS> {}
+            impl<PINS> crate::hal::blocking::spi::transfer::Default<u8> for Spi<$SPIX, PINS> {}
 
-            impl<PINS> ::hal::blocking::spi::write::Default<u8> for Spi<$SPIX, PINS> {}
+            impl<PINS> crate::hal::blocking::spi::write::Default<u8> for Spi<$SPIX, PINS> {}
         )+
     }
 }

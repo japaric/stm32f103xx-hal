@@ -11,7 +11,7 @@ extern crate panic_semihosting;
 extern crate stm32f103xx_hal;
 
 use core::fmt::Write;
-use rt::entry;
+use crate::rt::entry;
 
 #[entry]
 fn main() -> ! {
