@@ -24,6 +24,7 @@ impl RccExt for RCC {
                 pclk2: None,
                 sysclk: None,
             },
+            csr: CSR(()),
         }
     }
 }
@@ -37,6 +38,7 @@ pub struct Rcc {
     /// Advanced Peripheral Bus 2 (APB2) registers
     pub apb2: APB2,
     pub cfgr: CFGR,
+    pub csr: CSR,
 }
 
 /// AMBA High-performance Bus (AHB) registers
@@ -250,6 +252,65 @@ impl CFGR {
             sysclk: Hertz(sysclk),
         }
     }
+}
+
+/// Control/Status Register
+pub struct CSR(());
+
+impl CSR {
+    fn csr(&mut self) -> &rcc::CSR {
+        // NOTE(unsafe) this proxy grants exclusive access to this register
+        unsafe { &(*RCC::ptr()).csr }
+    }
+
+    /// Enable the 40 kHz LSI clock
+    ///
+    /// Needed for the Independent Watchdog (IWDG) periphal and the
+    /// Auto-Wakeup Unit (AWU)
+    pub(crate) fn enable_lsi(&mut self) {
+        // Enable
+        self.csr().modify(|_, w| w.lsion().set_bit());
+
+        // Wait for clock to become stable
+        while self.csr().read().lsirdy().bit_is_set() {}
+    }
+
+    /// Read why a reset occured
+    pub fn reset_reason(&mut self) -> ResetReason {
+        let r = self.csr().read();
+        if r.lpwrrstf().bit_is_set() {
+            ResetReason::LowPower
+        } else if r.wwdgrstf().bit_is_set() {
+            ResetReason::WWDG
+        } else if r.iwdgrstf().bit_is_set() {
+            ResetReason::IWDG
+        } else if r.sftrstf().bit_is_set() {
+            ResetReason::Software
+        } else if r.porrstf().bit_is_set() {
+            ResetReason::PorPdr
+        } else if r.pinrstf().bit_is_set() {
+            ResetReason::NrstPin
+        } else {
+            ResetReason::Unknown
+        }
+    }
+
+    /// Clear the reason for the last reset
+    pub fn clear_reset_reason(&mut self) {
+        self.csr().write(|w| w.rmvf().set_bit());
+    }
+}
+
+/// Reason for controller reset
+#[derive(Clone, Copy, Debug)]
+pub enum ResetReason {
+    LowPower,
+    WWDG,
+    IWDG,
+    Software,
+    PorPdr,
+    NrstPin,
+    Unknown,
 }
 
 /// Frozen clock frequencies
