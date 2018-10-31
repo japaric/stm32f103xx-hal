@@ -1,7 +1,7 @@
 use core::cmp;
 
 use cast::u32;
-use crate::device::rcc::cfgr::{PLLSRCW, SWW, USBPREW};
+use crate::device::rcc::cfgr::{PLLSRCW, SWW, USBPREW, ADCPREW};
 use crate::device::{rcc, RCC};
 
 use crate::flash::ACR;
@@ -285,15 +285,14 @@ impl CFGR {
         // Since there is no lower bound, aim for a too high value rather than
         // it being too low
         let adc_prescaler = {
-            // Integer division +1 for ceil operation
             let desired = sysclk / 14_000_000;
 
-            if desired >= 8 { 0x11 }
-            else if desired >= 6 { 0b10 }
-            else if desired >= 4 { 0b01 }
-            else { 0b00 }
+            if desired > 8 { ADCPREW::DIV8 }
+            else if desired > 6 { ADCPREW::DIV6 }
+            else if desired > 4 { ADCPREW::DIV4 }
+            else { ADCPREW::DIV2 }
         };
-        rcc.cfgr.modify(|_, w| w.adcpre().bits(adc_prescaler));
+        rcc.cfgr.modify(|_, w| w.adcpre().variant(adc_prescaler));
 
         Clocks {
             hclk: Hertz(hclk),
