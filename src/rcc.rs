@@ -287,9 +287,9 @@ impl CFGR {
         let adc_prescaler = {
             let desired = sysclk / 14_000_000;
 
-            if desired > 8 { ADCPREW::DIV8 }
-            else if desired > 6 { ADCPREW::DIV6 }
-            else if desired > 4 { ADCPREW::DIV4 }
+            if desired >= 6 { ADCPREW::DIV8 }
+            else if desired >= 4 { ADCPREW::DIV6 }
+            else if desired >= 2 { ADCPREW::DIV4 }
             else { ADCPREW::DIV2 }
         };
         rcc.cfgr.modify(|_, w| w.adcpre().variant(adc_prescaler));
