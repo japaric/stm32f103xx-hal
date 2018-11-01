@@ -3,6 +3,8 @@
 use core::marker::PhantomData;
 use core::ops;
 
+use stable_deref_trait::StableDeref;
+
 use rcc::AHB;
 
 #[derive(Debug)]
@@ -27,34 +29,21 @@ pub struct CircBuffer<BUFFER, CHANNEL>
 where
     BUFFER: 'static,
 {
-    buffer: &'static mut [BUFFER; 2],
+    buffer: BUFFER,
     channel: CHANNEL,
     readable_half: Half,
 }
 
 impl<BUFFER, CHANNEL> CircBuffer<BUFFER, CHANNEL> {
-    pub(crate) fn new(buf: &'static mut [BUFFER; 2], chan: CHANNEL) -> Self {
+    pub(crate) fn new<H>(buf: BUFFER, chan: CHANNEL) -> Self
+    where
+        BUFFER: StableDeref<Target = [H; 2]>,
+    {
         CircBuffer {
             buffer: buf,
             channel: chan,
             readable_half: Half::Second,
         }
-    }
-}
-
-pub trait Static<B> {
-    fn borrow(&self) -> &B;
-}
-
-impl<B> Static<B> for &'static B {
-    fn borrow(&self) -> &B {
-        *self
-    }
-}
-
-impl<B> Static<B> for &'static mut B {
-    fn borrow(&self) -> &B {
-        *self
     }
 }
 
@@ -71,7 +60,10 @@ pub struct Transfer<MODE, BUFFER, CHANNEL, PAYLOAD> {
     payload: PAYLOAD,
 }
 
-impl<BUFFER, CHANNEL, PAYLOAD> Transfer<R, BUFFER, CHANNEL, PAYLOAD> {
+impl<BUFFER, CHANNEL, PAYLOAD> Transfer<R, BUFFER, CHANNEL, PAYLOAD>
+where
+    BUFFER: StableDeref + 'static,
+{
     pub(crate) fn r(buffer: BUFFER, channel: CHANNEL, payload: PAYLOAD) -> Self {
         Transfer {
             _mode: PhantomData,
@@ -82,7 +74,10 @@ impl<BUFFER, CHANNEL, PAYLOAD> Transfer<R, BUFFER, CHANNEL, PAYLOAD> {
     }
 }
 
-impl<BUFFER, CHANNEL, PAYLOAD> Transfer<W, BUFFER, CHANNEL, PAYLOAD> {
+impl<BUFFER, CHANNEL, PAYLOAD> Transfer<W, BUFFER, CHANNEL, PAYLOAD>
+where
+    BUFFER: StableDeref + 'static,
+{
     pub(crate) fn w(buffer: BUFFER, channel: CHANNEL, payload: PAYLOAD) -> Self {
         Transfer {
             _mode: PhantomData,
@@ -129,6 +124,8 @@ macro_rules! dma {
             pub mod $dmaX {
                 use core::sync::atomic::{self, Ordering};
 
+                use stable_deref_trait::StableDeref;
+                use as_slice::AsSlice;
                 use stm32f103xx::{$DMAX, dma1};
 
                 use dma::{CircBuffer, DmaExt, Error, Event, Half, Transfer, W};
@@ -194,9 +191,10 @@ macro_rules! dma {
 
                     impl<B> CircBuffer<B, $CX> {
                         /// Peeks into the readable half of the buffer
-                        pub fn peek<R, F>(&mut self, f: F) -> Result<R, Error>
-                            where
-                            F: FnOnce(&B, Half) -> R,
+                        pub fn peek<R, F, H>(&mut self, f: F) -> Result<R, Error>
+                        where
+                            B: StableDeref<Target = [H; 2]>,
+                            F: FnOnce(&H, Half) -> R,
                         {
                             let half_being_read = self.readable_half()?;
 
@@ -207,7 +205,6 @@ macro_rules! dma {
 
                             // XXX does this need a compiler barrier?
                             let ret = f(buf, half_being_read);
-
 
                             let isr = self.channel.isr();
                             let first_half_is_done = isr.$htifX().bit_is_set();
@@ -286,14 +283,13 @@ macro_rules! dma {
                     impl<BUFFER, PAYLOAD> Transfer<W, &'static mut BUFFER, $CX, PAYLOAD> {
                         pub fn peek<T>(&self) -> &[T]
                         where
-                            BUFFER: AsRef<[T]>,
+                            BUFFER: AsSlice<Element=T>,
                         {
                             let pending = self.channel.get_cndtr() as usize;
 
-                            let slice = self.buffer.as_ref();
-                            let capacity = slice.len();
+                            let capacity = self.buffer.as_slice().len();
 
-                            &slice[..(capacity - pending)]
+                            &self.buffer.as_slice()[..(capacity - pending)]
                         }
                     }
                 )+

@@ -1,4 +1,5 @@
 use core::marker::PhantomData;
+use core::ops::DerefMut;
 use core::ptr;
 use core::sync::atomic::{self, Ordering};
 
@@ -9,12 +10,15 @@ use stm32f103xx::{USART1, USART2, USART3};
 use void::Void;
 
 use afio::MAPR;
-use dma::{dma1, CircBuffer, Static, Transfer, R, W};
+use dma::{dma1, CircBuffer, Transfer, R, W};
 use gpio::gpioa::{PA10, PA2, PA3, PA9};
 use gpio::gpiob::{PB10, PB11, PB6, PB7};
 use gpio::{Alternate, Floating, Input, PushPull};
 use rcc::{APB1, APB2, Clocks};
 use time::Bps;
+
+use stable_deref_trait::StableDeref;
+use as_slice::{AsSlice, AsMutSlice};
 
 /// Interrupt event
 pub enum Event {
@@ -215,140 +219,144 @@ macro_rules! hal {
                 }
             }
 
-            impl<B> ReadDma<B> for Rx<$USARTX> where B: AsMut<[u8]> {
-                fn circ_read(self, mut chan: Self::Dma, buffer: &'static mut [B; 2],
+            impl<B, H> CircReadDma<B, H> for Rx<$USARTX>
+            where 
+                B: StableDeref<Target = [H; 2]> + DerefMut,
+                H: AsMutSlice<Element = u8>
+            {
+                fn circ_read(self, mut chan: Self::Dma, mut buffer: B,
                 ) -> CircBuffer<B, Self::Dma>
                 {
-                    {
-                        let buffer = buffer[0].as_mut();
-                        chan.cmar().write(|w| unsafe {
-                            w.ma().bits(buffer.as_ptr() as usize as u32)
-                        });
-                        chan.cndtr().write(|w| unsafe{
-                            w.ndt().bits(u16(buffer.len() * 2).unwrap())
-                        });
-                        chan.cpar().write(|w| unsafe {
-                            w.pa().bits(&(*$USARTX::ptr()).dr as *const _ as usize as u32)
-                        });
+                    chan.cmar().write(|w| unsafe {
+                        w.ma().bits(buffer[0].as_mut_slice().as_ptr() as usize as u32)
+                    });
+                    chan.cndtr().write(|w| unsafe{
+                        w.ndt().bits(u16(buffer[0].as_mut_slice().len() * 2).unwrap())
+                    });
+                    chan.cpar().write(|w| unsafe {
+                        w.pa().bits(&(*$USARTX::ptr()).dr as *const _ as usize as u32)
+                    });
 
-                        // TODO can we weaken this compiler barrier?
-                        // NOTE(compiler_fence) operations on `buffer` should not be reordered after
-                        // the next statement, which starts the DMA transfer
-                        atomic::compiler_fence(Ordering::SeqCst);
+                    // TODO can we weaken this compiler barrier?
+                    // NOTE(compiler_fence) operations on `buffer` should not be reordered after
+                    // the next statement, which starts the DMA transfer
+                    atomic::compiler_fence(Ordering::SeqCst);
 
-                        chan.ccr().modify(|_, w| {
-                            w.mem2mem()
-                                .clear_bit()
-                                .pl()
-                                .medium()
-                                .msize()
-                                .bit8()
-                                .psize()
-                                .bit8()
-                                .minc()
-                                .set_bit()
-                                .pinc()
-                                .clear_bit()
-                                .circ()
-                                .set_bit()
-                                .dir()
-                                .clear_bit()
-                                .en()
-                                .set_bit()
-                        });
-                    }
+                    chan.ccr().modify(|_, w| {
+                        w.mem2mem()
+                            .clear_bit()
+                            .pl()
+                            .medium()
+                            .msize()
+                            .bit8()
+                            .psize()
+                            .bit8()
+                            .minc()
+                            .set_bit()
+                            .pinc()
+                            .clear_bit()
+                            .circ()
+                            .set_bit()
+                            .dir()
+                            .clear_bit()
+                            .en()
+                            .set_bit()
+                    });
 
                     CircBuffer::new(buffer, chan)
                 }
+            }
 
-                fn read_exact(self, mut chan: Self::Dma, buffer: &'static mut B,
-                ) -> Transfer<W, &'static mut B, Self::Dma, Self>
+            impl<B> ReadDma<B> for Rx<$USARTX>
+            where
+                B: AsMutSlice<Element = u8> + StableDeref + 'static,
+                Self: core::marker::Sized,
+            {
+                fn read_exact(self, mut chan: Self::Dma, mut buffer: B,
+                ) -> Transfer<W, B, Self::Dma, Self>
                 {
-                    {
-                        let buffer = buffer.as_mut();
-                        chan.cmar().write(|w| unsafe {
-                            w.ma().bits(buffer.as_ptr() as usize as u32)
-                        });
-                        chan.cndtr().write(|w| unsafe{
-                            w.ndt().bits(u16(buffer.len()).unwrap())
-                        });
-                        chan.cpar().write(|w| unsafe {
-                            w.pa().bits(&(*$USARTX::ptr()).dr as *const _ as usize as u32)
-                        });
+                    chan.cmar().write(|w| unsafe {
+                        w.ma().bits(buffer.as_mut_slice().as_ptr() as usize as u32)
+                    });
+                    chan.cndtr().write(|w| unsafe{
+                        w.ndt().bits(u16(buffer.as_mut_slice().len()).unwrap())
+                    });
+                    chan.cpar().write(|w| unsafe {
+                        w.pa().bits(&(*$USARTX::ptr()).dr as *const _ as usize as u32)
+                    });
 
-                        // TODO can we weaken this compiler barrier?
-                        // NOTE(compiler_fence) operations on `buffer` should not be reordered after
-                        // the next statement, which starts the DMA transfer
-                        atomic::compiler_fence(Ordering::SeqCst);
+                    // TODO can we weaken this compiler barrier?
+                    // NOTE(compiler_fence) operations on `buffer` should not be reordered after
+                    // the next statement, which starts the DMA transfer
+                    atomic::compiler_fence(Ordering::SeqCst);
 
-                        chan.ccr().modify(|_, w| {
-                            w.mem2mem()
-                                .clear_bit()
-                                .pl()
-                                .medium()
-                                .msize()
-                                .bit8()
-                                .psize()
-                                .bit8()
-                                .minc()
-                                .set_bit()
-                                .pinc()
-                                .clear_bit()
-                                .circ()
-                                .clear_bit()
-                                .dir()
-                                .clear_bit()
-                                .en()
-                                .set_bit()
-                        });
-                    }
+                    chan.ccr().modify(|_, w| {
+                        w.mem2mem()
+                            .clear_bit()
+                            .pl()
+                            .medium()
+                            .msize()
+                            .bit8()
+                            .psize()
+                            .bit8()
+                            .minc()
+                            .set_bit()
+                            .pinc()
+                            .clear_bit()
+                            .circ()
+                            .clear_bit()
+                            .dir()
+                            .clear_bit()
+                            .en()
+                            .set_bit()
+                    });
 
                     Transfer::w(buffer, chan, self)
                 }
             }
 
-            impl<A, B> WriteDma<A, B> for Tx<$USARTX> where A: AsRef<[u8]>, B: Static<A> {
+            impl<B> WriteDma<B> for Tx<$USARTX>
+            where
+                B: StableDeref + AsSlice<Element = u8> + 'static
+            {
                 fn write_all(self, mut chan: Self::Dma, buffer: B
                 ) -> Transfer<R, B, Self::Dma, Self>
                 {
-                    {
-                        let buffer = buffer.borrow().as_ref();
-                        chan.cmar().write(|w| unsafe {
-                            w.ma().bits(buffer.as_ptr() as usize as u32)
-                        });
-                        chan.cndtr().write(|w| unsafe{
-                            w.ndt().bits(u16(buffer.len()).unwrap())
-                        });
-                        chan.cpar().write(|w| unsafe {
-                            w.pa().bits(&(*$USARTX::ptr()).dr as *const _ as usize as u32)
-                        });
+                    chan.cmar().write(|w| unsafe {
+                        w.ma().bits(buffer.as_slice().as_ptr() as usize as u32)
+                    });
+                    chan.cndtr().write(|w| unsafe{
+                        w.ndt().bits(u16(buffer.as_slice().len()).unwrap())
+                    });
+                    chan.cpar().write(|w| unsafe {
+                        w.pa().bits(&(*$USARTX::ptr()).dr as *const _ as usize as u32)
+                    });
 
-                        // TODO can we weaken this compiler barrier?
-                        // NOTE(compiler_fence) operations on `buffer` should not be reordered after
-                        // the next statement, which starts the DMA transfer
-                        atomic::compiler_fence(Ordering::SeqCst);
+                    // TODO can we weaken this compiler barrier?
+                    // NOTE(compiler_fence) operations on `buffer` should not be reordered after
+                    // the next statement, which starts the DMA transfer
+                    atomic::compiler_fence(Ordering::SeqCst);
 
-                        chan.ccr().modify(|_, w| {
-                            w.mem2mem()
-                                .clear_bit()
-                                .pl()
-                                .medium()
-                                .msize()
-                                .bit8()
-                                .psize()
-                                .bit8()
-                                .minc()
-                                .set_bit()
-                                .pinc()
-                                .clear_bit()
-                                .circ()
-                                .clear_bit()
-                                .dir()
-                                .set_bit()
-                                .en()
-                                .set_bit()
-                        });
-                    }
+                    chan.ccr().modify(|_, w| {
+                        w.mem2mem()
+                            .clear_bit()
+                            .pl()
+                            .medium()
+                            .msize()
+                            .bit8()
+                            .psize()
+                            .bit8()
+                            .minc()
+                            .set_bit()
+                            .pinc()
+                            .clear_bit()
+                            .circ()
+                            .clear_bit()
+                            .dir()
+                            .set_bit()
+                            .en()
+                            .set_bit()
+                    });
 
                     Transfer::r(buffer, chan, self)
                 }
@@ -444,23 +452,25 @@ impl DmaChannel for Tx<USART3> {
     type Dma = dma1::C2;
 }
 
-pub trait ReadDma<B>: DmaChannel
-where
-    B: AsMut<[u8]>,
-    Self: core::marker::Sized,
+pub trait CircReadDma<B, H>: DmaChannel
+where 
+    B: StableDeref<Target = [H; 2]> + DerefMut,
+    H: AsMutSlice<Element = u8>
 {
-    fn circ_read(self, chan: Self::Dma, buffer: &'static mut [B; 2]) -> CircBuffer<B, Self::Dma>;
-    fn read_exact(
-        self,
-        chan: Self::Dma,
-        buffer: &'static mut B,
-    ) -> Transfer<W, &'static mut B, Self::Dma, Self>;
+    fn circ_read(self, chan: Self::Dma, buffer: B) -> CircBuffer<B, Self::Dma>;
 }
 
-pub trait WriteDma<A, B>: DmaChannel
+pub trait ReadDma<B>: DmaChannel
+where 
+    B: AsMutSlice<Element = u8> + StableDeref + 'static,
+    Self: core::marker::Sized,
+{
+    fn read_exact(self, chan: Self::Dma, buffer: B) -> Transfer<W, B, Self::Dma, Self>;
+}
+
+pub trait WriteDma<B>: DmaChannel
 where
-    A: AsRef<[u8]>,
-    B: Static<A>,
+    B: StableDeref + AsSlice<Element = u8> + 'static,
     Self: core::marker::Sized,
 {
     fn write_all(self, chan: Self::Dma, buffer: B) -> Transfer<R, B, Self::Dma, Self>;
