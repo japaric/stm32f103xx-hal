@@ -4,6 +4,7 @@ use core::marker::PhantomData;
 use core::ops;
 
 use stable_deref_trait::StableDeref;
+use as_slice::{AsSlice, AsMutSlice};
 
 use rcc::AHB;
 
@@ -419,4 +420,29 @@ dma! {
 
 pub trait DmaChannel {
     type Dma;
+    type TransferElement;
+}
+
+pub trait CircReadDma<B, H>: DmaChannel
+where 
+    B: StableDeref<Target = [H; 2]> + core::ops::DerefMut,
+    H: AsMutSlice<Element = Self::TransferElement>
+{
+    fn circ_read(self, chan: Self::Dma, buffer: B) -> CircBuffer<B, Self::Dma>;
+}
+
+pub trait ReadDma<B>: DmaChannel
+where 
+    B: AsMutSlice<Element = Self::TransferElement> + StableDeref + 'static,
+    Self: core::marker::Sized,
+{
+    fn read_exact(self, chan: Self::Dma, buffer: B) -> Transfer<W, B, Self::Dma, Self>;
+}
+
+pub trait WriteDma<B>: DmaChannel
+where
+    B: StableDeref + AsSlice<Element = Self::TransferElement> + 'static,
+    Self: core::marker::Sized,
+{
+    fn write_all(self, chan: Self::Dma, buffer: B) -> Transfer<R, B, Self::Dma, Self>;
 }

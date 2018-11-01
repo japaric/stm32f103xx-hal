@@ -1,5 +1,4 @@
 use core::marker::PhantomData;
-use core::ops::DerefMut;
 use core::ptr;
 use core::sync::atomic::{self, Ordering};
 
@@ -221,8 +220,8 @@ macro_rules! hal {
 
             impl<B, H> CircReadDma<B, H> for Rx<$USARTX>
             where 
-                B: StableDeref<Target = [H; 2]> + DerefMut,
-                H: AsMutSlice<Element = u8>
+                B: StableDeref<Target = [H; 2]> + core::ops::DerefMut,
+                H: AsMutSlice<Element = Self::TransferElement>
             {
                 fn circ_read(self, mut chan: Self::Dma, mut buffer: B,
                 ) -> CircBuffer<B, Self::Dma>
@@ -269,7 +268,7 @@ macro_rules! hal {
 
             impl<B> ReadDma<B> for Rx<$USARTX>
             where
-                B: AsMutSlice<Element = u8> + StableDeref + 'static,
+                B: AsMutSlice<Element = Self::TransferElement> + StableDeref + 'static,
                 Self: core::marker::Sized,
             {
                 fn read_exact(self, mut chan: Self::Dma, mut buffer: B,
@@ -317,7 +316,7 @@ macro_rules! hal {
 
             impl<B> WriteDma<B> for Tx<$USARTX>
             where
-                B: StableDeref + AsSlice<Element = u8> + 'static
+                B: StableDeref + AsSlice<Element = Self::TransferElement> + 'static
             {
                 fn write_all(self, mut chan: Self::Dma, buffer: B
                 ) -> Transfer<R, B, Self::Dma, Self>
@@ -427,51 +426,34 @@ hal! {
 }
 
 use dma::DmaChannel;
+use dma::{CircReadDma, ReadDma, WriteDma};
 
 impl DmaChannel for Rx<USART1> {
     type Dma = dma1::C5;
+    type TransferElement = u8;
 }
 
 impl DmaChannel for Tx<USART1> {
     type Dma = dma1::C4;
+    type TransferElement = u8;
 }
 
 impl DmaChannel for Rx<USART2> {
     type Dma = dma1::C6;
+    type TransferElement = u8;
 }
 
 impl DmaChannel for Tx<USART2> {
     type Dma = dma1::C7;
+    type TransferElement = u8;
 }
 
 impl DmaChannel for Rx<USART3> {
     type Dma = dma1::C3;
+    type TransferElement = u8;
 }
 
 impl DmaChannel for Tx<USART3> {
     type Dma = dma1::C2;
-}
-
-pub trait CircReadDma<B, H>: DmaChannel
-where 
-    B: StableDeref<Target = [H; 2]> + DerefMut,
-    H: AsMutSlice<Element = u8>
-{
-    fn circ_read(self, chan: Self::Dma, buffer: B) -> CircBuffer<B, Self::Dma>;
-}
-
-pub trait ReadDma<B>: DmaChannel
-where 
-    B: AsMutSlice<Element = u8> + StableDeref + 'static,
-    Self: core::marker::Sized,
-{
-    fn read_exact(self, chan: Self::Dma, buffer: B) -> Transfer<W, B, Self::Dma, Self>;
-}
-
-pub trait WriteDma<B>: DmaChannel
-where
-    B: StableDeref + AsSlice<Element = u8> + 'static,
-    Self: core::marker::Sized,
-{
-    fn write_all(self, chan: Self::Dma, buffer: B) -> Transfer<R, B, Self::Dma, Self>;
+    type TransferElement = u8;
 }
