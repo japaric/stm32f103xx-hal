@@ -285,7 +285,7 @@ impl CFGR {
         // Since there is no lower bound, aim for a too high value rather than
         // it being too low
         let adc_prescaler = {
-            let desired = sysclk / 14_000_000;
+            let desired = pclk2 / 14_000_000;
 
             if desired >= 6 { ADCPREW::DIV8 }
             else if desired >= 4 { ADCPREW::DIV6 }
