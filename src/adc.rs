@@ -56,8 +56,6 @@ macro_rules! hal {
                     // Wait for the ADC to be ready
                     while adc.cr2.read().adon().bit_is_set() == false
                         {}
-                    
-                    let status = adc.cr2.read().bits();
 
                     // Set the sequence length to 1
                     // Amount of conversions n-1
