@@ -1,5 +1,5 @@
 use stm32f103xx::{RTC, PWR};
-use rcc::Rcc;
+use rcc::{APB1, BDCR};
 
 
 /*
@@ -27,9 +27,9 @@ pub struct Rtc {
 
 
 impl Rtc {
-    pub fn rtc(regs: RTC, rcc: &mut Rcc, pwr: &mut PWR) -> Self {
+    pub fn rtc(regs: RTC, apb1: &mut APB1, bdcr: &mut BDCR, pwr: &mut PWR) -> Self {
         // Enable the backup interface by setting PWREN and BKPEN
-        rcc.apb1.enr().modify(|_r, w| {
+        apb1.enr().modify(|_r, w| {
             w
                 .bkpen().set_bit()
                 .pwren().set_bit()
@@ -42,7 +42,7 @@ impl Rtc {
 
         // Configure the perscaler to use the LSE clock as defined in the documentation
         // in section 7.2.4. This gives a 32.768khz frequency for the RTC
-        rcc.bdcr.bdcr().modify(|_, w| {
+        bdcr.bdcr().modify(|_, w| {
             w
                 // Enable external low speed oscilator
                 .lseon().set_bit()
