@@ -263,7 +263,7 @@ impl CSR {
         unsafe { &(*RCC::ptr()).csr }
     }
 
-    /// Enable the 40 kHz LSI clock
+    /// Enable the LSI clock around 40 kHz (30..60 kHz)
     ///
     /// Needed for the Independent Watchdog (IWDG) periphal and the
     /// Auto-Wakeup Unit (AWU)
