@@ -1,65 +1,47 @@
 //! Blinks an LED
 
-#![feature(proc_macro)]
 #![deny(unsafe_code)]
 #![deny(warnings)]
+#![no_main]
 #![no_std]
 
-extern crate cortex_m;
-extern crate cortex_m_rtfm as rtfm;
 extern crate panic_abort;
-extern crate stm32f103xx_hal as hal;
 
-use crate::hal::{
+use stm32f103xx_hal::{
     prelude::*,
-    device,
     gpio::{
         gpioc::PC13;
         Output, PushPull,
     },
     timer::{Event, Timer},
 };
-use crate::rtfm::{app, Threshold};
+use rtfm::app;
 
-app! {
-    device: device,
+#[app(device = stm32f103xx_hal::device)]
+const APP: () = {
+    static mut LED: PC13<Output<PushPull>> = ();
 
-    resources: {
-        static LED: PC13<Output<PushPull>>;
-    },
+    #[init]
+    fn init() {
+        let mut flash = device.FLASH.constrain();
+        let mut rcc = device.RCC.constrain();
 
-    tasks: {
-        SYS_TICK: {
-            path: sys_tick,
-            resources: [LED],
-        },
+        let clocks = rcc.cfgr.freeze(&mut flash.acr);
+
+        let mut gpioc = device.GPIOC.split(&mut rcc.apb2);
+        let led = gpioc.pc13.into_push_pull_output(&mut gpioc.crh);
+
+        Timer::syst(core.SYST, 1.hz(), clocks).listen(Event::Update);
+
+        LED = led;
     }
-}
 
-fn init(p: init::Peripherals) -> init::LateResources {
-    let mut flash = p.device.FLASH.constrain();
-    let mut rcc = p.device.RCC.constrain();
-
-    let clocks = rcc.cfgr.freeze(&mut flash.acr);
-
-    let mut gpioc = p.device.GPIOC.split(&mut rcc.apb2);
-    let led = gpioc.pc13.into_push_pull_output(&mut gpioc.crh);
-
-    Timer::syst(p.core.SYST, 1.hz(), clocks).listen(Event::Update);
-
-    init::LateResources { LED: led }
-}
-
-fn idle() -> ! {
-    loop {
-        rtfm::wfi();
+    #[interrupt(resources = [LED])]
+    fn SysTick() {
+        if resources.LED.is_low() {
+            resources.LED.set_high()
+        } else {
+            resources.LED.set_low()
+        }
     }
-}
-
-fn sys_tick(_t: &mut Threshold, mut r: SYS_TICK::Resources) {
-    if r.LED.is_low() {
-        r.LED.set_high()
-    } else {
-        r.LED.set_low()
-    }
-}
+};
