@@ -5,15 +5,14 @@
 #![no_main]
 #![no_std]
 
+extern crate panic_halt;
 extern crate cortex_m_rt as rt;
-extern crate panic_semihosting;
-extern crate stm32f103xx_hal as hal;
 
-use crate::hal::{
+use stm32f103xx_hal::{
     prelude::*,
     device,
 };
-use crate::rt::{entry, exception, ExceptionFrame};
+use cortex_m_rt::entry;
 
 #[entry]
 fn main() -> ! {
@@ -25,14 +24,4 @@ fn main() -> ! {
     gpioc.pc13.into_push_pull_output(&mut gpioc.crh);
 
     loop {}
-}
-
-#[exception]
-fn HardFault(ef: &ExceptionFrame) -> ! {
-    panic!("{:#?}", ef);
-}
-
-#[exception]
-fn DefaultHandler(irqn: i16) {
-    panic!("Unhandled exception (IRQn = {})", irqn);
 }

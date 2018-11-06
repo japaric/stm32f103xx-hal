@@ -5,17 +5,14 @@
 #![no_main]
 #![no_std]
 
-extern crate cortex_m;
-extern crate cortex_m_rt as rt;
-extern crate panic_semihosting;
-extern crate stm32f103xx_hal as hal;
+extern crate panic_halt;
 
-use crate::hal::{
+use stm32f103xx_hal::{
     prelude::*,
     device,
     delay::Delay,
 };
-use crate::rt::{entry, exception, ExceptionFrame};
+use cortex_m_rt::entry;
 
 #[entry]
 fn main() -> ! {
@@ -38,14 +35,4 @@ fn main() -> ! {
         led.set_low();
         delay.delay_ms(1_000_u16);
     }
-}
-
-#[exception]
-fn HardFault(ef: &ExceptionFrame) -> ! {
-    panic!("{:#?}", ef);
-}
-
-#[exception]
-fn DefaultHandler(irqn: i16) {
-    panic!("Unhandled exception (IRQn = {})", irqn);
 }

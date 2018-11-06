@@ -16,22 +16,18 @@
 #![no_main]
 #![no_std]
 
-#[macro_use]
-extern crate cortex_m;
-extern crate cortex_m_rt as rt;
-extern crate enc28j60;
-extern crate heapless;
-extern crate jnet;
 extern crate panic_itm;
-#[macro_use]
-extern crate serde_derive;
-extern crate serde_json_core as json;
-extern crate stm32f103xx_hal as hal;
+use cortex_m::iprintln;
+
+use serde_derive::{Deserialize, Serialize};
+
+use serde_json_core as json;
 
 use core::convert::TryInto;
 
 use enc28j60::Enc28j60;
-use crate::hal::{
+use as_slice::AsMutSlice;
+use stm32f103xx_hal::{
     prelude::*,
     device,
     delay::Delay,
@@ -40,7 +36,7 @@ use crate::hal::{
 use heapless::consts::*;
 use heapless::FnvIndexMap;
 use jnet::{arp, coap, ether, icmp, ipv4, mac, udp, Buffer};
-use crate::rt::{entry, exception, ExceptionFrame};
+use cortex_m_rt::entry;
 
 /* Constants */
 const KB: u16 = 1024;
@@ -121,7 +117,7 @@ fn main() -> ! {
     let mut buf = [0; 128];
     loop {
         let mut buf = Buffer::new(&mut buf);
-        let len = enc28j60.receive(buf.as_mut()).ok().unwrap();
+        let len = enc28j60.receive(buf.as_mut_slice()).ok().unwrap();
         buf.truncate(len);
 
         if let Ok(mut eth) = ether::Frame::parse(buf) {
@@ -314,14 +310,4 @@ fn main() -> ! {
             iprintln!(_stim, "Err(E)");
         }
     }
-}
-
-#[exception]
-fn HardFault(ef: &ExceptionFrame) -> ! {
-    panic!("{:#?}", ef);
-}
-
-#[exception]
-fn DefaultHandler(irqn: i16) {
-    panic!("Unhandled exception (IRQn = {})", irqn);
 }

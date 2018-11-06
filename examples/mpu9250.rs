@@ -5,21 +5,17 @@
 #![no_main]
 #![no_std]
 
-extern crate cortex_m_rt as rt;
-extern crate cortex_m;
-extern crate mpu9250;
 extern crate panic_semihosting;
-extern crate stm32f103xx_hal as hal;
 
 use cortex_m::asm;
-use crate::hal::{
+use stm32f103xx_hal::{
     prelude::*,
     device,
     delay::Delay,
     spi::Spi,
 };
 use mpu9250::Mpu9250;
-use crate::rt::{entry, exception, ExceptionFrame};
+use cortex_m_rt::entry;
 
 #[entry]
 fn main() -> ! {
@@ -60,7 +56,7 @@ fn main() -> ! {
 
     let mut delay = Delay::new(cp.SYST, clocks);
 
-    let mut mpu9250 = Mpu9250::marg(spi, nss, &mut delay).unwrap();
+    let mut mpu9250 = Mpu9250::marg_default(spi, nss, &mut delay).unwrap();
 
     // sanity checks
     assert_eq!(mpu9250.who_am_i().unwrap(), 0x71);
@@ -71,14 +67,4 @@ fn main() -> ! {
     asm::bkpt();
 
     loop {}
-}
-
-#[exception]
-fn HardFault(ef: &ExceptionFrame) -> ! {
-    panic!("{:#?}", ef);
-}
-
-#[exception]
-fn DefaultHandler(irqn: i16) {
-    panic!("Unhandled exception (IRQn = {})", irqn);
 }

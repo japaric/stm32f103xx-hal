@@ -3,20 +3,17 @@
 #![no_main]
 #![no_std]
 
-#[macro_use]
-extern crate cortex_m;
-extern crate cortex_m_rt as rt;
-extern crate mfrc522;
 extern crate panic_itm;
-extern crate stm32f103xx_hal as hal;
 
-use crate::hal::{
+use cortex_m::iprintln;
+
+use stm32f103xx_hal::{
     prelude::*,
     device,
     spi::Spi,
 };
 use mfrc522::Mfrc522;
-use crate::rt::{entry, exception, ExceptionFrame};
+use cortex_m_rt::entry;
 
 #[entry]
 fn main() -> ! {
@@ -58,14 +55,4 @@ fn main() -> ! {
             }
         }
     }
-}
-
-#[exception]
-fn HardFault(ef: &ExceptionFrame) -> ! {
-    panic!("{:#?}", ef);
-}
-
-#[exception]
-fn DefaultHandler(irqn: i16) {
-    panic!("Unhandled exception (IRQn = {})", irqn);
 }

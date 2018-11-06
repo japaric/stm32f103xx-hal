@@ -5,19 +5,16 @@
 #![no_main]
 #![no_std]
 
-extern crate cortex_m_rt as rt;
-#[macro_use(singleton)]
-extern crate cortex_m;
-extern crate panic_semihosting;
-extern crate stm32f103xx_hal as hal;
+extern crate panic_halt;
 
-use cortex_m::asm;
-use crate::hal::{
+use cortex_m::{asm, singleton};
+
+use stm32f103xx_hal::{
     prelude::*,
     device,
     serial::Serial,
 };
-use crate::rt::{entry, exception, ExceptionFrame};
+use cortex_m_rt::entry;
 
 #[entry]
 fn main() -> ! {
@@ -73,14 +70,4 @@ fn main() -> ! {
     asm::bkpt();
 
     loop {}
-}
-
-#[exception]
-fn HardFault(ef: &ExceptionFrame) -> ! {
-    panic!("{:#?}", ef);
-}
-
-#[exception]
-fn DefaultHandler(irqn: i16) {
-    panic!("Unhandled exception (IRQn = {})", irqn);
 }
