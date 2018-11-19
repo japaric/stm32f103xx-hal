@@ -16,12 +16,10 @@ use rt::{entry, exception, ExceptionFrame};
 #[entry]
 fn main() -> ! {
     let p = stm32f103xx::Peripherals::take().unwrap();
-    // let cp = stm32f103xx::CorePeripherals::take().unwrap();
 
     let mut rcc = p.RCC.constrain();
     let mut gpiob = p.GPIOB.split(&mut rcc.apb2);
     let mut afio = p.AFIO.constrain(&mut rcc.apb2);
-
 
     afio.mapr.disable_jtag();
 

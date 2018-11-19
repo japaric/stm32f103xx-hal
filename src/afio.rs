@@ -53,9 +53,7 @@ impl MAPR {
         unsafe { &(*AFIO::ptr()).mapr }
     }
 
-    /**
-      Disables the JTAG to free up pb3, pb4 and pa15 for normal use
-    */
+    /// Disables the JTAG to free up pb3, pb4 and pa15 for normal use
     pub fn disable_jtag(&mut self) {
         self.mapr().modify(|_, w| unsafe{w.swj_cfg().bits(0b010)})
     }
