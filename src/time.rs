@@ -1,5 +1,6 @@
 //! Time units
 
+use core::ops::Div;
 use cortex_m::peripheral::DWT;
 
 use rcc::Clocks;
@@ -20,6 +21,10 @@ pub struct KiloHertz(pub u32);
 #[derive(Clone, Copy)]
 pub struct MegaHertz(pub u32);
 
+/// 1/1000th of a second
+#[derive(Clone, Copy, PartialOrd, PartialEq)]
+pub struct MilliSeconds(pub u32);
+
 /// Extension trait that adds convenience methods to the `u32` type
 pub trait U32Ext {
     /// Wrap in `Bps`
@@ -33,6 +38,9 @@ pub trait U32Ext {
 
     /// Wrap in `MegaHertz`
     fn mhz(self) -> MegaHertz;
+
+    /// Wrap in `MilliSeconds`
+    fn ms(self) -> MilliSeconds;
 }
 
 impl U32Ext for u32 {
@@ -51,6 +59,10 @@ impl U32Ext for u32 {
     fn mhz(self) -> MegaHertz {
         MegaHertz(self)
     }
+
+    fn ms(self) -> MilliSeconds {
+        MilliSeconds(self)
+    }
 }
 
 impl Into<Hertz> for KiloHertz {
@@ -68,6 +80,22 @@ impl Into<Hertz> for MegaHertz {
 impl Into<KiloHertz> for MegaHertz {
     fn into(self) -> KiloHertz {
         KiloHertz(self.0 * 1_000)
+    }
+}
+
+impl Div<u32> for MilliSeconds {
+    type Output = MilliSeconds;
+
+    fn div(self, rhs: u32) -> Self::Output {
+        MilliSeconds(self.0 / rhs)
+    }
+}
+
+impl Div<MilliSeconds> for MilliSeconds {
+    type Output = u32;
+
+    fn div(self, rhs: MilliSeconds) -> Self::Output {
+        self.0 / rhs.0
     }
 }
 
