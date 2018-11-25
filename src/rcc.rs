@@ -267,7 +267,7 @@ impl CSR {
     ///
     /// Needed for the Independent Watchdog (IWDG) periphal and the
     /// Auto-Wakeup Unit (AWU)
-    pub(crate) fn enable_lsi(&mut self) {
+    pub fn enable_lsi(&mut self) {
         // Enable
         self.csr().modify(|_, w| w.lsion().set_bit());
 
