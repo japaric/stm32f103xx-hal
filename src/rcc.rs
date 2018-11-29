@@ -98,7 +98,9 @@ pub struct CFGR {
 }
 
 impl CFGR {
-    pub fn hse<F>(mut self, freq: F) -> Self
+    /// Uses HSE (external oscillator) instead of HSI (internal RC oscillator) as the clock source.
+    /// Will result in a hang if an external oscillator is not connected or it fails to start.
+    pub fn use_hse<F>(mut self, freq: F) -> Self
     where
         F: Into<Hertz>,
     {
@@ -106,6 +108,7 @@ impl CFGR {
         self
     }
 
+    /// Sets the desired frequency for the HCLK clock
     pub fn hclk<F>(mut self, freq: F) -> Self
     where
         F: Into<Hertz>,
@@ -114,6 +117,7 @@ impl CFGR {
         self
     }
 
+    /// Sets the desired frequency for the PCKL1 clock
     pub fn pclk1<F>(mut self, freq: F) -> Self
     where
         F: Into<Hertz>,
@@ -122,6 +126,7 @@ impl CFGR {
         self
     }
 
+    /// Sets the desired frequency for the PCLK2 clock
     pub fn pclk2<F>(mut self, freq: F) -> Self
     where
         F: Into<Hertz>,
@@ -130,6 +135,7 @@ impl CFGR {
         self
     }
 
+    /// Sets the desired frequency for the SYSCLK clock
     pub fn sysclk<F>(mut self, freq: F) -> Self
     where
         F: Into<Hertz>,
@@ -256,7 +262,6 @@ impl CFGR {
         }
 
         // set prescalers and clock source
-
         rcc.cfgr.modify(|_, w| unsafe {
             w.ppre2()
                 .bits(ppre2_bits)
