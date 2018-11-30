@@ -82,6 +82,15 @@ version = "0.10.0"
 [features]
 doc = []
 rt = ["stm32f103xx/rt"]
+stm32f103x4 = []
+stm32f103x6 = []
+stm32f103x8 = []
+stm32f103xB = []
+stm32f103xC = []
+stm32f103xD = []
+stm32f103xE = []
+stm32f103xF = []
+stm32f103xG = []
 
 [profile.dev]
 incremental = false

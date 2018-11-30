@@ -1,4 +1,4 @@
-/* Linker script for the STM32F103C8T6 */
+/* Linker script for medium-density flash STM32F103x8 MCUs */
 MEMORY
 {
   FLASH : ORIGIN = 0x08000000, LENGTH = 64K
