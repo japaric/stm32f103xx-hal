@@ -24,7 +24,6 @@ extern crate panic_itm;
 use cortex_m::iprintln;
 
 use enc28j60::Enc28j60;
-use as_slice::AsMutSlice;
 use stm32f103xx_hal::{
     prelude::*,
     device,
@@ -112,7 +111,7 @@ fn main() -> ! {
     let mut buf = [0; 256];
     loop {
         let mut buf = Buffer::new(&mut buf);
-        let len = enc28j60.receive(buf.as_mut_slice()).ok().unwrap();
+        let len = enc28j60.receive(buf.as_mut()).ok().unwrap();
         buf.truncate(len);
 
         if let Ok(mut eth) = ether::Frame::parse(buf) {
