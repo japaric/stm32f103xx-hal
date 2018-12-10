@@ -3,7 +3,7 @@
 use core::marker::PhantomData;
 use core::ops;
 
-use rcc::AHB;
+use crate::rcc::AHB;
 
 #[derive(Debug)]
 pub enum Error {
@@ -129,10 +129,10 @@ macro_rules! dma {
             pub mod $dmaX {
                 use core::sync::atomic::{self, Ordering};
 
-                use stm32f103xx::{$DMAX, dma1};
+                use crate::device::{$DMAX, dma1};
 
-                use dma::{CircBuffer, DmaExt, Error, Event, Half, Transfer, W};
-                use rcc::AHB;
+                use crate::dma::{CircBuffer, DmaExt, Error, Event, Half, Transfer, W};
+                use crate::rcc::AHB;
 
                 pub struct Channels((), $(pub $CX),+);
 

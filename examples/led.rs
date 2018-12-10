@@ -5,17 +5,18 @@
 #![no_main]
 #![no_std]
 
+extern crate panic_halt;
 extern crate cortex_m_rt as rt;
-extern crate panic_semihosting;
-extern crate stm32f103xx_hal as hal;
 
-use hal::prelude::*;
-use hal::stm32f103xx;
-use rt::{entry, exception, ExceptionFrame};
+use stm32f103xx_hal::{
+    prelude::*,
+    device,
+};
+use cortex_m_rt::entry;
 
 #[entry]
 fn main() -> ! {
-    let p = stm32f103xx::Peripherals::take().unwrap();
+    let p = device::Peripherals::take().unwrap();
 
     let mut rcc = p.RCC.constrain();
     let mut gpioc = p.GPIOC.split(&mut rcc.apb2);
@@ -23,14 +24,4 @@ fn main() -> ! {
     gpioc.pc13.into_push_pull_output(&mut gpioc.crh);
 
     loop {}
-}
-
-#[exception]
-fn HardFault(ef: &ExceptionFrame) -> ! {
-    panic!("{:#?}", ef);
-}
-
-#[exception]
-fn DefaultHandler(irqn: i16) {
-    panic!("Unhandled exception (IRQn = {})", irqn);
 }

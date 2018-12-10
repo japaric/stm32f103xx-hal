@@ -1,6 +1,6 @@
-use stm32f103xx::{afio, AFIO};
+use crate::device::{afio, AFIO};
 
-use rcc::APB2;
+use crate::rcc::APB2;
 
 pub trait AfioExt {
     fn constrain(self, apb2: &mut APB2) -> Parts;

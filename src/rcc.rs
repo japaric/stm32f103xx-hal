@@ -1,11 +1,11 @@
 use core::cmp;
 
 use cast::u32;
-use stm32f103xx::rcc::cfgr::{PLLSRCW, SWW, USBPREW};
-use stm32f103xx::{rcc, RCC};
+use crate::device::rcc::cfgr::{PLLSRCW, SWW, USBPREW};
+use crate::device::{rcc, RCC};
 
-use flash::ACR;
-use time::Hertz;
+use crate::flash::ACR;
+use crate::time::Hertz;
 
 /// Extension trait that constrains the `RCC` peripheral
 pub trait RccExt {
