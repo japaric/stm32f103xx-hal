@@ -3,18 +3,17 @@ use core::ptr;
 use core::sync::atomic::{self, Ordering};
 
 use cast::u16;
-use hal;
 use nb;
-use stm32f103xx::{USART1, USART2, USART3};
+use crate::device::{USART1, USART2, USART3};
 use void::Void;
 
-use afio::MAPR;
-use dma::{dma1, CircBuffer, Transfer, R, W};
-use gpio::gpioa::{PA10, PA2, PA3, PA9};
-use gpio::gpiob::{PB10, PB11, PB6, PB7};
-use gpio::{Alternate, Floating, Input, PushPull};
-use rcc::{APB1, APB2, Clocks};
-use time::Bps;
+use crate::afio::MAPR;
+use crate::dma::{dma1, CircBuffer, Static, Transfer, R, W};
+use crate::gpio::gpioa::{PA10, PA2, PA3, PA9};
+use crate::gpio::gpiob::{PB10, PB11, PB6, PB7};
+use crate::gpio::{Alternate, Floating, Input, PushPull};
+use crate::rcc::{APB1, APB2, Clocks};
+use crate::time::Bps;
 
 use stable_deref_trait::StableDeref;
 use as_slice::{AsSlice, AsMutSlice};
@@ -173,7 +172,7 @@ macro_rules! hal {
                 }
             }
 
-            impl hal::serial::Read<u8> for Rx<$USARTX> {
+            impl crate::hal::serial::Read<u8> for Rx<$USARTX> {
                 type Error = Error;
 
                 fn read(&mut self) -> nb::Result<u8, Error> {
@@ -361,7 +360,7 @@ macro_rules! hal {
                 }
             }
 
-            impl hal::serial::Write<u8> for Tx<$USARTX> {
+            impl crate::hal::serial::Write<u8> for Tx<$USARTX> {
                 type Error = Void;
 
                 fn flush(&mut self) -> nb::Result<(), Self::Error> {
@@ -425,8 +424,8 @@ hal! {
     ),
 }
 
-use dma::DmaChannel;
-use dma::{CircReadDma, ReadDma, WriteDma};
+use crate::dma::DmaChannel;
+use crate::dma::{CircReadDma, ReadDma, WriteDma};
 
 impl DmaChannel for Rx<USART1> {
     type Dma = dma1::C5;

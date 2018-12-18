@@ -1,13 +1,13 @@
 use core::u16;
 
-use hal::{self, Direction};
-use stm32f103xx::{TIM2, TIM3, TIM4};
+use crate::hal::{self, Direction};
+use crate::device::{TIM2, TIM3, TIM4};
 
-use afio::MAPR;
-use gpio::gpioa::{PA0, PA1, PA6, PA7};
-use gpio::gpiob::{PB6, PB7};
-use gpio::{Floating, Input};
-use rcc::APB1;
+use crate::afio::MAPR;
+use crate::gpio::gpioa::{PA0, PA1, PA6, PA7};
+use crate::gpio::gpiob::{PB6, PB7};
+use crate::gpio::{Floating, Input};
+use crate::rcc::APB1;
 
 pub trait Pins<TIM> {
     const REMAP: u8;

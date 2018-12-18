@@ -5,22 +5,21 @@
 #![no_std]
 #![no_main]
 
-extern crate cortex_m_rt as rt;
-#[macro_use(singleton)]
-extern crate cortex_m;
-extern crate panic_semihosting;
-extern crate stm32f103xx_hal as hal;
+extern crate panic_halt;
 
-use cortex_m::asm;
-use hal::dma::Half;
-use hal::prelude::*;
-use hal::serial::Serial;
-use hal::stm32f103xx;
-use rt::{entry, exception, ExceptionFrame};
+use cortex_m::{asm, singleton};
+
+use stm32f103xx_hal::{
+    prelude::*,
+    device,
+    dma::Half,
+    serial::Serial,
+};
+use cortex_m_rt::entry;
 
 #[entry]
 fn main() -> ! {
-    let p = stm32f103xx::Peripherals::take().unwrap();
+    let p = device::Peripherals::take().unwrap();
 
     let mut flash = p.FLASH.constrain();
     let mut rcc = p.RCC.constrain();
@@ -74,14 +73,4 @@ fn main() -> ! {
     asm::bkpt();
 
     loop {}
-}
-
-#[exception]
-fn HardFault(ef: &ExceptionFrame) -> ! {
-    panic!("{:#?}", ef);
-}
-
-#[exception]
-fn DefaultHandler(irqn: i16) {
-    panic!("Unhandled exception (IRQn = {})", irqn);
 }

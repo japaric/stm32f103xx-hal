@@ -19,24 +19,21 @@
 #![no_std]
 #![no_main]
 
-extern crate cortex_m_rt as rt;
-#[macro_use]
-extern crate cortex_m;
-extern crate enc28j60;
-extern crate heapless;
-extern crate jnet;
 extern crate panic_itm;
-extern crate stm32f103xx_hal as hal;
+
+use cortex_m::iprintln;
 
 use enc28j60::Enc28j60;
-use hal::delay::Delay;
-use hal::prelude::*;
-use hal::spi::Spi;
-use hal::stm32f103xx;
+use stm32f103xx_hal::{
+    prelude::*,
+    device,
+    delay::Delay,
+    spi::Spi,
+};
 use heapless::consts::*;
 use heapless::FnvIndexMap;
 use jnet::{arp, ether, icmp, ipv4, mac, udp, Buffer};
-use rt::{entry, exception, ExceptionFrame};
+use cortex_m_rt::entry;
 
 // uncomment to disable tracing
 // macro_rules! iprintln {
@@ -53,7 +50,7 @@ const KB: u16 = 1024; // bytes
 #[entry]
 fn main() -> ! {
     let mut cp = cortex_m::Peripherals::take().unwrap();
-    let dp = stm32f103xx::Peripherals::take().unwrap();
+    let dp = device::Peripherals::take().unwrap();
 
     let mut rcc = dp.RCC.constrain();
     let mut afio = dp.AFIO.constrain(&mut rcc.apb2);
@@ -269,14 +266,4 @@ fn main() -> ! {
             iprintln!(_stim, "Err(E)");
         }
     }
-}
-
-#[exception]
-fn HardFault(ef: &ExceptionFrame) -> ! {
-    panic!("{:#?}", ef);
-}
-
-#[exception]
-fn DefaultHandler(irqn: i16) {
-    panic!("Unhandled exception (IRQn = {})", irqn);
 }

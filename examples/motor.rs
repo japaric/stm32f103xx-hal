@@ -5,26 +5,22 @@
 #![no_main]
 #![no_std]
 
-extern crate cortex_m_rt as rt;
-extern crate cortex_m_semihosting as sh;
-extern crate motor_driver;
 extern crate panic_semihosting;
-#[macro_use(block)]
-extern crate nb;
-extern crate stm32f103xx_hal as hal;
+use cortex_m_semihosting::hprintln;
 
-use core::fmt::Write;
+use nb::block;
 
-use hal::prelude::*;
-use hal::serial::Serial;
-use hal::stm32f103xx;
+use stm32f103xx_hal::{
+    prelude::*,
+    device,
+    serial::Serial,
+};
 use motor_driver::Motor;
-use sh::hio;
-use rt::{entry, exception, ExceptionFrame};
+use cortex_m_rt::entry;
 
 #[entry]
 fn main() -> ! {
-    let p = stm32f103xx::Peripherals::take().unwrap();
+    let p = device::Peripherals::take().unwrap();
 
     let mut flash = p.FLASH.constrain();
     let mut rcc = p.RCC.constrain();
@@ -69,8 +65,7 @@ fn main() -> ! {
 
     motor.duty(duty as u16);
 
-    let mut hstdout = hio::hstdout().unwrap();
-    writeln!(hstdout, "{} {}", max_duty, brake).unwrap();
+    hprintln!("{} {}", max_duty, brake).unwrap();
     loop {
         match block!(rx.read()).unwrap() {
             b'*' => duty *= 2,
@@ -98,16 +93,6 @@ fn main() -> ! {
 
         motor.duty(duty.abs() as u16);
 
-        writeln!(hstdout, "{} {}", duty, brake).unwrap();
+        hprintln!("{} {}", duty, brake).unwrap();
     }
-}
-
-#[exception]
-fn HardFault(ef: &ExceptionFrame) -> ! {
-    panic!("{:#?}", ef);
-}
-
-#[exception]
-fn DefaultHandler(irqn: i16) {
-    panic!("Unhandled exception (IRQn = {})", irqn);
 }

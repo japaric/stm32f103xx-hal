@@ -1,6 +1,6 @@
 //! Flash memory
 
-use stm32f103xx::{flash, FLASH};
+use crate::device::{flash, FLASH};
 
 /// Extension trait to constrain the FLASH peripheral
 pub trait FlashExt {

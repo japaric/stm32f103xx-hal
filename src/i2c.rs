@@ -1,14 +1,14 @@
 //! Inter-Integrated Circuit (I2C) bus
 
-use afio::MAPR;
-use gpio::{Alternate, OpenDrain};
-use gpio::gpiob::{PB10, PB11, PB6, PB7, PB8, PB9};
-use hal::blocking::i2c::{Read, Write, WriteRead};
+use crate::afio::MAPR;
+use crate::gpio::{Alternate, OpenDrain};
+use crate::gpio::gpiob::{PB10, PB11, PB6, PB7, PB8, PB9};
+use crate::hal::blocking::i2c::{Read, Write, WriteRead};
 use nb::{Error as NbError, Result as NbResult};
 use nb::Error::{Other, WouldBlock};
-use rcc::{APB1, Clocks};
-use stm32f103xx::{I2C1, I2C2};
-use stm32f103xx::DWT;
+use crate::rcc::{APB1, Clocks};
+use crate::device::{I2C1, I2C2};
+use crate::device::DWT;
 
 /// I2C error
 #[derive(Debug, Eq, PartialEq)]
@@ -425,8 +425,8 @@ macro_rules! hal {
                             self.nb.i2c.cr1.modify(|_, w| w.ack().set_bit());
                             self.send_addr_and_wait(addr, true)?;
 
-                            let (mut first_bytes, mut last_two_bytes) = buffer.split_at_mut(buffer_len - 3);
-                            for mut byte in first_bytes {
+                            let (first_bytes, last_two_bytes) = buffer.split_at_mut(buffer_len - 3);
+                            for byte in first_bytes {
                                 self.nb.i2c.cr1.modify(|_, w| w.ack().set_bit());
                                 busy_wait_cycles!(wait_for_flag!(self.nb.i2c, rx_ne), self.data_timeout)?;
                                 *byte = self.nb.i2c.dr.read().dr().bits();

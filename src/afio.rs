@@ -1,6 +1,6 @@
-use stm32f103xx::{afio, AFIO};
+use crate::device::{afio, AFIO};
 
-use rcc::APB2;
+use crate::rcc::APB2;
 
 pub trait AfioExt {
     fn constrain(self, apb2: &mut APB2) -> Parts;
@@ -51,6 +51,11 @@ pub struct MAPR {
 impl MAPR {
     pub fn mapr(&mut self) -> &afio::MAPR {
         unsafe { &(*AFIO::ptr()).mapr }
+    }
+
+    /// Disables the JTAG to free up pb3, pb4 and pa15 for normal use
+    pub fn disable_jtag(&mut self) {
+        self.mapr().modify(|_, w| unsafe{w.swj_cfg().bits(0b010)})
     }
 }
 

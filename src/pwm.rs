@@ -2,16 +2,15 @@ use core::marker::PhantomData;
 use core::mem;
 
 use cast::{u16, u32};
-use hal;
-use stm32f103xx::{TIM2, TIM3, TIM4};
+use crate::device::{TIM2, TIM3, TIM4};
 
-use afio::MAPR;
-use bb;
-use gpio::gpioa::{PA0, PA1, PA2, PA3, PA6, PA7};
-use gpio::gpiob::{PB0, PB1, PB6, PB7, PB8, PB9};
-use gpio::{Alternate, PushPull};
-use rcc::{APB1, Clocks};
-use time::Hertz;
+use crate::afio::MAPR;
+use crate::bb;
+use crate::gpio::gpioa::{PA0, PA1, PA2, PA3, PA6, PA7};
+use crate::gpio::gpiob::{PB0, PB1, PB6, PB7, PB8, PB9};
+use crate::gpio::{Alternate, PushPull};
+use crate::rcc::{APB1, Clocks};
+use crate::time::Hertz;
 
 pub trait Pins<TIM> {
     const REMAP: u8;
@@ -91,7 +90,7 @@ impl Pins<TIM4>
 pub trait PwmExt: Sized {
     fn pwm<PINS, T>(
         self,
-        PINS,
+        _pins: PINS,
         mapr: &mut MAPR,
         frequency: T,
         clocks: Clocks,
@@ -231,7 +230,7 @@ macro_rules! hal {
                 unsafe { mem::uninitialized() }
             }
 
-            impl hal::PwmPin for Pwm<$TIMX, C1> {
+            impl crate::hal::PwmPin for Pwm<$TIMX, C1> {
                 type Duty = u16;
 
                 fn disable(&mut self) {
@@ -255,7 +254,7 @@ macro_rules! hal {
                 }
             }
 
-            impl hal::PwmPin for Pwm<$TIMX, C2> {
+            impl crate::hal::PwmPin for Pwm<$TIMX, C2> {
                 type Duty = u16;
 
                 fn disable(&mut self) {
@@ -279,7 +278,7 @@ macro_rules! hal {
                 }
             }
 
-            impl hal::PwmPin for Pwm<$TIMX, C3> {
+            impl crate::hal::PwmPin for Pwm<$TIMX, C3> {
                 type Duty = u16;
 
                 fn disable(&mut self) {
@@ -303,7 +302,7 @@ macro_rules! hal {
                 }
             }
 
-            impl hal::PwmPin for Pwm<$TIMX, C4> {
+            impl crate::hal::PwmPin for Pwm<$TIMX, C4> {
                 type Duty = u16;
 
                 fn disable(&mut self) {
