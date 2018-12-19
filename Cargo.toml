@@ -14,11 +14,6 @@ stm32f103xx = "0.11.0"
 cortex-m = "0.5.7"
 nb = "0.1.1"
 cortex-m-rt = "0.6.5"
-as-slice = "0.1"
-
-[dependencies.stable_deref_trait]
-default-features = false
-version = "1.1"
 
 [dependencies.void]
 default-features = false
@@ -42,6 +37,7 @@ enc28j60 = "0.2.0"
 heapless = "0.4.0"
 libm = "0.1.2"
 mfrc522 = "0.2.0"
+as-slice = "0.1.0"
 serde_derive = "1.0.33"
 serde-json-core = "0.0.1"
 mpu9250 = "0.7.3"
