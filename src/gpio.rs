@@ -340,7 +340,7 @@ macro_rules! gpio {
                         $PXi { _mode: PhantomData }
                     }
                     /// Configures the pin to operate as an analog input pin
-                    pub fn into_analog(self, cr: &mut $CR) -> $PXi<Analog> {
+                    pub fn into_analog_input(self, cr: &mut $CR) -> $PXi<Analog> {
                         let offset = (4 * $i) % 32;
                         // Analog input
                         let cnf = 0b00;
