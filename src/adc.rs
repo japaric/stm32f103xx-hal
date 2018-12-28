@@ -2,11 +2,11 @@ use stm32f103xx::{ADC1, ADC2, ADC3};
 // TODO: Clear TODO comments
 
 
-use gpio::Analog;
-use gpio::gpioa::*;
-use gpio::gpiob::*;
+use crate::gpio::Analog;
+use crate::gpio::gpioa::*;
+use crate::gpio::gpiob::*;
 
-use rcc::APB2;
+use crate::rcc::APB2;
 
 pub struct Adc<ADC> {
     adc: ADC
