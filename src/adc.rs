@@ -1,6 +1,9 @@
 use stm32f103xx::{ADC1, ADC2, ADC3};
-// TODO: Clear TODO comments
 
+use embedded_hal::adc::{OneShot, Channel};
+
+use nb;
+use void::Void;
 
 use crate::gpio::Analog;
 use crate::gpio::gpioa::*;
@@ -11,23 +14,6 @@ use crate::rcc::APB2;
 pub struct Adc<ADC> {
     adc: ADC
 }
-
-pub trait AnalogPin<ADC> {
-    fn analog_read(&self, adc: &mut ADC) -> u16;
-}
-
-// trait AdcPin <ADC, T> {
-//     fn analog_read()
-// }
-
-
-// Enabling ADC
-// Turn ADC on by setting ADON in ADC_CR2
-// Wait for t_STAB
-// Set ADON again
-
-//XXX: Maybe ensure that PCLK2 is on. Do we need the clock to
-//run the ADC in single conversion mode?
 
 macro_rules! hal {
     ($(
@@ -69,18 +55,37 @@ macro_rules! hal {
                 /**
                   Make a single reading of the specified channel
                 */
-                pub fn read(&mut self, channel: u8) -> u16 {
+                fn read_raw(&mut self, channel: u8) -> nb::Result<u16, Void> {
                     // Select the channel to be converted
                     // NOTE: Unsafe write of u8 to 4 bit register. Will this cause issues?
                     unsafe{self.adc.sqr3.modify(|_, w| w.sq1().bits(channel))};
                     // Set ADON
                     // self.adc.cr2.modify(|_, w| w.swstart().set_bit());
                     self.adc.cr2.modify(|_, w| { w.adon().set_bit()});
-                    // Wait for end of conversion
-                    while self.adc.sr.read().eoc().bit() == false
-                        {}
-                    // Read the data in the ADC_DR reg
-                    self.adc.dr.read().data().bits()
+
+                    // Check if the data is ready for reading
+                    if self.adc.sr.read().eoc().bit() == false {
+                        Err(nb::Error::WouldBlock)
+                    }
+                    else {
+                        Ok(self.adc.dr.read().data().bits())
+                    }
+                }
+            }
+
+
+            impl<PIN> OneShot<$ADC, u16, PIN> for Adc<$ADC>
+            where
+                PIN: Channel<$ADC, ID=u8>,
+            {
+                type Error = Void;
+
+                fn read(
+                    &mut self,
+                    _pin: &mut PIN
+                ) -> nb::Result<u16, Self::Error>
+                {
+                    self.read_raw(PIN::channel())
                 }
             }
         )+
@@ -93,9 +98,11 @@ macro_rules! analog_pin_impls {
     {
         $(
             $(
-                impl AnalogPin<$adc> for $pin<Analog> {
-                    fn analog_read(&self, adc: &mut $adc) -> u16 {
-                        adc.read($channel)
+                impl Channel<$adc> for $pin<Analog> {
+                    type ID = u8;
+
+                    fn channel() -> Self::ID {
+                        $channel
                     }
                 }
             )+
@@ -123,7 +130,7 @@ hal! {
 }
 
 analog_pin_impls!{
-    Adc<ADC1>: (
+    ADC1: (
         PA0: 0,
         PA1: 1,
         PA2: 2,
@@ -135,7 +142,7 @@ analog_pin_impls!{
         PB0: 8,
         PB1: 9
     ),
-    Adc<ADC2>: (
+    ADC2: (
         PA0: 0,
         PA1: 1,
         PA2: 2,
