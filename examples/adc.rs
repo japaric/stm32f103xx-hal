@@ -6,7 +6,6 @@
 
 #[macro_use]
 extern crate cortex_m_rt as rt;
-#[macro_use]
 extern crate cortex_m;
 extern crate cortex_m_semihosting;
 extern crate panic_semihosting;
@@ -39,8 +38,8 @@ fn main() -> ! {
         // Aquire stdout and print the result of an analog reading
         // NOTE: This will probably freeze when running without a debugger connected.
         hio::hstdout().map(|mut hio| {
-            writeln!(hio, "reading: {}", pb1.analog_read(&mut adc))
-        });
+            writeln!(hio, "reading: {}", pb1.analog_read(&mut adc)).unwrap()
+        }).unwrap();
     }
 }
 

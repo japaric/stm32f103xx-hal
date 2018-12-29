@@ -69,7 +69,7 @@ macro_rules! hal {
                 /**
                   Make a single reading of the specified channel
                 */
-                fn read(&mut self, channel: u8) -> u16 {
+                pub fn read(&mut self, channel: u8) -> u16 {
                     // Select the channel to be converted
                     // NOTE: Unsafe write of u8 to 4 bit register. Will this cause issues?
                     unsafe{self.adc.sqr3.modify(|_, w| w.sq1().bits(channel))};
