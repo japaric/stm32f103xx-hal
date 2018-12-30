@@ -58,16 +58,19 @@ macro_rules! hal {
                 fn read_raw(&mut self, channel: u8) -> nb::Result<u16, Void> {
                     // Select the channel to be converted
                     // NOTE: Unsafe write of u8 to 4 bit register. Will this cause issues?
-                    unsafe{self.adc.sqr3.modify(|_, w| w.sq1().bits(channel))};
-                    // Set ADON
-                    // self.adc.cr2.modify(|_, w| w.swstart().set_bit());
-                    self.adc.cr2.modify(|_, w| { w.adon().set_bit()});
+                    if self.adc.sr.read().strt().bit() == false {
+                        unsafe{self.adc.sqr3.modify(|_, w| w.sq1().bits(channel))};
+                        // Set ADON
+                        // self.adc.cr2.modify(|_, w| w.swstart().set_bit());
+                        self.adc.cr2.modify(|_, w| { w.adon().set_bit()});
+                    }
 
                     // Check if the data is ready for reading
                     if self.adc.sr.read().eoc().bit() == false {
                         Err(nb::Error::WouldBlock)
                     }
                     else {
+                        self.adc.sr.modify(|_, w| w.strt().clear_bit());
                         Ok(self.adc.dr.read().data().bits())
                     }
                 }
