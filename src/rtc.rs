@@ -87,6 +87,13 @@ impl Rtc {
         })
     }
 
+    pub fn disable_alarm(&mut self) {
+        // Disable alarm interrupt
+        self.perform_write(|s| {
+            s.regs.crh.modify(|_, w| w.alrie().clear_bit());
+        })
+    }
+
     pub fn read(&self) -> u32{
         // Wait for the APB1 interface to be ready
         while self.regs.crl.read().rsf().bit() == false {}
