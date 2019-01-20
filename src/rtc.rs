@@ -1,5 +1,5 @@
-use stm32f103xx::{RTC, PWR};
-use crate::rcc::{APB1, BDCR};
+use stm32f103xx::{RTC};
+use crate::rcc::{BackupDomainEnabledToken};
 
 
 /*
@@ -27,31 +27,7 @@ pub struct Rtc {
 
 
 impl Rtc {
-    pub fn rtc(regs: RTC, apb1: &mut APB1, bdcr: &mut BDCR, pwr: &mut PWR) -> Self {
-        // Enable the backup interface by setting PWREN and BKPEN
-        apb1.enr().modify(|_r, w| {
-            w
-                .bkpen().set_bit()
-                .pwren().set_bit()
-        });
-        // Enable access to the backup registers
-        pwr.cr.modify(|_r, w| {
-            w.
-                dbp().set_bit()
-        });
-
-        // Configure the perscaler to use the LSE clock as defined in the documentation
-        // in section 7.2.4. This gives a 32.768khz frequency for the RTC
-        bdcr.bdcr().modify(|_, w| {
-            w
-                // Enable external low speed oscilator
-                .lseon().set_bit()
-                // Enable the RTC
-                .rtcen().set_bit()
-                // Set the source of the RTC to LSE
-                .rtcsel().lse()
-        });
-
+    pub fn rtc(regs: RTC, _token: &BackupDomainEnabledToken) -> Self {
         // Set the prescaler to make it count up once every second
         // The manual on page 490 says that the prescaler value for this should be 7fffh
         regs.prll.write(|w| unsafe{w.bits(0x7fff)});
