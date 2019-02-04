@@ -113,28 +113,9 @@ macro_rules! hal {
                 /// Return the bus clock frequency in hertz.
                 fn get_bus_clock(&self) -> Hertz {
                     if TypeId::of::<$apbX>() == TypeId::of::<APB1>() {
-                            Hertz(self.clocks.pclk1().0 * self.get_bus_frequency_multiplier())
+                        self.clocks.pclk1_tim()
                     } else if TypeId::of::<$apbX>() == TypeId::of::<APB2>() {
-                        Hertz(self.clocks.pclk2().0 * self.get_bus_frequency_multiplier())
-                    } else {
-                        unreachable!()
-                    }
-                }
-
-                /// Return the bus frequency multiplier.
-                fn get_bus_frequency_multiplier(&self) -> u32 {
-                    if TypeId::of::<$apbX>() == TypeId::of::<APB1>() {
-                        if self.clocks.ppre1() == 1 {
-                            1
-                        } else {
-                            2
-                        }
-                    } else if TypeId::of::<$apbX>() == TypeId::of::<APB2>() {
-                         if self.clocks.ppre2() == 1 {
-                            1
-                         } else {
-                            2
-                         }
+                        self.clocks.pclk2_tim()
                     } else {
                         unreachable!()
                     }
