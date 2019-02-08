@@ -1,10 +1,10 @@
 # `stm32f103xx-hal`
 
-> [HAL] for the STM32F103xx family of microcontrollers
+This crate has been **DEPRECATED** in favor of the [`stm32f1xx-hal`][] [crate].
+This crate will receive no further updates or bug fixes.
 
-[HAL]: https://crates.io/crates/embedded-hal
-
-## [Documentation](https://japaric.github.io/stm32f103xx-hal/stm32f103xx_hal)
+[`stm32f1xx-hal`]: https://github.com/stm32-rs/stm32f1xx-hal
+[crate]: https://crates.io/crates/stm32f1xx-hal
 
 ## License
 
