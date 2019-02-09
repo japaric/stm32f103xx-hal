@@ -34,6 +34,8 @@ impl Timer<SYST> {
     }
 
     /// Starts listening for an `event`
+    /// You *have* to call `wait()` from your event handler to clear the interrupt flag (UIF),
+    /// otherwise the interrupt handler will execute continuously.
     pub fn listen(&mut self, event: Event) {
         match event {
             Event::Update => self.tim.enable_interrupt(),
