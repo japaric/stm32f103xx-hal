@@ -3,6 +3,7 @@ use core::cmp;
 use cast::u32;
 use crate::device::rcc::cfgr::{PLLSRCW, SWW, USBPREW};
 use crate::device::{rcc, RCC};
+use crate::device::PWR;
 
 use crate::flash::ACR;
 use crate::time::Hertz;
@@ -11,6 +12,7 @@ use crate::time::Hertz;
 pub trait RccExt {
     /// Constrains the `RCC` peripheral so it plays nicely with the other abstractions
     fn constrain(self) -> Rcc;
+    fn enable_backup_domain(&mut self, pwr: &mut PWR) -> BackupDomainEnabledToken;
 }
 
 impl RccExt for RCC {
@@ -28,6 +30,51 @@ impl RccExt for RCC {
             },
         }
     }
+
+    fn enable_backup_domain(&mut self, pwr: &mut PWR) -> BackupDomainEnabledToken {
+
+        // NOTE: Access to apb1enr before Rcc struct is created means we have exclusive access
+        let apb1_enr = unsafe { &(*RCC::ptr()).apb1enr };
+        // Enable the backup interface by setting PWREN and BKPEN
+        apb1_enr.modify(|_r, w| {
+            w
+                .bkpen().set_bit()
+                .pwren().set_bit()
+        });
+
+        // Enable access to the backup registers
+        pwr.cr.modify(|_r, w| {
+            w.
+                dbp().set_bit()
+        });
+
+
+        // Configure the perscaler to use the LSE clock as defined in the documentation
+        // in section 7.2.4. This gives a 32.768khz frequency for the RTC
+        self.bdcr.modify(|_, w| {
+            w
+                // Enable external low speed oscilator
+                .lseon().set_bit()
+                // Enable the RTC
+                .rtcen().set_bit()
+                // Set the source of the RTC to LSE
+                .rtcsel().lse()
+        });
+
+        BackupDomainEnabledToken {
+            _0: ()
+        }
+
+    }
+}
+
+/**
+    Token indicating that the backup domain has been enabled and can be used
+    for things like the
+    RTC
+*/
+pub struct BackupDomainEnabledToken {
+    _0: ()
 }
 
 /// Constrained RCC peripheral
@@ -292,6 +339,7 @@ impl CFGR {
         }
     }
 }
+
 
 /// Frozen clock frequencies
 ///
