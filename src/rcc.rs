@@ -1,7 +1,7 @@
 use core::cmp;
 
 use cast::u32;
-use crate::device::rcc::cfgr::{PLLSRCW, SWW, USBPREW};
+use crate::device::rcc::cfgr::{PLLSRCW, SWW, USBPREW, ADCPREW};
 use crate::device::{rcc, RCC};
 
 use crate::flash::ACR;
@@ -25,6 +25,7 @@ impl RccExt for RCC {
                 pclk1: None,
                 pclk2: None,
                 sysclk: None,
+                adcclk: None,
             },
         }
     }
@@ -95,6 +96,7 @@ pub struct CFGR {
     pclk1: Option<u32>,
     pclk2: Option<u32>,
     sysclk: Option<u32>,
+    adcclk: Option<u32>,
 }
 
 impl CFGR {
@@ -144,9 +146,17 @@ impl CFGR {
         self
     }
 
-    pub fn freeze(self, acr: &mut ACR) -> Clocks {
-        // TODO ADC clock
+    /// Sets the desired frequency for the ADCCLK cloc
+    pub fn adcclk<F>(mut self, freq: F) -> Self
+    where
+        F: Into<Hertz>,
+    {
+        self.adcclk = Some(freq.into().0);
+        self
+    }
 
+
+    pub fn freeze(self, acr: &mut ACR) -> Clocks {
         let pllsrcclk = self.hse.unwrap_or(HSI / 2);
 
         let pllmul = self.sysclk.unwrap_or(pllsrcclk) / pllsrcclk;
@@ -280,6 +290,19 @@ impl CFGR {
                     SWW::HSI
                 })
         });
+
+        // The ADC clock can not exceed 14 MHz (see the processor manual section 11.1)
+        // Since there is no lower bound, aim for a too high value rather than
+        // it being too low
+        let adc_prescaler = {
+            let desired = pclk2 / self.adcclk.unwrap_or(14_000_000);
+
+            if desired >= 6 { ADCPREW::DIV8 }
+            else if desired >= 4 { ADCPREW::DIV6 }
+            else if desired >= 2 { ADCPREW::DIV4 }
+            else { ADCPREW::DIV2 }
+        };
+        rcc.cfgr.modify(|_, w| w.adcpre().variant(adc_prescaler));
 
         Clocks {
             hclk: Hertz(hclk),

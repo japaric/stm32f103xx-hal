@@ -27,19 +27,18 @@ pub struct Floating;
 pub struct PullDown;
 /// Pulled up input (type state)
 pub struct PullUp;
+/// Analog input (type state)
+pub struct Analog;
+/// Push pull output (type state)
+pub struct PushPull;
+/// Open drain output (type state)
+pub struct OpenDrain;
 
 /// Output mode (type state)
 pub struct Output<MODE> {
     _mode: PhantomData<MODE>,
 }
 
-/// Push pull output (type state)
-pub struct PushPull;
-/// Open drain output (type state)
-pub struct OpenDrain;
-
-/// Analog mode (type state)
-pub struct Analog;
 
 /// Alternate function
 pub struct Alternate<MODE> {
@@ -340,9 +339,8 @@ macro_rules! gpio {
 
                         $PXi { _mode: PhantomData }
                     }
-                    
                     /// Configures the pin to operate as an analog input pin
-                    pub fn into_analog(self, cr: &mut $CR) -> $PXi<Analog> {
+                    pub fn into_analog_input(self, cr: &mut $CR) -> $PXi<Analog> {
                         let offset = (4 * $i) % 32;
                         // Analog input
                         let cnf = 0b00;
